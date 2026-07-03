@@ -89,152 +89,152 @@ const DEMO_JUMPS: JumpDemo[] = [
   },
 ];
 
-// ─── Hardcoded scoring params for the demo session ───────────────────────────
-// These pre-fill the NewJump form so the scorer can run the demo live.
+// ─── Hardcoded scoring params ─────────────────────────────────────────────────
 
 const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
-  // Jump 1 — Leo 8.07 · Backroll Kiteloop Tornado · 17.5m · 121m
   {
     landingOutcome: 'clean',
-    HEIGHT:       { height: '16_20m',  amplitude: 'gt121m'   },
-    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb',   free_fall: 'high'   },
+    HEIGHT:       { height: '16_20m', amplitude: 'gt121m'  },
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
     EXECUTION:    { speed_in_out: 0.32, stability_control: 0.32, landing_control: 0.32, board_control: 0.32, kite_control: 0.32 },
   },
-  // Jump 2 — Leo 8.37 · Dobbie Boardoff from the Fin · 19.8m · 83m
   {
     landingOutcome: 'clean',
-    HEIGHT:       { height: '16_20m',  amplitude: '81_120m'  },
-    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb',   free_fall: 'high'   },
+    HEIGHT:       { height: '16_20m', amplitude: '81_120m' },
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
     EXECUTION:    { speed_in_out: 0.30, stability_control: 0.28, landing_control: 0.30, board_control: 0.30, kite_control: 0.28 },
   },
-  // Jump 3 — Lorenzo 9.40 · Backroll Kiteloop Flip Late Back Added Rotation · 18.4m · 94m
   {
     landingOutcome: 'clean',
-    HEIGHT:       { height: '16_20m',  amplitude: '81_120m'  },
-    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb',   free_fall: 'high'   },
+    HEIGHT:       { height: '16_20m', amplitude: '81_120m' },
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '1', board_tic_tac: '0' },
     EXECUTION:    { speed_in_out: 0.38, stability_control: 0.38, landing_control: 0.38, board_control: 0.38, kite_control: 0.38 },
   },
 ];
 
-// ─── GKA broadcast HUD (no curve — text overlay only) ────────────────────────
+// ─── Recap screen (shown after video ends) ────────────────────────────────────
 
-function GKAReplayHUD({ jump, currentTime }: { jump: JumpDemo; currentTime: number }) {
-  const { woo } = jump;
-  const elapsed  = Math.max(0, currentTime - woo.takeoffOffset);
-  const progress = Math.min(elapsed / woo.airtime, 1);
-
-  const airSecs   = Math.floor(Math.min(elapsed, woo.airtime));
-  const distNow   = Math.round(woo.distance * progress);
-  const hRatio    = Math.min(progress / woo.peakTimeRatio, 1);
-  const heightNow = (woo.maxHeight * hRatio).toFixed(1);
-
-  const sh = (s: string) => ({ textShadow: s });
+function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void }) {
+  const wooStats = [
+    { label: 'Max Height', value: `${jump.woo.maxHeight} m` },
+    { label: 'Airtime',    value: `${jump.woo.airtime} s`   },
+    { label: 'Distance',   value: `${jump.woo.distance} m`  },
+    { label: 'Max Speed',  value: `${jump.woo.maxSpeed} km/h` },
+    { label: 'Approach',   value: `${jump.woo.approachSpeed} km/h` },
+    { label: 'Wind Angle', value: `${jump.woo.windAngle}°`  },
+    { label: 'Quality',    value: jump.woo.quality           },
+  ];
 
   return (
-    <div className="absolute inset-0 pointer-events-none select-none">
+    <div
+      className="absolute inset-0 bg-zinc-950 flex flex-col overflow-hidden"
+      style={{ animation: 'fadeIn 0.4s ease' }}
+    >
+      <style>{`@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`}</style>
 
-      {/* ── Top-left: athlete + trick + REPLAY badge ── */}
-      <div className="absolute top-4 left-4">
-        <div className="bg-black/65 px-3 py-2 mb-2.5 inline-block">
-          <div className="font-mono text-white text-sm font-bold tracking-widest leading-tight"
-               style={sh('0 1px 4px rgba(0,0,0,0.9)')}>
+      {/* ── Top bar ── */}
+      <div className="flex items-center justify-between px-7 py-4 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <img src={logo} alt="GKA" className="w-9 h-9" />
+          <div>
+            <div className="font-mono text-white text-xs font-bold tracking-[0.2em]">CAPITAL.COM GKA</div>
+            <div className="font-mono text-zinc-500 text-[10px] tracking-widest">BIG AIR WORLD TOUR</div>
+          </div>
+        </div>
+        <button
+          onClick={onClose}
+          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+        >
+          <X className="w-4 h-4 text-white" />
+        </button>
+      </div>
+
+      {/* ── Athlete + score ── */}
+      <div className="flex items-center justify-between px-7 py-5">
+        <div>
+          <div className="font-mono text-white text-xl font-black tracking-widest leading-tight">
             {jump.athlete.toUpperCase()}
           </div>
-          <div className="font-mono text-orange-300 text-[11px] tracking-wide leading-tight mt-0.5">
-            {jump.trick.toUpperCase()}
+          <div className="text-orange-400 text-sm font-semibold tracking-wide mt-1">
+            {jump.trick}
           </div>
-          <div className="font-mono text-zinc-400 text-[11px] tracking-wider leading-tight mt-0.5">
-            CAPITAL.COM GKA BIG AIR · {jump.label.toUpperCase()}
-          </div>
-        </div>
-        <div className="flex items-center gap-2.5">
-          <img src={logo} alt="GKA" className="w-9 h-9" />
-          <span className="font-bold text-white text-xl tracking-[0.22em]"
-                style={sh('0 1px 6px rgba(0,0,0,0.9)')}>
-            REPLAY
-          </span>
-        </div>
-      </div>
-
-      {/* ── Top-right: score ── */}
-      <div className="absolute top-4 right-4 text-right">
-        <div className="font-mono text-zinc-300 text-[11px] tracking-widest uppercase"
-             style={sh('0 1px 4px rgba(0,0,0,0.9)')}>Score</div>
-        <div className="text-white font-black text-6xl leading-none tabular-nums"
-             style={sh('0 2px 8px rgba(0,0,0,0.9)')}>
-          {jump.score.toFixed(2)}
-        </div>
-        <div className="text-zinc-400 text-sm">/ 10</div>
-      </div>
-
-      {/* ── Bottom stats row ── */}
-      <div className="absolute bottom-12 inset-x-4 flex items-end justify-between">
-        <div>
-          <div className="font-mono text-zinc-200 text-[10px] tracking-widest uppercase mb-0.5"
-               style={sh('0 1px 4px rgba(0,0,0,0.9)')}>AIR, s</div>
-          <div className="text-orange-400 font-black text-5xl leading-none tabular-nums"
-               style={sh('0 2px 6px rgba(0,0,0,0.9)')}>
-            {airSecs}
-          </div>
-        </div>
-        <div className="text-center">
-          <div className="font-mono text-zinc-200 text-[10px] tracking-widest uppercase mb-0.5"
-               style={sh('0 1px 4px rgba(0,0,0,0.9)')}>DISTANCE</div>
-          <div className="text-orange-400 font-black text-5xl leading-none tabular-nums"
-               style={sh('0 2px 6px rgba(0,0,0,0.9)')}>
-            {distNow}<span className="text-2xl font-bold ml-0.5">m</span>
+          <div className="font-mono text-zinc-600 text-[10px] tracking-widest mt-1">
+            {jump.label.toUpperCase()}
           </div>
         </div>
         <div className="text-right">
-          <div className="font-mono text-zinc-200 text-[10px] tracking-widest uppercase mb-0.5"
-               style={sh('0 1px 4px rgba(0,0,0,0.9)')}>MAX HEIGHT, m</div>
-          <div className="text-orange-400 font-black text-5xl leading-none tabular-nums"
-               style={sh('0 2px 6px rgba(0,0,0,0.9)')}>
-            {heightNow}
+          <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1">Score</div>
+          <div className="text-white font-black tabular-nums" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1 }}>
+            {jump.score.toFixed(2)}
           </div>
+          <div className="text-zinc-500 text-sm mt-0.5">/ 10</div>
         </div>
       </div>
 
-      {/* ── Progress timeline ── */}
-      <div className="absolute bottom-4 inset-x-4 flex items-center gap-1.5">
-        <div className="w-1.5 h-1.5 rounded-full bg-white/60" />
-        <div className="flex-1 h-px bg-white/25">
-          <div className="h-full bg-white/70 transition-none" style={{ width: `${progress * 100}%` }} />
-        </div>
-        <div className="w-1.5 h-1.5 rounded-full bg-white/40" />
-      </div>
-    </div>
-  );
-}
+      {/* ── Divider ── */}
+      <div className="h-px bg-white/10 mx-7" />
 
-// ─── Replay prompt ────────────────────────────────────────────────────────────
+      {/* ── Data grid ── */}
+      <div className="flex-1 grid grid-cols-2 gap-0 px-7 py-5 min-h-0">
 
-function ReplayPrompt({ jump, onReplay }: { jump: JumpDemo; onReplay: () => void }) {
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      <div className="absolute top-4 left-4">
-        <div className="bg-black/65 px-3 py-2 inline-block">
-          <div className="font-mono text-white text-sm font-bold tracking-widest">{jump.athlete.toUpperCase()}</div>
-          <div className="font-mono text-orange-300 text-[11px] tracking-wide mt-0.5">{jump.trick.toUpperCase()}</div>
-          <div className="font-mono text-zinc-400 text-[11px] tracking-wider mt-0.5">
-            CAPITAL.COM GKA BIG AIR · {jump.label.toUpperCase()}
+        {/* Score breakdown */}
+        <div className="pr-7 border-r border-white/10 flex flex-col justify-center gap-3">
+          <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1">
+            Score Breakdown
+          </div>
+          {jump.areas.map(area => {
+            const pct = (area.score / area.maxScore) * 100;
+            return (
+              <div key={area.name}>
+                <div className="flex justify-between items-baseline mb-1.5">
+                  <span className="font-mono text-zinc-300 text-xs tracking-widest">{area.name}</span>
+                  <span className="text-white text-xs font-bold tabular-nums">
+                    {area.score.toFixed(2)}
+                    <span className="text-zinc-600 font-normal"> / {area.maxScore.toFixed(2)}</span>
+                  </span>
+                </div>
+                <div className="w-full bg-white/8 rounded-full h-2 overflow-hidden" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                  <div
+                    className={`h-full rounded-full bg-gradient-to-r ${area.gradient}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Total */}
+          <div className="flex justify-between items-baseline mt-2 pt-3 border-t border-white/10">
+            <span className="font-mono text-zinc-400 text-xs tracking-widest uppercase">Total</span>
+            <span className="text-white font-black text-xl tabular-nums">
+              {jump.score.toFixed(2)}
+              <span className="text-zinc-600 text-sm font-normal"> / 10</span>
+            </span>
           </div>
         </div>
-      </div>
-      <div className="absolute bottom-8 left-4">
-        <button onClick={onReplay} className="pointer-events-auto flex items-center gap-3 group">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-orange-400/30 animate-ping" />
-            <img src={logo} alt="GKA" className="relative w-11 h-11" />
+
+        {/* Woo sensor data */}
+        <div className="pl-7 flex flex-col justify-center gap-3">
+          <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1 flex items-center gap-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            Woo Sensor Data
           </div>
-          <span className="font-bold text-white text-2xl tracking-[0.22em] group-hover:text-orange-300 transition-colors"
-                style={{ textShadow: '0 1px 8px rgba(0,0,0,0.95)' }}>
-            REPLAY WITH DATA
-          </span>
-        </button>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+            {wooStats.map(stat => (
+              <div key={stat.label}>
+                <div className="font-mono text-zinc-600 text-[9px] tracking-widest uppercase leading-tight">
+                  {stat.label}
+                </div>
+                <div className="text-white font-bold text-base tabular-nums mt-0.5">
+                  {stat.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -242,19 +242,15 @@ function ReplayPrompt({ jump, onReplay }: { jump: JumpDemo; onReplay: () => void
 
 // ─── Video player ─────────────────────────────────────────────────────────────
 
-type VState = 'idle' | 'playing' | 'replay-prompt' | 'replaying';
+type VState = 'idle' | 'playing' | 'recap';
 
 function VideoPlayer({ jump }: { jump: JumpDemo }) {
-  const [open, setOpen]       = useState(false);
-  const [vState, setVState]   = useState<VState>('idle');
-  const [curTime, setCurTime] = useState(0);
-  const videoRef  = useRef<HTMLVideoElement>(null);
-  const firstPlay = useRef(true);
+  const [open, setOpen]     = useState(false);
+  const [vState, setVState] = useState<VState>('idle');
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const openModal = () => {
     if (!jump.videoSrc) return;
-    firstPlay.current = true;
-    setCurTime(0);
     setOpen(true);
     setVState('playing');
   };
@@ -264,25 +260,11 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
     if (videoRef.current) videoRef.current.currentTime = 0;
     setOpen(false);
     setVState('idle');
-    setCurTime(0);
-  };
-
-  const handleEnded = () => {
-    if (!firstPlay.current) return;
-    firstPlay.current = false;
-    setVState('replay-prompt');
-  };
-
-  const startReplay = () => {
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    videoRef.current.play().catch(() => {});
-    setCurTime(0);
-    setVState('replaying');
   };
 
   return (
     <>
+      {/* Thumbnail */}
       <div
         className="relative w-full aspect-video bg-zinc-900 rounded-xl overflow-hidden group cursor-pointer"
         onClick={openModal}
@@ -300,15 +282,20 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
         )}
       </div>
 
+      {/* Fullscreen modal */}
       {open && (
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-          <button
-            onClick={closeModal}
-            className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          {/* Close button (only during playback, recap has its own) */}
+          {vState === 'playing' && (
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
 
+          {/* 16:9 video container */}
           <div
             className="relative w-full"
             style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)' }}
@@ -317,13 +304,14 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
               ref={videoRef}
               src={jump.videoSrc}
               className="absolute inset-0 w-full h-full object-cover"
-              onEnded={handleEnded}
-              onTimeUpdate={() => setCurTime(videoRef.current?.currentTime ?? 0)}
+              onEnded={() => setVState('recap')}
               playsInline
               autoPlay
             />
-            {vState === 'replaying'     && <GKAReplayHUD jump={jump} currentTime={curTime} />}
-            {vState === 'replay-prompt' && <ReplayPrompt jump={jump} onReplay={startReplay} />}
+
+            {vState === 'recap' && (
+              <RecapScreen jump={jump} onClose={closeModal} />
+            )}
           </div>
         </div>
       )}
@@ -354,19 +342,18 @@ function ScoreBar({ area }: { area: AreaScore }) {
   );
 }
 
-// ─── Woo sensor data panel ────────────────────────────────────────────────────
+// ─── Woo panel ────────────────────────────────────────────────────────────────
 
 function WooPanel({ woo }: { woo: WooData }) {
-  const stats: { label: string; value: string }[] = [
-    { label: 'Max Height', value: `${woo.maxHeight} m` },
-    { label: 'Airtime',    value: `${woo.airtime} s` },
-    { label: 'Distance',   value: `${woo.distance} m` },
-    { label: 'Max Speed',  value: `${woo.maxSpeed} km/h` },
-    { label: 'Approach',   value: `${woo.approachSpeed} km/h` },
-    { label: 'Wind Angle', value: `${woo.windAngle}°` },
-    { label: 'Quality',    value: woo.quality },
+  const stats = [
+    { label: 'Max Height', value: `${woo.maxHeight} m`       },
+    { label: 'Airtime',    value: `${woo.airtime} s`         },
+    { label: 'Distance',   value: `${woo.distance} m`        },
+    { label: 'Max Speed',  value: `${woo.maxSpeed} km/h`     },
+    { label: 'Approach',   value: `${woo.approachSpeed} km/h`},
+    { label: 'Wind Angle', value: `${woo.windAngle}°`        },
+    { label: 'Quality',    value: woo.quality                 },
   ];
-
   return (
     <div className="border-t border-border pt-4 mt-2">
       <div className="flex items-center gap-2 mb-3">

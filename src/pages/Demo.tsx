@@ -346,7 +346,7 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        <div className="fixed inset-0 z-[200] bg-black flex items-center justify-center">
           {vState === 'playing' && (
             <button
               onClick={closeModal}
@@ -356,8 +356,8 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
             </button>
           )}
           <div
-            className="relative w-full"
-            style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)', background: '#000' }}
+            className="relative w-full h-full"
+            style={{ background: '#000' }}
           >
             <video
               ref={videoRef}
@@ -476,13 +476,8 @@ function JumpCard({ jump }: { jump: JumpDemo }) {
       </Card>
 
       {showRecap && (
-        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-          <div
-            className="relative w-full"
-            style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)', background: '#000' }}
-          >
-            <RecapScreen jump={jump} onClose={() => setShowRecap(false)} />
-          </div>
+        <div className="fixed inset-0 z-[200] bg-black">
+          <RecapScreen jump={jump} onClose={() => setShowRecap(false)} />
         </div>
       )}
     </>

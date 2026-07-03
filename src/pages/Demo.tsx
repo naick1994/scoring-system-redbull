@@ -21,11 +21,20 @@ interface WooData {
   takeoffOffset: number;
 }
 
+interface AreaParam {
+  label: string;
+  detail: string;
+  pts: number;
+  maxPts: number;
+}
+
 interface AreaScore {
   name: string;
   score: number;
   maxScore: number;
+  weight: number;
   gradient: string;
+  params: AreaParam[];
 }
 
 interface JumpDemo {
@@ -48,14 +57,47 @@ const DEMO_JUMPS: JumpDemo[] = [
     athlete: 'Leonardo Casati',
     trick: 'Backroll Kiteloop Tornado',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
-    score: 6.78,
+    score: 7.18,
     areas: [
-      { name: 'HEIGHT',       score: 1.47, maxScore: 2.00, gradient: 'from-blue-500 to-cyan-400' },
-      { name: 'EXTREMITY',    score: 0.74, maxScore: 1.00, gradient: 'from-purple-500 to-pink-400' },
-      { name: 'TECHNICALITY', score: 2.54, maxScore: 4.50, gradient: 'from-amber-500 to-yellow-400' },
-      { name: 'EXECUTION',    score: 2.03, maxScore: 2.50, gradient: 'from-green-500 to-lime-400' },
+      {
+        name: 'HEIGHT', score: 2.21, maxScore: 3.00, weight: 30,
+        gradient: 'from-blue-500 to-cyan-400',
+        params: [
+          { label: 'Height',    detail: '16–20 m',  pts: 0.90, maxPts: 1.50 },
+          { label: 'Amplitude', detail: '>121 m',   pts: 1.00, maxPts: 1.00 },
+        ],
+      },
+      {
+        name: 'EXTREMITY', score: 2.22, maxScore: 3.00, weight: 30,
+        gradient: 'from-purple-500 to-pink-400',
+        params: [
+          { label: 'Kite Angle', detail: 'Low (51–70°)', pts: 0.50, maxPts: 0.75 },
+          { label: 'Yank Power', detail: 'Bomb',         pts: 0.75, maxPts: 0.75 },
+          { label: 'Free Fall',  detail: 'Medium',       pts: 0.25, maxPts: 0.50 },
+        ],
+      },
+      {
+        name: 'TECHNICALITY', score: 1.13, maxScore: 2.00, weight: 20,
+        gradient: 'from-amber-500 to-yellow-400',
+        params: [
+          { label: 'Rotations', detail: '×3',          pts: 0.80, maxPts: 0.80 },
+          { label: 'Axis',      detail: 'Horizontal',  pts: 0.50, maxPts: 0.50 },
+          { label: 'Board Off', detail: 'No',          pts: 0.00, maxPts: 1.00 },
+        ],
+      },
+      {
+        name: 'EXECUTION', score: 1.62, maxScore: 2.00, weight: 20,
+        gradient: 'from-green-500 to-lime-400',
+        params: [
+          { label: 'Speed In/Out',   detail: '', pts: 0.32, maxPts: 0.40 },
+          { label: 'Stability',      detail: '', pts: 0.32, maxPts: 0.40 },
+          { label: 'Landing',        detail: '', pts: 0.32, maxPts: 0.40 },
+          { label: 'Board Control',  detail: '', pts: 0.32, maxPts: 0.40 },
+          { label: 'Kite Control',   detail: '', pts: 0.32, maxPts: 0.40 },
+        ],
+      },
     ],
-    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
+    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6, quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
   },
   {
     id: 2,
@@ -63,14 +105,49 @@ const DEMO_JUMPS: JumpDemo[] = [
     athlete: 'Leonardo Casati',
     trick: 'Dobbie Boardoff from the Fin',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
-    score: 7.73,
+    score: 7.98,
     areas: [
-      { name: 'HEIGHT',       score: 1.80, maxScore: 2.00, gradient: 'from-blue-500 to-cyan-400' },
-      { name: 'EXTREMITY',    score: 0.76, maxScore: 1.00, gradient: 'from-purple-500 to-pink-400' },
-      { name: 'TECHNICALITY', score: 3.21, maxScore: 4.50, gradient: 'from-amber-500 to-yellow-400' },
-      { name: 'EXECUTION',    score: 1.96, maxScore: 2.50, gradient: 'from-green-500 to-lime-400' },
+      {
+        name: 'HEIGHT', score: 2.70, maxScore: 3.00, weight: 30,
+        gradient: 'from-blue-500 to-cyan-400',
+        params: [
+          { label: 'Height',    detail: '16–20 m',  pts: 0.90, maxPts: 1.50 },
+          { label: 'Amplitude', detail: '81–120 m', pts: 0.67, maxPts: 1.00 },
+        ],
+      },
+      {
+        name: 'EXTREMITY', score: 2.28, maxScore: 3.00, weight: 30,
+        gradient: 'from-purple-500 to-pink-400',
+        params: [
+          { label: 'Kite Angle', detail: 'Low (51–70°)', pts: 0.50, maxPts: 0.75 },
+          { label: 'Yank Power', detail: 'Bomb',         pts: 0.75, maxPts: 0.75 },
+          { label: 'Free Fall',  detail: 'High',         pts: 0.50, maxPts: 0.50 },
+        ],
+      },
+      {
+        name: 'TECHNICALITY', score: 1.43, maxScore: 2.00, weight: 20,
+        gradient: 'from-amber-500 to-yellow-400',
+        params: [
+          { label: 'Rotations', detail: '×2',          pts: 0.50, maxPts: 0.80 },
+          { label: 'Axis',      detail: 'Horizontal',  pts: 0.50, maxPts: 0.50 },
+          { label: 'Board Off', detail: 'Yes',         pts: 1.00, maxPts: 1.00 },
+          { label: 'Board Flip',detail: '0',           pts: 0.00, maxPts: 0.30 },
+          { label: 'Tic Tac',   detail: '0',           pts: 0.00, maxPts: 0.20 },
+        ],
+      },
+      {
+        name: 'EXECUTION', score: 1.57, maxScore: 2.00, weight: 20,
+        gradient: 'from-green-500 to-lime-400',
+        params: [
+          { label: 'Speed In/Out',  detail: '', pts: 0.30, maxPts: 0.40 },
+          { label: 'Stability',     detail: '', pts: 0.28, maxPts: 0.40 },
+          { label: 'Landing',       detail: '', pts: 0.30, maxPts: 0.40 },
+          { label: 'Board Control', detail: '', pts: 0.30, maxPts: 0.40 },
+          { label: 'Kite Control',  detail: '', pts: 0.28, maxPts: 0.40 },
+        ],
+      },
     ],
-    woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
+    woo: { maxHeight: 19.8, airtime: 7.5, distance: 83, maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
   },
   {
     id: 3,
@@ -78,14 +155,49 @@ const DEMO_JUMPS: JumpDemo[] = [
     athlete: 'Lorenzo Casati',
     trick: 'Backroll Kiteloop Flip Late Back Added Rotation',
     videoSrc: `${import.meta.env.BASE_URL}videos/LORE_9.40.mp4`,
-    score: 8.86,
+    score: 8.96,
     areas: [
-      { name: 'HEIGHT',       score: 1.65, maxScore: 2.00, gradient: 'from-blue-500 to-cyan-400' },
-      { name: 'EXTREMITY',    score: 0.95, maxScore: 1.00, gradient: 'from-purple-500 to-pink-400' },
-      { name: 'TECHNICALITY', score: 3.86, maxScore: 4.50, gradient: 'from-amber-500 to-yellow-400' },
-      { name: 'EXECUTION',    score: 2.40, maxScore: 2.50, gradient: 'from-green-500 to-lime-400' },
+      {
+        name: 'HEIGHT', score: 2.47, maxScore: 3.00, weight: 30,
+        gradient: 'from-blue-500 to-cyan-400',
+        params: [
+          { label: 'Height',    detail: '16–20 m',  pts: 0.90, maxPts: 1.50 },
+          { label: 'Amplitude', detail: '81–120 m', pts: 0.67, maxPts: 1.00 },
+        ],
+      },
+      {
+        name: 'EXTREMITY', score: 2.85, maxScore: 3.00, weight: 30,
+        gradient: 'from-purple-500 to-pink-400',
+        params: [
+          { label: 'Kite Angle', detail: 'Low (51–70°)', pts: 0.50, maxPts: 0.75 },
+          { label: 'Yank Power', detail: 'Bomb',         pts: 0.75, maxPts: 0.75 },
+          { label: 'Free Fall',  detail: 'High',         pts: 0.50, maxPts: 0.50 },
+        ],
+      },
+      {
+        name: 'TECHNICALITY', score: 1.72, maxScore: 2.00, weight: 20,
+        gradient: 'from-amber-500 to-yellow-400',
+        params: [
+          { label: 'Rotations', detail: '×3',          pts: 0.80, maxPts: 0.80 },
+          { label: 'Axis',      detail: 'Horizontal',  pts: 0.50, maxPts: 0.50 },
+          { label: 'Board Off', detail: 'Yes',         pts: 1.00, maxPts: 1.00 },
+          { label: 'Board Flip',detail: '×1',          pts: 0.10, maxPts: 0.30 },
+          { label: 'Tic Tac',   detail: '0',           pts: 0.00, maxPts: 0.20 },
+        ],
+      },
+      {
+        name: 'EXECUTION', score: 1.92, maxScore: 2.00, weight: 20,
+        gradient: 'from-green-500 to-lime-400',
+        params: [
+          { label: 'Speed In/Out',  detail: '', pts: 0.38, maxPts: 0.40 },
+          { label: 'Stability',     detail: '', pts: 0.38, maxPts: 0.40 },
+          { label: 'Landing',       detail: '', pts: 0.38, maxPts: 0.40 },
+          { label: 'Board Control', detail: '', pts: 0.38, maxPts: 0.40 },
+          { label: 'Kite Control',  detail: '', pts: 0.38, maxPts: 0.40 },
+        ],
+      },
     ],
-    woo: { maxHeight: 18.4, airtime: 6.8, distance: 94,  maxSpeed: 56, approachSpeed: 28, windAngle: 19, quality: 'OK',   peakTimeRatio: 0.29, takeoffOffset: 0 },
+    woo: { maxHeight: 18.4, airtime: 6.8, distance: 94, maxSpeed: 56, approachSpeed: 28, windAngle: 19, quality: 'OK', peakTimeRatio: 0.29, takeoffOffset: 0 },
   },
 ];
 
@@ -115,17 +227,34 @@ const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
   },
 ];
 
-// ─── Recap screen (shown after video ends) ────────────────────────────────────
+// ─── Recap screen ─────────────────────────────────────────────────────────────
+
+function ParamRow({ p }: { p: AreaParam }) {
+  const pct = p.maxPts > 0 ? (p.pts / p.maxPts) * 100 : 0;
+  return (
+    <div className="flex items-center gap-2 py-0.5">
+      <div className="w-1 h-1 rounded-full bg-white/20 shrink-0" />
+      <span className="text-zinc-500 text-[10px] tracking-wide min-w-[6rem]">{p.label}</span>
+      {p.detail && <span className="text-zinc-400 text-[10px] font-semibold">{p.detail}</span>}
+      <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden min-w-[2rem]">
+        <div className="h-full bg-white/30 rounded-full" style={{ width: `${pct}%` }} />
+      </div>
+      <span className="text-zinc-400 text-[10px] tabular-nums shrink-0">
+        {p.pts.toFixed(2)}<span className="text-zinc-700">/{p.maxPts.toFixed(2)}</span>
+      </span>
+    </div>
+  );
+}
 
 function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void }) {
   const wooStats = [
-    { label: 'Max Height', value: `${jump.woo.maxHeight} m` },
-    { label: 'Airtime',    value: `${jump.woo.airtime} s`   },
-    { label: 'Distance',   value: `${jump.woo.distance} m`  },
-    { label: 'Max Speed',  value: `${jump.woo.maxSpeed} km/h` },
+    { label: 'Max Height', value: `${jump.woo.maxHeight} m`        },
+    { label: 'Airtime',    value: `${jump.woo.airtime} s`          },
+    { label: 'Distance',   value: `${jump.woo.distance} m`         },
+    { label: 'Max Speed',  value: `${jump.woo.maxSpeed} km/h`      },
     { label: 'Approach',   value: `${jump.woo.approachSpeed} km/h` },
-    { label: 'Wind Angle', value: `${jump.woo.windAngle}°`  },
-    { label: 'Quality',    value: jump.woo.quality           },
+    { label: 'Wind Angle', value: `${jump.woo.windAngle}°`         },
+    { label: 'Quality',    value: jump.woo.quality                  },
   ];
 
   return (
@@ -136,12 +265,12 @@ function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void })
       <style>{`@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`}</style>
 
       {/* ── Top bar ── */}
-      <div className="flex items-center justify-between px-7 py-4 border-b border-white/10">
+      <div className="flex items-center justify-between px-6 py-3 border-b border-white/10 shrink-0">
         <div className="flex items-center gap-3">
-          <img src={logo} alt="GKA" className="w-9 h-9" />
+          <img src={logo} alt="GKA" className="w-8 h-8" />
           <div>
             <div className="font-mono text-white text-xs font-bold tracking-[0.2em]">CAPITAL.COM GKA</div>
-            <div className="font-mono text-zinc-500 text-[10px] tracking-widest">BIG AIR WORLD TOUR</div>
+            <div className="font-mono text-zinc-500 text-[9px] tracking-widest">BIG AIR WORLD TOUR</div>
           </div>
         </div>
         <button
@@ -153,84 +282,108 @@ function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void })
       </div>
 
       {/* ── Athlete + score ── */}
-      <div className="flex items-center justify-between px-7 py-5">
+      <div className="flex items-center justify-between px-6 py-3 shrink-0">
         <div>
-          <div className="font-mono text-white text-xl font-black tracking-widest leading-tight">
+          <div className="font-mono text-white text-lg font-black tracking-widest leading-tight">
             {jump.athlete.toUpperCase()}
           </div>
-          <div className="text-orange-400 text-sm font-semibold tracking-wide mt-1">
-            {jump.trick}
-          </div>
-          <div className="font-mono text-zinc-600 text-[10px] tracking-widest mt-1">
-            {jump.label.toUpperCase()}
-          </div>
+          <div className="text-orange-400 text-xs font-semibold tracking-wide mt-0.5">{jump.trick}</div>
+          <div className="font-mono text-zinc-600 text-[9px] tracking-widest mt-0.5">{jump.label.toUpperCase()}</div>
         </div>
         <div className="text-right">
-          <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1">Score</div>
-          <div className="text-white font-black tabular-nums" style={{ fontSize: 'clamp(2.5rem, 5vw, 4rem)', lineHeight: 1 }}>
+          <div className="font-mono text-zinc-500 text-[9px] tracking-widest uppercase mb-0.5">Score</div>
+          <div className="text-white font-black tabular-nums leading-none" style={{ fontSize: 'clamp(2rem, 4.5vw, 3.5rem)' }}>
             {jump.score.toFixed(2)}
           </div>
-          <div className="text-zinc-500 text-sm mt-0.5">/ 10</div>
+          <div className="text-zinc-500 text-xs mt-0.5">/ 10</div>
         </div>
       </div>
 
-      {/* ── Divider ── */}
-      <div className="h-px bg-white/10 mx-7" />
+      <div className="h-px bg-white/10 mx-6 shrink-0" />
 
-      {/* ── Data grid ── */}
-      <div className="flex-1 grid grid-cols-2 gap-0 px-7 py-5 min-h-0">
+      {/* ── Main content ── */}
+      <div className="flex-1 grid grid-cols-5 gap-0 min-h-0">
 
-        {/* Score breakdown */}
-        <div className="pr-7 border-r border-white/10 flex flex-col justify-center gap-3">
-          <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1">
-            Score Breakdown
-          </div>
+        {/* ── Score breakdown (3/5 width) ── */}
+        <div className="col-span-3 border-r border-white/10 px-6 py-4 overflow-y-auto flex flex-col gap-3">
+          <div className="font-mono text-zinc-500 text-[9px] tracking-widest uppercase">Score Breakdown</div>
+
           {jump.areas.map(area => {
             const pct = (area.score / area.maxScore) * 100;
+            const subtotal = area.params.reduce((s, p) => s + p.pts, 0);
+            const subtotalMax = area.params.reduce((s, p) => s + p.maxPts, 0);
+            const norm = subtotalMax > 0 ? (subtotal / subtotalMax) * 100 : 0;
             return (
               <div key={area.name}>
-                <div className="flex justify-between items-baseline mb-1.5">
-                  <span className="font-mono text-zinc-300 text-xs tracking-widest">{area.name}</span>
+                {/* Area header */}
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-white text-[10px] font-bold tracking-widest">{area.name}</span>
+                    <span className="bg-white/10 text-zinc-400 text-[9px] font-mono px-1.5 py-0.5 rounded">
+                      ×{area.weight}%
+                    </span>
+                  </div>
                   <span className="text-white text-xs font-bold tabular-nums">
                     {area.score.toFixed(2)}
-                    <span className="text-zinc-600 font-normal"> / {area.maxScore.toFixed(2)}</span>
+                    <span className="text-zinc-600 font-normal">/{area.maxScore.toFixed(2)}</span>
                   </span>
                 </div>
-                <div className="w-full bg-white/8 rounded-full h-2 overflow-hidden" style={{ background: 'rgba(255,255,255,0.07)' }}>
-                  <div
-                    className={`h-full rounded-full bg-gradient-to-r ${area.gradient}`}
-                    style={{ width: `${pct}%` }}
-                  />
+                {/* Area bar */}
+                <div className="w-full h-1.5 rounded-full mb-1.5 overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+                  <div className={`h-full rounded-full bg-gradient-to-r ${area.gradient}`} style={{ width: `${pct}%` }} />
+                </div>
+                {/* Formula line */}
+                <div className="font-mono text-zinc-600 text-[9px] mb-2">
+                  {subtotal.toFixed(2)}/{subtotalMax.toFixed(2)} = {norm.toFixed(0)}% &nbsp;×&nbsp;
+                  10 &nbsp;×&nbsp; {area.weight}% weight &nbsp;=&nbsp;
+                  <span className="text-zinc-400">{area.score.toFixed(2)} pts</span>
+                </div>
+                {/* Sub-params */}
+                <div className="pl-2 border-l border-white/10">
+                  {area.params.map((p, i) => <ParamRow key={i} p={p} />)}
                 </div>
               </div>
             );
           })}
 
           {/* Total */}
-          <div className="flex justify-between items-baseline mt-2 pt-3 border-t border-white/10">
-            <span className="font-mono text-zinc-400 text-xs tracking-widest uppercase">Total</span>
-            <span className="text-white font-black text-xl tabular-nums">
+          <div className="flex justify-between items-baseline pt-3 border-t border-white/10 mt-1">
+            <span className="font-mono text-zinc-400 text-[10px] tracking-widest uppercase">Total Score</span>
+            <span className="text-white font-black text-lg tabular-nums">
               {jump.score.toFixed(2)}
               <span className="text-zinc-600 text-sm font-normal"> / 10</span>
             </span>
           </div>
         </div>
 
-        {/* Woo sensor data */}
-        <div className="pl-7 flex flex-col justify-center gap-3">
-          <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1 flex items-center gap-2">
+        {/* ── Woo sensor data (2/5 width) ── */}
+        <div className="col-span-2 px-6 py-4 flex flex-col gap-4">
+          <div className="font-mono text-zinc-500 text-[9px] tracking-widest uppercase flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
             Woo Sensor Data
           </div>
-          <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-4">
             {wooStats.map(stat => (
               <div key={stat.label}>
-                <div className="font-mono text-zinc-600 text-[9px] tracking-widest uppercase leading-tight">
-                  {stat.label}
-                </div>
-                <div className="text-white font-bold text-base tabular-nums mt-0.5">
-                  {stat.value}
-                </div>
+                <div className="font-mono text-zinc-600 text-[9px] tracking-widest uppercase leading-tight">{stat.label}</div>
+                <div className="text-white font-bold text-sm tabular-nums mt-0.5">{stat.value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* GKA weights legend */}
+          <div className="mt-auto pt-4 border-t border-white/10">
+            <div className="font-mono text-zinc-600 text-[9px] tracking-widest uppercase mb-2">GKA Weights</div>
+            {[
+              { label: 'Height',       pct: 30, color: 'bg-cyan-500' },
+              { label: 'Extremity',    pct: 30, color: 'bg-pink-500' },
+              { label: 'Technicality', pct: 20, color: 'bg-yellow-500' },
+              { label: 'Execution',    pct: 20, color: 'bg-lime-500' },
+            ].map(w => (
+              <div key={w.label} className="flex items-center gap-2 mb-1">
+                <div className={`w-1.5 h-1.5 rounded-full ${w.color} shrink-0`} />
+                <span className="text-zinc-500 text-[9px] tracking-wide flex-1">{w.label}</span>
+                <span className="font-mono text-zinc-400 text-[9px] font-bold">{w.pct}%</span>
               </div>
             ))}
           </div>
@@ -264,7 +417,6 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
 
   return (
     <>
-      {/* Thumbnail */}
       <div
         className="relative w-full aspect-video bg-zinc-900 rounded-xl overflow-hidden group cursor-pointer"
         onClick={openModal}
@@ -282,10 +434,8 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
         )}
       </div>
 
-      {/* Fullscreen modal */}
       {open && (
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
-          {/* Close button (only during playback, recap has its own) */}
           {vState === 'playing' && (
             <button
               onClick={closeModal}
@@ -294,8 +444,6 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
               <X className="w-4 h-4" />
             </button>
           )}
-
-          {/* 16:9 video container */}
           <div
             className="relative w-full"
             style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)' }}
@@ -308,10 +456,7 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
               playsInline
               autoPlay
             />
-
-            {vState === 'recap' && (
-              <RecapScreen jump={jump} onClose={closeModal} />
-            )}
+            {vState === 'recap' && <RecapScreen jump={jump} onClose={closeModal} />}
           </div>
         </div>
       )}
@@ -319,7 +464,7 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
   );
 }
 
-// ─── Score bar ────────────────────────────────────────────────────────────────
+// ─── Score bar (card) ─────────────────────────────────────────────────────────
 
 function ScoreBar({ area }: { area: AreaScore }) {
   const pct = area.maxScore > 0 ? (area.score / area.maxScore) * 100 : 0;
@@ -333,26 +478,23 @@ function ScoreBar({ area }: { area: AreaScore }) {
         </span>
       </div>
       <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
-        <div
-          className={`h-full bg-gradient-to-r ${area.gradient} transition-all duration-700`}
-          style={{ width: `${pct}%` }}
-        />
+        <div className={`h-full bg-gradient-to-r ${area.gradient} transition-all duration-700`} style={{ width: `${pct}%` }} />
       </div>
     </div>
   );
 }
 
-// ─── Woo panel ────────────────────────────────────────────────────────────────
+// ─── Woo panel (card) ────────────────────────────────────────────────────────
 
 function WooPanel({ woo }: { woo: WooData }) {
   const stats = [
-    { label: 'Max Height', value: `${woo.maxHeight} m`       },
-    { label: 'Airtime',    value: `${woo.airtime} s`         },
-    { label: 'Distance',   value: `${woo.distance} m`        },
-    { label: 'Max Speed',  value: `${woo.maxSpeed} km/h`     },
-    { label: 'Approach',   value: `${woo.approachSpeed} km/h`},
-    { label: 'Wind Angle', value: `${woo.windAngle}°`        },
-    { label: 'Quality',    value: woo.quality                 },
+    { label: 'Max Height', value: `${woo.maxHeight} m`        },
+    { label: 'Airtime',    value: `${woo.airtime} s`          },
+    { label: 'Distance',   value: `${woo.distance} m`         },
+    { label: 'Max Speed',  value: `${woo.maxSpeed} km/h`      },
+    { label: 'Approach',   value: `${woo.approachSpeed} km/h` },
+    { label: 'Wind Angle', value: `${woo.windAngle}°`         },
+    { label: 'Quality',    value: woo.quality                  },
   ];
   return (
     <div className="border-t border-border pt-4 mt-2">
@@ -363,9 +505,7 @@ function WooPanel({ woo }: { woo: WooData }) {
       <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">
         {stats.map(s => (
           <div key={s.label} className="text-center">
-            <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider leading-tight mb-0.5">
-              {s.label}
-            </div>
+            <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider leading-tight mb-0.5">{s.label}</div>
             <div className="text-sm font-bold text-foreground tabular-nums">{s.value}</div>
           </div>
         ))}
@@ -390,7 +530,6 @@ function JumpCard({ jump }: { jump: JumpDemo }) {
           <div className="text-xs text-muted-foreground mt-0.5">/ 10</div>
         </div>
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 pb-4">
         <VideoPlayer jump={jump} />
         <div className="flex flex-col justify-center gap-4">
@@ -406,7 +545,6 @@ function JumpCard({ jump }: { jump: JumpDemo }) {
           </div>
         </div>
       </div>
-
       <div className="px-6 pb-5">
         <WooPanel woo={jump.woo} />
       </div>

@@ -1,7 +1,7 @@
 import { JumpParameters, PresetWeights, ScoringResult, AreaScore, ParameterScore } from '@/types/scoring';
 
 export const PRESET_WEIGHTS: Record<string, PresetWeights> = {
-  GKA: { HEIGHT: 20, EXTREMITY: 10, TECHNICALITY: 45, EXECUTION: 25 },
+  GKA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 20, EXECUTION: 20 },
   KOTA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 25, EXECUTION: 15 },
   Megaloop: { HEIGHT: 45, EXTREMITY: 45, TECHNICALITY: 10, EXECUTION: 0 },
   '40KTS': { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 30, EXECUTION: 10 },
@@ -9,8 +9,8 @@ export const PRESET_WEIGHTS: Record<string, PresetWeights> = {
 };
 
 export const PRESET_CONFIG: Record<string, { weights: PresetWeights; hasOverallImpression: boolean }> = {
-  GKA: { 
-    weights: { HEIGHT: 20, EXTREMITY: 10, TECHNICALITY: 45, EXECUTION: 25 },
+  GKA: {
+    weights: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 20, EXECUTION: 20 },
     hasOverallImpression: false
   },
   KOTA: { 

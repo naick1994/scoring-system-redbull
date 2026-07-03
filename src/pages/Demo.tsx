@@ -261,7 +261,7 @@ function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void })
 
   return (
     <div
-      className="absolute inset-0 bg-zinc-950 flex flex-col overflow-hidden"
+      className="absolute inset-0 bg-black flex flex-col overflow-hidden"
       style={{ animation: 'fadeIn 0.4s ease' }}
     >
       <style>{`@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`}</style>
@@ -448,7 +448,7 @@ function VideoPlayer({ jump }: { jump: JumpDemo }) {
           )}
           <div
             className="relative w-full"
-            style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)' }}
+            style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)', background: '#000' }}
           >
             <video
               ref={videoRef}
@@ -570,7 +570,7 @@ function JumpCard({ jump }: { jump: JumpDemo }) {
         <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
           <div
             className="relative w-full"
-            style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)' }}
+            style={{ aspectRatio: '16/9', maxHeight: '100vh', maxWidth: 'calc(100vh * 16 / 9)', background: '#000' }}
           >
             <RecapScreen jump={jump} onClose={() => setShowRecap(false)} />
           </div>

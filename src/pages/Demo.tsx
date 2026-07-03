@@ -180,7 +180,7 @@ function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void })
         <div className="flex items-center gap-4">
           <img src={logo}        alt="GKA"        className="h-8" />
           <div className="w-px h-5 bg-white/15" />
-          <img src={wooLogo}     alt="Woo"        className="h-5 invert" />
+          <img src={wooLogo}     alt="Woo"        className="h-5" style={{ filter: 'brightness(0) invert(1)' }} />
           <div className="w-px h-5 bg-white/15" />
           <img src={capitalLogo} alt="Capital.com" className="h-5" style={{ filter: 'brightness(0) invert(1)' }} />
         </div>
@@ -270,7 +270,7 @@ function RecapScreen({ jump, onClose }: { jump: JumpDemo; onClose: () => void })
         {/* ── Woo sensor data (2/5 width) ── */}
         <div className="col-span-2 px-6 py-4 flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <img src={wooLogo} alt="Woo" className="h-4 invert" />
+            <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
             <span className="font-mono text-zinc-500 text-[9px] tracking-widest uppercase">Sensor Data</span>
           </div>
           <div className="grid grid-cols-2 gap-x-5 gap-y-4">
@@ -410,7 +410,7 @@ function WooPanel({ woo }: { woo: WooData }) {
   return (
     <div className="border-t border-border pt-4 mt-2">
       <div className="flex items-center gap-2 mb-3">
-        <img src={wooLogo} alt="Woo" className="h-4 dark:invert" />
+        <img src={wooLogo} alt="Woo" className="h-4" />
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data</span>
       </div>
       <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">

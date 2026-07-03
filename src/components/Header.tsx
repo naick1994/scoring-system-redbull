@@ -31,7 +31,7 @@ export function Header() {
           <div className="flex items-center gap-5">
             <img src={logo}        alt="GKA"        className="h-8" />
             <div className="w-px h-6 bg-border" />
-            <img src={wooLogo}     alt="Woo"        className="h-6 dark:invert" />
+            <img src={wooLogo}     alt="Woo"        className="h-6" />
             <div className="w-px h-6 bg-border" />
             <img src={capitalLogo} alt="Capital.com" className="h-6" />
           </div>

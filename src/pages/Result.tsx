@@ -447,8 +447,7 @@ export default function Result() {
                 <SelectItem value="GKA">GKA</SelectItem>
                 <SelectItem value="KOTA">KOTA</SelectItem>
                 <SelectItem value="Megaloop">Megaloop</SelectItem>
-                <SelectItem value="40KTS">40 KTS</SelectItem>
-                <SelectItem value="20KTS">20 KTS</SelectItem>
+
               </SelectContent>
             </Select>
           </div>

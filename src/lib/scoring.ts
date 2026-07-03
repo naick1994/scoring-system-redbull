@@ -4,8 +4,6 @@ export const PRESET_WEIGHTS: Record<string, PresetWeights> = {
   GKA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 20, EXECUTION: 20 },
   KOTA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 25, EXECUTION: 15 },
   Megaloop: { HEIGHT: 45, EXTREMITY: 45, TECHNICALITY: 10, EXECUTION: 0 },
-  '40KTS': { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 30, EXECUTION: 10 },
-  '20KTS': { HEIGHT: 25, EXTREMITY: 10, TECHNICALITY: 45, EXECUTION: 20 },
 };
 
 export const PRESET_CONFIG: Record<string, { weights: PresetWeights; hasOverallImpression: boolean }> = {
@@ -19,14 +17,6 @@ export const PRESET_CONFIG: Record<string, { weights: PresetWeights; hasOverallI
   },
   Megaloop: { 
     weights: { HEIGHT: 45, EXTREMITY: 45, TECHNICALITY: 10, EXECUTION: 0 },
-    hasOverallImpression: false
-  },
-  '40KTS': { 
-    weights: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 30, EXECUTION: 10 },
-    hasOverallImpression: false
-  },
-  '20KTS': { 
-    weights: { HEIGHT: 25, EXTREMITY: 10, TECHNICALITY: 45, EXECUTION: 20 },
     hasOverallImpression: false
   },
   Custom: {

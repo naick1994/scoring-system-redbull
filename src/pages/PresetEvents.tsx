@@ -30,8 +30,6 @@ const PRESET_NAME_TO_KEY: Record<string, EventPreset> = {
   'GKA': 'GKA',
   'KOTA': 'KOTA',
   'Megaloop': 'Megaloop',
-  '40 KTS': '40KTS',
-  '20 KTS': '20KTS'
 };
 
 export default function PresetEvents() {
@@ -78,8 +76,6 @@ export default function PresetEvents() {
     { name: 'GKA', ...PRESET_WEIGHTS.GKA, hasOI: PRESET_CONFIG.GKA.hasOverallImpression },
     { name: 'KOTA', ...PRESET_WEIGHTS.KOTA, hasOI: PRESET_CONFIG.KOTA.hasOverallImpression },
     { name: 'Megaloop', ...PRESET_WEIGHTS.Megaloop, hasOI: PRESET_CONFIG.Megaloop.hasOverallImpression },
-    { name: '40 KTS', ...PRESET_WEIGHTS['40KTS'], hasOI: PRESET_CONFIG['40KTS'].hasOverallImpression },
-    { name: '20 KTS', ...PRESET_WEIGHTS['20KTS'], hasOI: PRESET_CONFIG['20KTS'].hasOverallImpression },
   ];
 
   return (
@@ -115,18 +111,6 @@ export default function PresetEvents() {
                   <div className="flex items-center justify-between w-full gap-2">
                     <span>Megaloop</span>
                     {activePreset === 'Megaloop' && <Check className="w-4 h-4 text-primary" />}
-                  </div>
-                </SelectItem>
-                <SelectItem value="40KTS">
-                  <div className="flex items-center justify-between w-full gap-2">
-                    <span>40 KTS</span>
-                    {activePreset === '40KTS' && <Check className="w-4 h-4 text-primary" />}
-                  </div>
-                </SelectItem>
-                <SelectItem value="20KTS">
-                  <div className="flex items-center justify-between w-full gap-2">
-                    <span>20 KTS</span>
-                    {activePreset === '20KTS' && <Check className="w-4 h-4 text-primary" />}
                   </div>
                 </SelectItem>
                 <SelectItem value="Custom">

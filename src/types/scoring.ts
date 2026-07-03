@@ -1,6 +1,6 @@
 export type LandingOutcome = 'crash' | 'butt' | 'clean';
 
-export type EventPreset = 'GKA' | 'KOTA' | 'Megaloop' | '40KTS' | '20KTS' | 'Custom';
+export type EventPreset = 'GKA' | 'KOTA' | 'Megaloop' | 'Custom';
 
 export interface PresetWeights {
   HEIGHT: number;

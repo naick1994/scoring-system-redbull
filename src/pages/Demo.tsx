@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Play, Film, ChevronRight, BarChart2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
@@ -7,7 +7,8 @@ import logo from '@/assets/gka-logo.svg';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import { useScoring } from '@/contexts/ScoringContext';
-import type { JumpParameters } from '@/types/scoring';
+import { calculateScore } from '@/lib/scoring';
+import type { JumpParameters, ScoringResult } from '@/types/scoring';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -39,171 +40,44 @@ interface AreaScore {
   params: AreaParam[];
 }
 
-interface JumpDemo {
+interface JumpDemoBase {
   id: number;
   label: string;
   athlete: string;
   trick: string;
   videoSrc?: string;
-  score: number;
-  areas: AreaScore[];
   woo: WooData;
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+interface JumpDemo extends JumpDemoBase {
+  score: number;
+  areas: AreaScore[];
+}
 
-const DEMO_JUMPS: JumpDemo[] = [
+// ─── Static data (no scores — computed live) ──────────────────────────────────
+
+const DEMO_JUMPS_BASE: JumpDemoBase[] = [
   {
-    id: 1,
-    label: 'Jump 1',
-    athlete: 'Leonardo Casati',
+    id: 1, label: 'Jump 1', athlete: 'Leonardo Casati',
     trick: 'Backroll Kiteloop Tornado',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
-    score: 7.18,
-    areas: [
-      {
-        name: 'HEIGHT', score: 2.21, maxScore: 3.00, weight: 30,
-        gradient: 'from-blue-500 to-cyan-400',
-        params: [
-          { label: 'Height',    detail: '16–20 m',  pts: 0.90, maxPts: 1.50 },
-          { label: 'Amplitude', detail: '>121 m',   pts: 1.00, maxPts: 1.00 },
-        ],
-      },
-      {
-        name: 'EXTREMITY', score: 2.22, maxScore: 3.00, weight: 30,
-        gradient: 'from-purple-500 to-pink-400',
-        params: [
-          { label: 'Kite Angle', detail: 'Low (51–70°)', pts: 0.50, maxPts: 0.75 },
-          { label: 'Yank Power', detail: 'Bomb',         pts: 0.75, maxPts: 0.75 },
-          { label: 'Free Fall',  detail: 'Medium',       pts: 0.25, maxPts: 0.50 },
-        ],
-      },
-      {
-        name: 'TECHNICALITY', score: 1.13, maxScore: 2.00, weight: 20,
-        gradient: 'from-amber-500 to-yellow-400',
-        params: [
-          { label: 'Rotations', detail: '×3',          pts: 0.80, maxPts: 0.80 },
-          { label: 'Axis',      detail: 'Horizontal',  pts: 0.50, maxPts: 0.50 },
-          { label: 'Board Off', detail: 'No',          pts: 0.00, maxPts: 1.00 },
-        ],
-      },
-      {
-        name: 'EXECUTION', score: 1.62, maxScore: 2.00, weight: 20,
-        gradient: 'from-green-500 to-lime-400',
-        params: [
-          { label: 'Speed In/Out',   detail: '', pts: 0.32, maxPts: 0.40 },
-          { label: 'Stability',      detail: '', pts: 0.32, maxPts: 0.40 },
-          { label: 'Landing',        detail: '', pts: 0.32, maxPts: 0.40 },
-          { label: 'Board Control',  detail: '', pts: 0.32, maxPts: 0.40 },
-          { label: 'Kite Control',   detail: '', pts: 0.32, maxPts: 0.40 },
-        ],
-      },
-    ],
-    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6, quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
+    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
   },
   {
-    id: 2,
-    label: 'Jump 2',
-    athlete: 'Leonardo Casati',
+    id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
     trick: 'Dobbie Boardoff from the Fin',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
-    score: 7.98,
-    areas: [
-      {
-        name: 'HEIGHT', score: 2.70, maxScore: 3.00, weight: 30,
-        gradient: 'from-blue-500 to-cyan-400',
-        params: [
-          { label: 'Height',    detail: '16–20 m',  pts: 0.90, maxPts: 1.50 },
-          { label: 'Amplitude', detail: '81–120 m', pts: 0.67, maxPts: 1.00 },
-        ],
-      },
-      {
-        name: 'EXTREMITY', score: 2.28, maxScore: 3.00, weight: 30,
-        gradient: 'from-purple-500 to-pink-400',
-        params: [
-          { label: 'Kite Angle', detail: 'Low (51–70°)', pts: 0.50, maxPts: 0.75 },
-          { label: 'Yank Power', detail: 'Bomb',         pts: 0.75, maxPts: 0.75 },
-          { label: 'Free Fall',  detail: 'High',         pts: 0.50, maxPts: 0.50 },
-        ],
-      },
-      {
-        name: 'TECHNICALITY', score: 1.43, maxScore: 2.00, weight: 20,
-        gradient: 'from-amber-500 to-yellow-400',
-        params: [
-          { label: 'Rotations', detail: '×2',          pts: 0.50, maxPts: 0.80 },
-          { label: 'Axis',      detail: 'Horizontal',  pts: 0.50, maxPts: 0.50 },
-          { label: 'Board Off', detail: 'Yes',         pts: 1.00, maxPts: 1.00 },
-          { label: 'Board Flip',detail: '0',           pts: 0.00, maxPts: 0.30 },
-          { label: 'Tic Tac',   detail: '0',           pts: 0.00, maxPts: 0.20 },
-        ],
-      },
-      {
-        name: 'EXECUTION', score: 1.57, maxScore: 2.00, weight: 20,
-        gradient: 'from-green-500 to-lime-400',
-        params: [
-          { label: 'Speed In/Out',  detail: '', pts: 0.30, maxPts: 0.40 },
-          { label: 'Stability',     detail: '', pts: 0.28, maxPts: 0.40 },
-          { label: 'Landing',       detail: '', pts: 0.30, maxPts: 0.40 },
-          { label: 'Board Control', detail: '', pts: 0.30, maxPts: 0.40 },
-          { label: 'Kite Control',  detail: '', pts: 0.28, maxPts: 0.40 },
-        ],
-      },
-    ],
-    woo: { maxHeight: 19.8, airtime: 7.5, distance: 83, maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
+    woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
   },
   {
-    id: 3,
-    label: 'Jump 3',
-    athlete: 'Lorenzo Casati',
+    id: 3, label: 'Jump 3', athlete: 'Lorenzo Casati',
     trick: 'Backroll Kiteloop Flip Late Back Added Rotation',
     videoSrc: `${import.meta.env.BASE_URL}videos/LORE_9.40.mp4`,
-    score: 8.96,
-    areas: [
-      {
-        name: 'HEIGHT', score: 2.47, maxScore: 3.00, weight: 30,
-        gradient: 'from-blue-500 to-cyan-400',
-        params: [
-          { label: 'Height',    detail: '16–20 m',  pts: 0.90, maxPts: 1.50 },
-          { label: 'Amplitude', detail: '81–120 m', pts: 0.67, maxPts: 1.00 },
-        ],
-      },
-      {
-        name: 'EXTREMITY', score: 2.85, maxScore: 3.00, weight: 30,
-        gradient: 'from-purple-500 to-pink-400',
-        params: [
-          { label: 'Kite Angle', detail: 'Low (51–70°)', pts: 0.50, maxPts: 0.75 },
-          { label: 'Yank Power', detail: 'Bomb',         pts: 0.75, maxPts: 0.75 },
-          { label: 'Free Fall',  detail: 'High',         pts: 0.50, maxPts: 0.50 },
-        ],
-      },
-      {
-        name: 'TECHNICALITY', score: 1.72, maxScore: 2.00, weight: 20,
-        gradient: 'from-amber-500 to-yellow-400',
-        params: [
-          { label: 'Rotations', detail: '×3',          pts: 0.80, maxPts: 0.80 },
-          { label: 'Axis',      detail: 'Horizontal',  pts: 0.50, maxPts: 0.50 },
-          { label: 'Board Off', detail: 'Yes',         pts: 1.00, maxPts: 1.00 },
-          { label: 'Board Flip',detail: '×1',          pts: 0.10, maxPts: 0.30 },
-          { label: 'Tic Tac',   detail: '0',           pts: 0.00, maxPts: 0.20 },
-        ],
-      },
-      {
-        name: 'EXECUTION', score: 1.92, maxScore: 2.00, weight: 20,
-        gradient: 'from-green-500 to-lime-400',
-        params: [
-          { label: 'Speed In/Out',  detail: '', pts: 0.38, maxPts: 0.40 },
-          { label: 'Stability',     detail: '', pts: 0.38, maxPts: 0.40 },
-          { label: 'Landing',       detail: '', pts: 0.38, maxPts: 0.40 },
-          { label: 'Board Control', detail: '', pts: 0.38, maxPts: 0.40 },
-          { label: 'Kite Control',  detail: '', pts: 0.38, maxPts: 0.40 },
-        ],
-      },
-    ],
-    woo: { maxHeight: 18.4, airtime: 6.8, distance: 94, maxSpeed: 56, approachSpeed: 28, windAngle: 19, quality: 'OK', peakTimeRatio: 0.29, takeoffOffset: 0 },
+    woo: { maxHeight: 18.4, airtime: 6.8, distance: 94,  maxSpeed: 56, approachSpeed: 28, windAngle: 19, quality: 'OK',   peakTimeRatio: 0.29, takeoffOffset: 0 },
   },
 ];
 
-// ─── Hardcoded scoring params ─────────────────────────────────────────────────
+// ─── Default scoring params (used when scorer hasn't been loaded) ─────────────
 
 const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
   {
@@ -228,6 +102,41 @@ const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
     EXECUTION:    { speed_in_out: 0.38, stability_control: 0.38, landing_control: 0.38, board_control: 0.38, kite_control: 0.38 },
   },
 ];
+
+// ─── Score computation helpers ────────────────────────────────────────────────
+
+const AREA_GRADIENT: Record<string, string> = {
+  HEIGHT:       'from-blue-500 to-cyan-400',
+  EXTREMITY:    'from-purple-500 to-pink-400',
+  TECHNICALITY: 'from-amber-500 to-yellow-400',
+  EXECUTION:    'from-green-500 to-lime-400',
+};
+
+const VALUE_DISPLAY: Record<string, string> = {
+  '0_10m': '0–10 m', '11_15m': '11–15 m', '16_20m': '16–20 m', 'gt20m': '>20 m',
+  '0_40m': '0–40 m', '41_80m': '41–80 m', '81_120m': '81–120 m', 'gt121m': '>121 m',
+  'super_low': 'Super Low (71°+)', 'low': 'Low (51–70°)', 'average': 'Average (31–50°)', 'high': 'High (0–30°)',
+  'none': 'None', 'medium': 'Medium', 'bomb': 'Bomb', 'poor': 'Poor',
+  'horizontal': 'Horizontal', 'vertical': 'Vertical',
+  'yes': 'Yes', 'no': 'No',
+  '0': '0', '1': '×1', '2': '×2', '3': '×3', '3+': '3+',
+};
+
+function resultToAreas(result: ScoringResult): AreaScore[] {
+  return result.areaScores.map(as => ({
+    name: as.area,
+    score: Math.round(as.finalScore * 100) / 100,
+    maxScore: Math.round(as.weight * 10 * 100) / 100,
+    weight: Math.round(as.weight * 100),
+    gradient: AREA_GRADIENT[as.area] ?? 'from-gray-500 to-gray-400',
+    params: as.parameters.map(p => ({
+      label: p.label,
+      detail: VALUE_DISPLAY[String(p.value)] ?? String(p.value),
+      pts: p.points,
+      maxPts: p.max,
+    })),
+  }));
+}
 
 // ─── Recap screen ─────────────────────────────────────────────────────────────
 
@@ -584,7 +493,8 @@ function JumpCard({ jump }: { jump: JumpDemo }) {
 
 export default function Demo() {
   const navigate = useNavigate();
-  const { setActivePreset, setJump1Params, setJump2Params, setJump3Params } = useScoring();
+  const { weights, activePreset, setActivePreset, setJump1Params, setJump2Params, setJump3Params,
+          jump1Params, jump2Params, jump3Params } = useScoring();
 
   const loadDemoSession = () => {
     setActivePreset('GKA');
@@ -593,6 +503,26 @@ export default function Demo() {
     setJump3Params(DEMO_SCORING_PARAMS[2]);
     navigate('/');
   };
+
+  // Use params from scorer if loaded, otherwise fall back to demo defaults
+  const effectiveParams = useMemo<[JumpParameters, JumpParameters, JumpParameters]>(() => [
+    jump1Params ?? DEMO_SCORING_PARAMS[0],
+    jump2Params ?? DEMO_SCORING_PARAMS[1],
+    jump3Params ?? DEMO_SCORING_PARAMS[2],
+  ], [jump1Params, jump2Params, jump3Params]);
+
+  // Compute scores live from current weights and effective params
+  const computedJumps: JumpDemo[] = useMemo(() =>
+    DEMO_JUMPS_BASE.map((base, i) => {
+      const result = calculateScore(effectiveParams[i], weights, activePreset);
+      return {
+        ...base,
+        score: result.totalScore,
+        areas: resultToAreas(result),
+      };
+    }),
+    [effectiveParams, weights, activePreset]
+  );
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -615,7 +545,7 @@ export default function Demo() {
         </div>
       </div>
       <div className="space-y-8">
-        {DEMO_JUMPS.map(jump => <JumpCard key={jump.id} jump={jump} />)}
+        {computedJumps.map(jump => <JumpCard key={jump.id} jump={jump} />)}
       </div>
     </div>
   );

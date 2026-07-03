@@ -1,7 +1,11 @@
 import { useState, useRef } from 'react';
-import { X, Play, Film } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, Play, Film, ChevronRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import logo from '@/assets/gka-logo.svg';
+import { useScoring } from '@/contexts/ScoringContext';
+import type { JumpParameters } from '@/types/scoring';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -82,6 +86,36 @@ const DEMO_JUMPS: JumpDemo[] = [
       { name: 'EXECUTION',    score: 2.40, maxScore: 2.50, gradient: 'from-green-500 to-lime-400' },
     ],
     woo: { maxHeight: 18.4, airtime: 6.8, distance: 94,  maxSpeed: 56, approachSpeed: 28, windAngle: 19, quality: 'OK',   peakTimeRatio: 0.29, takeoffOffset: 0 },
+  },
+];
+
+// ─── Hardcoded scoring params for the demo session ───────────────────────────
+// These pre-fill the NewJump form so the scorer can run the demo live.
+
+const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
+  // Jump 1 — Leo 8.07 · Backroll Kiteloop Tornado · 17.5m · 121m
+  {
+    landingOutcome: 'clean',
+    HEIGHT:       { height: '16_20m',  amplitude: 'gt121m'   },
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb',   free_fall: 'high'   },
+    TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
+    EXECUTION:    { speed_in_out: 0.32, stability_control: 0.32, landing_control: 0.32, board_control: 0.32, kite_control: 0.32 },
+  },
+  // Jump 2 — Leo 8.37 · Dobbie Boardoff from the Fin · 19.8m · 83m
+  {
+    landingOutcome: 'clean',
+    HEIGHT:       { height: '16_20m',  amplitude: '81_120m'  },
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb',   free_fall: 'high'   },
+    TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
+    EXECUTION:    { speed_in_out: 0.30, stability_control: 0.28, landing_control: 0.30, board_control: 0.30, kite_control: 0.28 },
+  },
+  // Jump 3 — Lorenzo 9.40 · Backroll Kiteloop Flip Late Back Added Rotation · 18.4m · 94m
+  {
+    landingOutcome: 'clean',
+    HEIGHT:       { height: '16_20m',  amplitude: '81_120m'  },
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb',   free_fall: 'high'   },
+    TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '1', board_tic_tac: '0' },
+    EXECUTION:    { speed_in_out: 0.38, stability_control: 0.38, landing_control: 0.38, board_control: 0.38, kite_control: 0.38 },
   },
 ];
 
@@ -396,6 +430,17 @@ function JumpCard({ jump }: { jump: JumpDemo }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Demo() {
+  const navigate = useNavigate();
+  const { setActivePreset, setJump1Params, setJump2Params, setJump3Params } = useScoring();
+
+  const loadDemoSession = () => {
+    setActivePreset('GKA');
+    setJump1Params(DEMO_SCORING_PARAMS[0]);
+    setJump2Params(DEMO_SCORING_PARAMS[1]);
+    setJump3Params(DEMO_SCORING_PARAMS[2]);
+    navigate('/');
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8 flex items-start justify-between flex-wrap gap-4">
@@ -405,9 +450,15 @@ export default function Demo() {
             3 real competition jumps · objective Woo sensor data · no judge subjectivity.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
-          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-          <span className="text-sm font-semibold text-primary">Woo Sensor Data</span>
+        <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-4 py-2">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-sm font-semibold text-primary">Woo Sensor Data</span>
+          </div>
+          <Button onClick={loadDemoSession} className="gap-2 font-semibold">
+            Load Demo in Scorer
+            <ChevronRight className="w-4 h-4" />
+          </Button>
         </div>
       </div>
       <div className="space-y-8">

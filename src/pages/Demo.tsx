@@ -260,9 +260,9 @@ function RecapScreen({
             {jump.athlete.toUpperCase()}
           </div>
           <div className="text-orange-400 text-xs font-semibold tracking-wide mt-1">{jump.trick}</div>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-center gap-2 mt-1.5">
             <span className="font-mono text-zinc-500 text-[10px] tracking-widest">{jump.label.toUpperCase()}</span>
-            <span className="font-mono text-zinc-300 text-[10px] font-bold tracking-widest bg-white/10 px-1.5 py-0.5 rounded">
+            <span className="font-mono text-cyan-300 text-xs font-bold tracking-widest bg-cyan-500/15 border border-cyan-500/30 px-2 py-0.5 rounded">
               {jump.category}
             </span>
           </div>
@@ -623,7 +623,9 @@ function JumpCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-lg font-bold text-foreground">{jump.label} · {jump.athlete}</h3>
-              <Badge variant="outline" className="font-mono text-[10px] tracking-widest">{jump.category}</Badge>
+              <Badge className="font-mono text-xs font-bold tracking-widest bg-primary/15 text-primary border border-primary/30 hover:bg-primary/15">
+                {jump.category}
+              </Badge>
             </div>
             <p className="text-sm font-semibold text-orange-500">{jump.trick}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Capital.com GKA Big Air</p>

@@ -16,11 +16,11 @@ export function Header() {
   const showOverallImpression = PRESET_CONFIG[activePreset]?.hasOverallImpression ?? false;
 
   const navItems = [
+    { path: '/parameters-guide', label: 'Parameters Guide' },
     { path: '/preset', label: 'Event Presets' },
     { path: '/', label: 'New Score' },
     ...(showOverallImpression ? [{ path: '/overall-impression', label: 'Overall Impression' }] : []),
     { path: '/result', label: 'Result' },
-    { path: '/parameters-guide', label: 'Parameters Guide' },
     { path: '/demo', label: 'Demo' },
   ];
 

@@ -241,16 +241,6 @@ export default function ParametersGuide() {
                   </div>
                   <div className="text-xs text-muted-foreground mt-2">Max: {PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.max} points (conditional)</div>
                 </div>
-
-                {/* Conditional Logic Note */}
-                <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
-                  <p className="text-sm text-foreground font-medium mb-2">📝 Conditional Scoring</p>
-                  <p className="text-sm text-muted-foreground">
-                    Board Flip and Board Tic Tac parameters only apply when Board Off is set to "Yes". 
-                    When Board Off = No, the maximum possible TECHNICALITY score is 1.5 points. 
-                    When Board Off = Yes, the maximum increases to 2.5 points.
-                  </p>
-                </div>
               </div>
             </AccordionContent>
           </AccordionItem>

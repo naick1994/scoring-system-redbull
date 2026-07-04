@@ -31,9 +31,9 @@ export function Header() {
           <div className="flex items-center gap-5">
             <img src={logo}        alt="GKA"        className="h-12" />
             <div className="w-px h-6 bg-border" />
-            <img src={wooLogo}     alt="Woo"        className="h-6" />
+            <img src={wooLogo}     alt="Woo"        className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
             <div className="w-px h-6 bg-border" />
-            <img src={capitalLogo} alt="Capital.com" className="h-6" />
+            <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Big Air Scoring System</h1>
         </div>

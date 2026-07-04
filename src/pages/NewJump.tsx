@@ -28,7 +28,7 @@ interface JumpFormState {
   heightParams: { height: string; amplitude: string };
   extremityParams: { kite_angle: string; yank_power: string; free_fall: string };
   technicalityParams: { rotations: string; rotation_axis: string; board_off: string; board_flip: string; board_tic_tac: string };
-  executionParams: { speed_in_out: number; stability_control: number; landing_control: number; board_control: number; kite_control: number };
+  executionParams: { style: number; stability_control: number; landing_control: number; board_control: number; kite_control: number };
 }
 
 const initialFormState: JumpFormState = {
@@ -36,7 +36,7 @@ const initialFormState: JumpFormState = {
   heightParams: { height: '', amplitude: '' },
   extremityParams: { kite_angle: '', yank_power: '', free_fall: '' },
   technicalityParams: { rotations: '', rotation_axis: '', board_off: '', board_flip: '', board_tic_tac: '' },
-  executionParams: { speed_in_out: 0, stability_control: 0, landing_control: 0, board_control: 0, kite_control: 0 },
+  executionParams: { style: 0, stability_control: 0, landing_control: 0, board_control: 0, kite_control: 0 },
 };
 
 export default function NewJump() {
@@ -88,7 +88,7 @@ export default function NewJump() {
       board_tic_tac: params.TECHNICALITY.board_tic_tac || '',
     },
     executionParams: {
-      speed_in_out: (params.EXECUTION.speed_in_out * 10) / 0.4,
+      style: (params.EXECUTION.style * 10) / 0.4,
       stability_control: (params.EXECUTION.stability_control * 10) / 0.4,
       landing_control: (params.EXECUTION.landing_control * 10) / 0.4,
       board_control: (params.EXECUTION.board_control * 10) / 0.4,
@@ -102,7 +102,7 @@ export default function NewJump() {
     EXTREMITY: form.extremityParams,
     TECHNICALITY: form.technicalityParams,
     EXECUTION: {
-      speed_in_out: (form.executionParams.speed_in_out * 0.4) / 10,
+      style: (form.executionParams.style * 0.4) / 10,
       stability_control: (form.executionParams.stability_control * 0.4) / 10,
       landing_control: (form.executionParams.landing_control * 0.4) / 10,
       board_control: (form.executionParams.board_control * 0.4) / 10,
@@ -383,7 +383,7 @@ export default function NewJump() {
                 <h3 className="text-xl font-semibold mb-6">EXECUTION</h3>
                 <div className="space-y-6">
                   {Object.entries({
-                    speed_in_out: 'Speed In/Out',
+                    style: 'Style',
                     stability_control: 'Stability & Control',
                     landing_control: 'Landing Control',
                     board_control: 'Board Control',

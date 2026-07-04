@@ -86,21 +86,21 @@ const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
     HEIGHT:       { height: 'b3', amplitude: 'b4' },
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
-    EXECUTION:    { speed_in_out: 0.32, stability_control: 0.32, landing_control: 0.32, board_control: 0.32, kite_control: 0.32 },
+    EXECUTION:    { style: 0.32, stability_control: 0.32, landing_control: 0.32, board_control: 0.32, kite_control: 0.32 },
   },
   {
     landingOutcome: 'clean',
     HEIGHT:       { height: 'b3', amplitude: 'b3' },
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
-    EXECUTION:    { speed_in_out: 0.30, stability_control: 0.28, landing_control: 0.30, board_control: 0.30, kite_control: 0.28 },
+    EXECUTION:    { style: 0.30, stability_control: 0.28, landing_control: 0.30, board_control: 0.30, kite_control: 0.28 },
   },
   {
     landingOutcome: 'clean',
     HEIGHT:       { height: 'b3', amplitude: 'b3' },
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '1', board_tic_tac: '0' },
-    EXECUTION:    { speed_in_out: 0.38, stability_control: 0.38, landing_control: 0.38, board_control: 0.38, kite_control: 0.38 },
+    EXECUTION:    { style: 0.38, stability_control: 0.38, landing_control: 0.38, board_control: 0.38, kite_control: 0.38 },
   },
 ];
 

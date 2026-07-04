@@ -32,13 +32,28 @@ const PRESET_NAME_TO_KEY: Record<string, EventPreset> = {
   'Megaloop': 'Megaloop',
 };
 
+type ThresholdTier = 't1' | 't2' | 't3';
+type ThresholdText = Record<'height' | 'amplitude', Record<ThresholdTier, string>>;
+
+const thresholdsToText = (t: HeightAmplitudeThresholds): ThresholdText => ({
+  height: { t1: String(t.height.t1), t2: String(t.height.t2), t3: String(t.height.t3) },
+  amplitude: { t1: String(t.amplitude.t1), t2: String(t.amplitude.t2), t3: String(t.amplitude.t3) },
+});
+
+const textToThresholds = (t: ThresholdText): HeightAmplitudeThresholds => ({
+  height: { t1: parseFloat(t.height.t1) || 0, t2: parseFloat(t.height.t2) || 0, t3: parseFloat(t.height.t3) || 0 },
+  amplitude: { t1: parseFloat(t.amplitude.t1) || 0, t2: parseFloat(t.amplitude.t2) || 0, t3: parseFloat(t.amplitude.t3) || 0 },
+});
+
 export default function PresetEvents() {
   const { activePreset, setActivePreset, weights, setWeights, heightAmplitudeThresholds, setHeightAmplitudeThresholds } = useScoring();
   const [selectedPreset, setSelectedPreset] = useState<EventPreset>(activePreset);
   const [customWeights, setCustomWeights] = useState<PresetWeights>(weights);
   const [isValid, setIsValid] = useState(true);
-  const [draftThresholds, setDraftThresholds] = useState<HeightAmplitudeThresholds>(heightAmplitudeThresholds);
+  const [thresholdText, setThresholdText] = useState<ThresholdText>(thresholdsToText(heightAmplitudeThresholds));
   const isMobile = useIsMobile();
+
+  const draftThresholds = textToThresholds(thresholdText);
 
   const thresholdsValid =
     draftThresholds.height.t1 < draftThresholds.height.t2 &&
@@ -48,13 +63,13 @@ export default function PresetEvents() {
 
   const handleThresholdChange = (
     area: 'height' | 'amplitude',
-    tier: 't1' | 't2' | 't3',
+    tier: ThresholdTier,
     value: string
   ) => {
-    const numValue = value === '' ? 0 : parseInt(value) || 0;
-    setDraftThresholds({
-      ...draftThresholds,
-      [area]: { ...draftThresholds[area], [tier]: numValue },
+    if (!/^\d*\.?\d*$/.test(value)) return;
+    setThresholdText({
+      ...thresholdText,
+      [area]: { ...thresholdText[area], [tier]: value },
     });
   };
 
@@ -236,9 +251,9 @@ export default function PresetEvents() {
                   <Input
                     id={`height-${tier}`}
                     type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={draftThresholds.height[tier] === 0 ? '' : draftThresholds.height[tier]}
+                    inputMode="decimal"
+                    pattern="[0-9]*\.?[0-9]*"
+                    value={thresholdText.height[tier]}
                     onChange={(e) => handleThresholdChange('height', tier, e.target.value)}
                     placeholder="0"
                   />
@@ -265,9 +280,9 @@ export default function PresetEvents() {
                   <Input
                     id={`amplitude-${tier}`}
                     type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    value={draftThresholds.amplitude[tier] === 0 ? '' : draftThresholds.amplitude[tier]}
+                    inputMode="decimal"
+                    pattern="[0-9]*\.?[0-9]*"
+                    value={thresholdText.amplitude[tier]}
                     onChange={(e) => handleThresholdChange('amplitude', tier, e.target.value)}
                     placeholder="0"
                   />

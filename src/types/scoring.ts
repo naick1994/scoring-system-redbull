@@ -56,7 +56,7 @@ export interface JumpParameters {
     board_tic_tac?: string;
   };
   EXECUTION: {
-    speed_in_out: number;
+    style: number;
     stability_control: number;
     landing_control: number;
     board_control: number;

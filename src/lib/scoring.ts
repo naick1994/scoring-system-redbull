@@ -13,8 +13,8 @@ export const AMPLITUDE_BRACKET_POINTS: Record<string, number> = { b1: 0, b2: 0.3
 export function heightBracketLabel(bracket: 'b1' | 'b2' | 'b3' | 'b4', t: HeightAmplitudeThresholds['height']): string {
   switch (bracket) {
     case 'b1': return `0-${t.t1}m`;
-    case 'b2': return `${t.t1 + 1}-${t.t2}m`;
-    case 'b3': return `${t.t2 + 1}-${t.t3}m`;
+    case 'b2': return `${t.t1}-${t.t2}m`;
+    case 'b3': return `${t.t2}-${t.t3}m`;
     case 'b4': return `+${t.t3}m`;
   }
 }
@@ -22,9 +22,9 @@ export function heightBracketLabel(bracket: 'b1' | 'b2' | 'b3' | 'b4', t: Height
 export function amplitudeBracketLabel(bracket: 'b1' | 'b2' | 'b3' | 'b4', t: HeightAmplitudeThresholds['amplitude']): string {
   switch (bracket) {
     case 'b1': return `0-${t.t1}m`;
-    case 'b2': return `${t.t1 + 1}-${t.t2}m`;
-    case 'b3': return `${t.t2 + 1}-${t.t3}m`;
-    case 'b4': return `+${t.t3 + 1}m`;
+    case 'b2': return `${t.t1}-${t.t2}m`;
+    case 'b3': return `${t.t2}-${t.t3}m`;
+    case 'b4': return `+${t.t3}m`;
   }
 }
 
@@ -174,7 +174,7 @@ export const PARAMETER_CONFIG = {
     },
   },
   EXECUTION: {
-    speed_in_out: { label: 'Speed In/Out', max: 0.4 },
+    style: { label: 'Style', max: 0.4 },
     stability_control: { label: 'Stability & Control', max: 0.4 },
     landing_control: { label: 'Landing Control', max: 0.4 },
     board_control: { label: 'Board Control', max: 0.4 },

@@ -23,6 +23,12 @@ const getSliderValueColor = (value: number): string => {
   return 'text-green-600';
 };
 
+const getProgressGradient = (percentage: number): string => {
+  if (percentage < 50) return 'from-red-500 to-amber-500';
+  if (percentage < 75) return 'from-amber-500 to-lime-500';
+  return 'from-lime-500 to-green-500';
+};
+
 interface JumpFormState {
   landingOutcome: LandingOutcome;
   heightParams: { height: string; amplitude: string };
@@ -172,9 +178,26 @@ export default function NewJump() {
   const renderJumpForm = (jump: JumpFormState, setJump: React.Dispatch<React.SetStateAction<JumpFormState>>, jumpNumber: number) => {
     const isCrash = jump.landingOutcome === 'crash';
     const isValid = isJumpValid(jump);
+    const liveScore = calculateScore(convertFormStateToParams(jump), weights, activePreset).totalScore;
+    const livePercentage = (liveScore / 10) * 100;
 
     return (
       <div className="space-y-6">
+        <Card className="p-6 shadow-[var(--shadow-card)] bg-gradient-to-br from-card to-primary/5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Projected Total (live)</h3>
+            <span className="text-2xl font-black text-primary tabular-nums">
+              {liveScore.toFixed(2)}<span className="text-sm font-normal text-muted-foreground"> / 10</span>
+            </span>
+          </div>
+          <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+            <div
+              className={`h-full rounded-full bg-gradient-to-r ${getProgressGradient(livePercentage)} transition-all duration-300`}
+              style={{ width: `${livePercentage}%` }}
+            />
+          </div>
+        </Card>
+
         <Card className="p-6 shadow-[var(--shadow-card)]">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold">Landing Outcome</h3>

@@ -43,7 +43,14 @@ export function ScoringProvider({ children }: { children: React.ReactNode }) {
   
   const [overallImpression, setOverallImpression] = useState<OverallImpressionParams | null>(null);
   const [overallImpressionScore, setOverallImpressionScore] = useState<number>(0);
-  const [heightAmplitudeThresholds, setHeightAmplitudeThresholdsState] = useState<HeightAmplitudeThresholds>(DEFAULT_HEIGHT_AMPLITUDE_THRESHOLDS);
+  // Lazy initializer so the very first render already has the persisted
+  // value — an effect-based hydration would leave a one-render window where
+  // this (and anything reading it on mount, like the thresholds form) sees
+  // the hardcoded default instead of what was actually saved.
+  const [heightAmplitudeThresholds, setHeightAmplitudeThresholdsState] = useState<HeightAmplitudeThresholds>(() => {
+    const saved = localStorage.getItem('heightAmplitudeThresholds');
+    return saved ? JSON.parse(saved) : DEFAULT_HEIGHT_AMPLITUDE_THRESHOLDS;
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem('activePreset');
@@ -52,11 +59,6 @@ export function ScoringProvider({ children }: { children: React.ReactNode }) {
       setWeightsState(saved === 'Custom'
         ? JSON.parse(localStorage.getItem('customWeights') || JSON.stringify(PRESET_WEIGHTS.KOTA))
         : PRESET_WEIGHTS[saved as keyof typeof PRESET_WEIGHTS]);
-    }
-
-    const savedThresholds = localStorage.getItem('heightAmplitudeThresholds');
-    if (savedThresholds) {
-      setHeightAmplitudeThresholdsState(JSON.parse(savedThresholds));
     }
   }, []);
 

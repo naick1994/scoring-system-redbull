@@ -9,7 +9,7 @@ import logo from '@/assets/gka-logo.svg';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import { useScoring } from '@/contexts/ScoringContext';
-import { calculateScore, heightBracketLabel, amplitudeBracketLabel, PARAMETER_CONFIG } from '@/lib/scoring';
+import { calculateScore, heightBracketLabel, amplitudeBracketLabel, heightBracketForValue, amplitudeBracketForValue, PARAMETER_CONFIG } from '@/lib/scoring';
 import type { JumpParameters, ScoringResult, HeightAmplitudeThresholds } from '@/types/scoring';
 
 const EXECUTION_LABELS: Record<string, string> = Object.fromEntries(
@@ -84,25 +84,26 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
 ];
 
 // ─── Default scoring params (used when scorer hasn't been loaded) ─────────────
+// HEIGHT is derived live from each jump's real Woo numbers (maxHeight/distance)
+// against the currently configured thresholds — see effectiveParams in Demo().
 
-const DEMO_SCORING_PARAMS: [JumpParameters, JumpParameters, JumpParameters] = [
+type DemoParamsWithoutHeight = Omit<JumpParameters, 'HEIGHT'>;
+
+const DEMO_SCORING_PARAMS: [DemoParamsWithoutHeight, DemoParamsWithoutHeight, DemoParamsWithoutHeight] = [
   {
     landingOutcome: 'clean',
-    HEIGHT:       { height: 'b3', amplitude: 'b4' },
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
     EXECUTION:    { style: 0.32, stability_control: 0.32, landing_control: 0.32, board_control: 0.32, kite_control: 0.32 },
   },
   {
     landingOutcome: 'clean',
-    HEIGHT:       { height: 'b3', amplitude: 'b3' },
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
     EXECUTION:    { style: 0.30, stability_control: 0.28, landing_control: 0.30, board_control: 0.30, kite_control: 0.28 },
   },
   {
     landingOutcome: 'clean',
-    HEIGHT:       { height: 'b3', amplitude: 'b3' },
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '1', board_tic_tac: '0' },
     EXECUTION:    { style: 0.38, stability_control: 0.38, landing_control: 0.38, board_control: 0.38, kite_control: 0.38 },
@@ -593,20 +594,33 @@ export default function Demo() {
   const { weights, activePreset, setActivePreset, setJump1Params, setJump2Params, setJump3Params,
           jump1Params, jump2Params, jump3Params, heightAmplitudeThresholds } = useScoring();
 
+  // HEIGHT bracket is derived from each jump's real Woo numbers against the
+  // currently configured thresholds, so it stays correct if thresholds change.
+  const demoDefaults = useMemo<[JumpParameters, JumpParameters, JumpParameters]>(() =>
+    DEMO_JUMPS_BASE.map((base, i) => ({
+      ...DEMO_SCORING_PARAMS[i],
+      HEIGHT: {
+        height: heightBracketForValue(base.woo.maxHeight, heightAmplitudeThresholds.height),
+        amplitude: amplitudeBracketForValue(base.woo.distance, heightAmplitudeThresholds.amplitude),
+      },
+    })) as [JumpParameters, JumpParameters, JumpParameters],
+    [heightAmplitudeThresholds]
+  );
+
   const loadDemoSession = () => {
     setActivePreset('GKA');
-    setJump1Params(DEMO_SCORING_PARAMS[0]);
-    setJump2Params(DEMO_SCORING_PARAMS[1]);
-    setJump3Params(DEMO_SCORING_PARAMS[2]);
+    setJump1Params(demoDefaults[0]);
+    setJump2Params(demoDefaults[1]);
+    setJump3Params(demoDefaults[2]);
     navigate('/');
   };
 
   // Use params from scorer if loaded, otherwise fall back to demo defaults
   const effectiveParams = useMemo<[JumpParameters, JumpParameters, JumpParameters]>(() => [
-    jump1Params ?? DEMO_SCORING_PARAMS[0],
-    jump2Params ?? DEMO_SCORING_PARAMS[1],
-    jump3Params ?? DEMO_SCORING_PARAMS[2],
-  ], [jump1Params, jump2Params, jump3Params]);
+    jump1Params ?? demoDefaults[0],
+    jump2Params ?? demoDefaults[1],
+    jump3Params ?? demoDefaults[2],
+  ], [jump1Params, jump2Params, jump3Params, demoDefaults]);
 
   // Compute scores live from current weights and effective params
   const computedJumps: JumpDemo[] = useMemo(() =>

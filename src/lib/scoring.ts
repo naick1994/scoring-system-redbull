@@ -28,6 +28,23 @@ export function amplitudeBracketLabel(bracket: 'b1' | 'b2' | 'b3' | 'b4', t: Hei
   }
 }
 
+// Maps a raw sensor value (meters) to the bracket it falls into under the
+// currently configured thresholds — recomputes automatically when the
+// chief judge changes the thresholds.
+export function heightBracketForValue(value: number, t: HeightAmplitudeThresholds['height']): 'b1' | 'b2' | 'b3' | 'b4' {
+  if (value <= t.t1) return 'b1';
+  if (value <= t.t2) return 'b2';
+  if (value <= t.t3) return 'b3';
+  return 'b4';
+}
+
+export function amplitudeBracketForValue(value: number, t: HeightAmplitudeThresholds['amplitude']): 'b1' | 'b2' | 'b3' | 'b4' {
+  if (value <= t.t1) return 'b1';
+  if (value <= t.t2) return 'b2';
+  if (value <= t.t3) return 'b3';
+  return 'b4';
+}
+
 export const PRESET_WEIGHTS: Record<string, PresetWeights> = {
   GKA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 20, EXECUTION: 20 },
   KOTA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 25, EXECUTION: 15 },

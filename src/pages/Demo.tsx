@@ -84,7 +84,7 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
   },
   {
     id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
-    trick: 'Dobbie Boardoff from the Fin',
+    trick: 'Doobie Loop Boardoff by the Fin',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
     woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
   },

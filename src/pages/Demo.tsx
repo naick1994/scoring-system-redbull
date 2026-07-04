@@ -78,21 +78,21 @@ interface JumpDemo extends JumpDemoBase {
 const DEMO_JUMPS_BASE: JumpDemoBase[] = [
   {
     id: 1, label: 'Jump 1', athlete: 'Leonardo Casati',
+    trick: 'Late Backroll Kiteloop Doppio Flip Added Rotation',
+    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_7.33.mp4`,
+    woo: { maxHeight: 15.9, airtime: 7.6, distance: 76,  maxSpeed: 46, approachSpeed: 32, windAngle: 18, quality: 'OK',   peakTimeRatio: 0.30, takeoffOffset: 0 },
+  },
+  {
+    id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
     trick: 'Backroll Kiteloop Tornado',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
     woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
   },
   {
-    id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
+    id: 3, label: 'Jump 3', athlete: 'Leonardo Casati',
     trick: 'Doobie Loop Boardoff by the Fin',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
     woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
-  },
-  {
-    id: 3, label: 'Jump 3', athlete: 'Lorenzo Casati',
-    trick: 'Backroll Kiteloop Flip Late Back Added Rotation',
-    videoSrc: `${import.meta.env.BASE_URL}videos/LORE_9.40.mp4`,
-    woo: { maxHeight: 18.4, airtime: 6.8, distance: 94,  maxSpeed: 56, approachSpeed: 28, windAngle: 19, quality: 'OK',   peakTimeRatio: 0.29, takeoffOffset: 0 },
   },
 ];
 
@@ -107,17 +107,17 @@ const DEMO_SCORING_PARAMS: [DemoParamsCore, DemoParamsCore, DemoParamsCore] = [
   {
     landingOutcome: 'clean',
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
+    TECHNICALITY: { rotations: '1', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '2', board_tic_tac: '0' },
+  },
+  {
+    landingOutcome: 'clean',
+    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
   },
   {
     landingOutcome: 'clean',
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
     TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
-  },
-  {
-    landingOutcome: 'clean',
-    EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
-    TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '1', board_tic_tac: '0' },
   },
 ];
 

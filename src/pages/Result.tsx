@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useScoring } from '@/contexts/ScoringContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Download, Plus, AlertCircle, Edit } from 'lucide-react';
 import { toast } from 'sonner';
@@ -200,12 +201,18 @@ export default function Result() {
           { result: jump3Result, label: 'Jump 3' },
         ].map(({ result, label }, idx) => (
           <Card key={label} className="p-6 shadow-[var(--shadow-card)]">
-            <h3 className="text-lg font-semibold mb-2 text-center">{label}</h3>
-            {jumpMeta?.[idx] && (
+            {jumpMeta?.[idx] ? (
               <div className="text-center mb-2">
-                <div className="text-sm font-medium text-primary">{jumpMeta[idx].trick}</div>
-                <div className="text-xs text-muted-foreground">{jumpMeta[idx].category}</div>
+                <div className="flex items-center justify-center gap-2">
+                  <h3 className="text-lg font-bold">{label} · {jumpMeta[idx].athlete}</h3>
+                  <Badge className="font-mono text-xs font-bold tracking-widest bg-primary/15 text-primary border border-primary/30 hover:bg-primary/15">
+                    {jumpMeta[idx].category}
+                  </Badge>
+                </div>
+                <p className="text-sm font-semibold text-orange-500 mt-1">{jumpMeta[idx].trick}</p>
               </div>
+            ) : (
+              <h3 className="text-lg font-semibold mb-2 text-center">{label}</h3>
             )}
             <div className="text-center">
               <div className="text-4xl font-bold text-primary">
@@ -220,9 +227,16 @@ export default function Result() {
 
       <Card className="p-6 mb-6 shadow-[var(--shadow-card)]">
         <CardHeader className="p-0 mb-6">
-          <CardTitle>Jump 1 - Detailed Breakdown</CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle>Jump 1 - Detailed Breakdown{jumpMeta?.[0] && ` · ${jumpMeta[0].athlete}`}</CardTitle>
+            {jumpMeta?.[0] && (
+              <Badge className="font-mono text-xs font-bold tracking-widest bg-primary/15 text-primary border border-primary/30 hover:bg-primary/15">
+                {jumpMeta[0].category}
+              </Badge>
+            )}
+          </div>
           {jumpMeta?.[0] && (
-            <p className="text-sm text-muted-foreground font-normal">{jumpMeta[0].trick} · {jumpMeta[0].category}</p>
+            <p className="text-sm font-semibold text-orange-500">{jumpMeta[0].trick}</p>
           )}
         </CardHeader>
         <CardContent className="p-0">
@@ -280,9 +294,16 @@ export default function Result() {
 
       <Card className="p-6 mb-6 shadow-[var(--shadow-card)]">
         <CardHeader className="p-0 mb-6">
-          <CardTitle>Jump 2 - Detailed Breakdown</CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle>Jump 2 - Detailed Breakdown{jumpMeta?.[1] && ` · ${jumpMeta[1].athlete}`}</CardTitle>
+            {jumpMeta?.[1] && (
+              <Badge className="font-mono text-xs font-bold tracking-widest bg-primary/15 text-primary border border-primary/30 hover:bg-primary/15">
+                {jumpMeta[1].category}
+              </Badge>
+            )}
+          </div>
           {jumpMeta?.[1] && (
-            <p className="text-sm text-muted-foreground font-normal">{jumpMeta[1].trick} · {jumpMeta[1].category}</p>
+            <p className="text-sm font-semibold text-orange-500">{jumpMeta[1].trick}</p>
           )}
         </CardHeader>
         <CardContent className="p-0">
@@ -340,9 +361,16 @@ export default function Result() {
 
       <Card className="p-6 mb-6 shadow-[var(--shadow-card)]">
         <CardHeader className="p-0 mb-6">
-          <CardTitle>Jump 3 - Detailed Breakdown</CardTitle>
+          <div className="flex items-center gap-2">
+            <CardTitle>Jump 3 - Detailed Breakdown{jumpMeta?.[2] && ` · ${jumpMeta[2].athlete}`}</CardTitle>
+            {jumpMeta?.[2] && (
+              <Badge className="font-mono text-xs font-bold tracking-widest bg-primary/15 text-primary border border-primary/30 hover:bg-primary/15">
+                {jumpMeta[2].category}
+              </Badge>
+            )}
+          </div>
           {jumpMeta?.[2] && (
-            <p className="text-sm text-muted-foreground font-normal">{jumpMeta[2].trick} · {jumpMeta[2].category}</p>
+            <p className="text-sm font-semibold text-orange-500">{jumpMeta[2].trick}</p>
           )}
         </CardHeader>
         <CardContent className="p-0">

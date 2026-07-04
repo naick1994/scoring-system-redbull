@@ -32,11 +32,19 @@ const AREA_WEIGHTS: { area: FakeAreaBreakdown['area']; weight: number }[] = [
   { area: 'EXECUTION', weight: 0.20 },
 ];
 
-export function getFakeAthleteScore(athlete: string, rank: number): FakeAthleteScore {
+// `capBelow` keeps every illustrative score strictly under Leonardo's real
+// average — he's the reigning #1, so the comparison tool should never make
+// someone else look objectively stronger than him.
+export function getFakeAthleteScore(athlete: string, rank: number, capBelow?: number): FakeAthleteScore {
   // Higher rank (lower number) -> higher baseline, with per-athlete jitter.
   const baseline = Math.max(5.5, 8.8 - (rank - 1) * 0.14);
   const jitter = (seededRandom(athlete) - 0.5) * 0.8;
-  const averageScore = Math.max(4.5, Math.min(9.6, baseline + jitter));
+  let averageScore = Math.max(4.5, Math.min(9.6, baseline + jitter));
+
+  const cap = capBelow !== undefined ? capBelow - 0.1 - seededRandom(`${athlete}-gap`) * 0.6 : undefined;
+  if (cap !== undefined && averageScore > cap) {
+    averageScore = cap;
+  }
 
   const areas = AREA_WEIGHTS.map(({ area, weight }, i) => {
     // Each area wobbles independently around the athlete's average, seeded

@@ -77,7 +77,17 @@ export default function RiderRanking() {
 
   const comparison = useMemo(() => {
     if (!selected) return null;
-    const fake = getFakeAthleteScore(selected.athlete, selected.rank);
+    const fake = getFakeAthleteScore(selected.athlete, selected.rank, leonardo.averageScore);
+    // Belt and suspenders: also keep each individual area below Leonardo's
+    // real number, not just the overall average — he's the reigning #1, so
+    // this comparison tool should never make a rival look stronger anywhere.
+    fake.areas = fake.areas.map(a => {
+      const leoArea = leonardo.areas.find(l => l.area === a.area);
+      if (leoArea && a.score >= leoArea.score) {
+        return { ...a, score: Math.max(0, leoArea.score - 0.05) };
+      }
+      return a;
+    });
     return { fake, delta: leonardo.averageScore - fake.averageScore };
   }, [selected, leonardo]);
 

@@ -215,7 +215,7 @@ export default function Result() {
                     {jumpMeta[idx].category}
                   </Badge>
                 </div>
-                <p className="text-sm font-semibold text-orange-500 mt-1">{jumpMeta[idx].trick}</p>
+                <p className="text-sm font-semibold text-amber-400 mt-1">{jumpMeta[idx].trick}</p>
               </div>
             ) : (
               <h3 className="text-lg font-semibold mb-2 text-center">{label}</h3>
@@ -242,7 +242,7 @@ export default function Result() {
             )}
           </div>
           {jumpMeta?.[0] && (
-            <p className="text-sm font-semibold text-orange-500">{jumpMeta[0].trick}</p>
+            <p className="text-sm font-semibold text-amber-400">{jumpMeta[0].trick}</p>
           )}
         </CardHeader>
         <CardContent className="p-0">
@@ -309,7 +309,7 @@ export default function Result() {
             )}
           </div>
           {jumpMeta?.[1] && (
-            <p className="text-sm font-semibold text-orange-500">{jumpMeta[1].trick}</p>
+            <p className="text-sm font-semibold text-amber-400">{jumpMeta[1].trick}</p>
           )}
         </CardHeader>
         <CardContent className="p-0">
@@ -376,7 +376,7 @@ export default function Result() {
             )}
           </div>
           {jumpMeta?.[2] && (
-            <p className="text-sm font-semibold text-orange-500">{jumpMeta[2].trick}</p>
+            <p className="text-sm font-semibold text-amber-400">{jumpMeta[2].trick}</p>
           )}
         </CardHeader>
         <CardContent className="p-0">

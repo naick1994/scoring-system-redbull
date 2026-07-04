@@ -641,7 +641,7 @@ function JumpCard({
                 {jump.category}
               </Badge>
             </div>
-            <p className="text-sm font-semibold text-orange-500">{jump.trick}</p>
+            <p className="text-sm font-semibold text-amber-400">{jump.trick}</p>
           </div>
           <div className="flex items-center gap-6 ml-4">
             <div className="flex items-center gap-2">

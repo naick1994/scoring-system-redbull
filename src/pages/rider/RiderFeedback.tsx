@@ -82,7 +82,7 @@ export default function RiderFeedback() {
                     {jump.category}
                   </Badge>
                 </div>
-                <p className="text-sm font-semibold text-orange-500">{jump.trick}</p>
+                <p className="text-sm font-semibold text-amber-400">{jump.trick}</p>
               </div>
               <div className="text-right">
                 <div className="text-2xl font-bold text-primary">{result.totalScore.toFixed(2)} / 10</div>

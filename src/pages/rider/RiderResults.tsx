@@ -86,7 +86,7 @@ export default function RiderResults() {
                   {jump.category}
                 </Badge>
               </div>
-              <p className="text-sm font-semibold text-orange-500 mt-1">{jump.trick}</p>
+              <p className="text-sm font-semibold text-amber-400 mt-1">{jump.trick}</p>
             </div>
             <div className="text-center">
               <div className="text-4xl font-bold text-primary">
@@ -108,7 +108,7 @@ export default function RiderResults() {
                 {jump.category}
               </Badge>
             </div>
-            <p className="text-sm font-semibold text-orange-500">{jump.trick}</p>
+            <p className="text-sm font-semibold text-amber-400">{jump.trick}</p>
           </div>
 
           <div className="space-y-4 mb-6">

@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import RiderResults from "./pages/rider/RiderResults";
 import RiderFeedback from "./pages/rider/RiderFeedback";
 import RiderRanking from "./pages/rider/RiderRanking";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ const App = () => (
                       <Route path="/rider" element={<ProtectedRoute allowedRoles={['rider']}><RiderResults /></ProtectedRoute>} />
                       <Route path="/rider/feedback" element={<ProtectedRoute allowedRoles={['rider']}><RiderFeedback /></ProtectedRoute>} />
                       <Route path="/rider/ranking" element={<RiderRanking />} />
+                      <Route path="/admin" element={<ProtectedRoute allowedRoles={['judge']}><Admin /></ProtectedRoute>} />
                       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                       <Route path="*" element={<NotFound />} />
                     </Routes>

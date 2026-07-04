@@ -86,10 +86,12 @@ export const DEMO_SCORING_PARAMS: [DemoParamsCore, DemoParamsCore, DemoParamsCor
 // Fixed Execution values (0-10 scale per slider) for the Rider area, which has
 // no live judge session to read Execution from — these represent Leonardo's
 // actual style/control level on each jump, consistent with a top-tier rider.
+// Matches the canonical snapshot in "Salti Leo.csv" (also the baseline the
+// /admin reset restores).
 export const DEMO_EXECUTION_VALUES: [Record<string, number>, Record<string, number>, Record<string, number>] = [
-  { style: 8, stability_control: 8, landing_control: 9, board_control: 7, kite_control: 8 },
-  { style: 9, stability_control: 8, landing_control: 8, board_control: 8, kite_control: 9 },
-  { style: 8, stability_control: 9, landing_control: 8, board_control: 8, kite_control: 8 },
+  { style: 8.8, stability_control: 8.3, landing_control: 8.4, board_control: 9.0, kite_control: 8.1 },
+  { style: 9.2, stability_control: 9.0, landing_control: 8.8, board_control: 8.8, kite_control: 8.8 },
+  { style: 7.9, stability_control: 7.9, landing_control: 7.9, board_control: 7.9, kite_control: 8.0 },
 ];
 
 // Builds the full JumpParameters + computed ScoringResult for demo jump

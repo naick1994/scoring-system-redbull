@@ -67,6 +67,8 @@ interface JumpDemoBase {
   category: string;
   videoSrc?: string;
   woo: WooData;
+  realScore: number;
+  realScoreEvent: string;
 }
 
 interface JumpDemo extends JumpDemoBase {
@@ -83,6 +85,7 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     category: 'KLBRFL',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_7.33.mp4`,
     woo: { maxHeight: 15.9, airtime: 7.6, distance: 76,  maxSpeed: 46, approachSpeed: 32, windAngle: 18, quality: 'OK',   peakTimeRatio: 0.30, takeoffOffset: 0 },
+    realScore: 7.33, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
   },
   {
     id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
@@ -90,6 +93,7 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     category: 'KLFRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
     woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
+    realScore: 8.37, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
   },
   {
     id: 3, label: 'Jump 3', athlete: 'Leonardo Casati',
@@ -97,6 +101,7 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     category: 'KLBRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
     woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
+    realScore: 8.07, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
   },
 ];
 
@@ -427,6 +432,21 @@ function RecapScreen({
               <span className="text-zinc-500 text-sm font-normal"> / 10.00</span>
             </span>
           </div>
+
+          {/* Real judges' score reference */}
+          <div className="flex justify-between items-baseline pt-2">
+            <span className="font-mono text-zinc-600 text-[10px] tracking-wide">
+              {jump.realScoreEvent}
+            </span>
+            <span className="text-zinc-500 text-xs tabular-nums">
+              Real judges' score: <span className="text-zinc-300 font-semibold">{jump.realScore.toFixed(2)}</span>
+              {showFull && (
+                <span className="text-zinc-600">
+                  {' '}({projectedTotal - jump.realScore >= 0 ? '+' : ''}{(projectedTotal - jump.realScore).toFixed(2)})
+                </span>
+              )}
+            </span>
+          </div>
         </div>
 
         {/* ── Woo sensor data (2/5 width) ── */}
@@ -628,7 +648,9 @@ function JumpCard({
               </Badge>
             </div>
             <p className="text-sm font-semibold text-orange-500">{jump.trick}</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Capital.com GKA Big Air</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {jump.realScoreEvent} · Real judges' score: <span className="font-semibold text-foreground">{jump.realScore.toFixed(2)}</span>
+            </p>
           </div>
           <div className="flex items-center gap-4 ml-4">
             <div className="flex items-center gap-2">
@@ -671,6 +693,11 @@ function JumpCard({
               <div className="text-xs text-muted-foreground mt-0.5">/ {displayMax.toFixed(2)}</div>
               {!revealed && (
                 <Badge className="bg-amber-600 hover:bg-amber-600 mt-1.5 text-[10px] tracking-wide">PARTIAL</Badge>
+              )}
+              {revealed && (
+                <div className="text-[10px] text-muted-foreground mt-1">
+                  vs real {jump.realScore.toFixed(2)} ({displayScore - jump.realScore >= 0 ? '+' : ''}{(displayScore - jump.realScore).toFixed(2)})
+                </div>
               )}
             </div>
           </div>

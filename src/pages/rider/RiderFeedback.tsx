@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useScoring } from '@/contexts/ScoringContext';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CheckCircle2, TrendingUp, Download } from 'lucide-react';
 import { AREA_DISPLAY_NAMES } from '@/lib/scoring';
 import { DEMO_JUMPS_BASE, buildDemoJumpResult } from '@/data/demoJumps';
 import { IMPROVEMENT_TIPS } from '@/data/improvementTips';
@@ -15,9 +16,21 @@ export default function RiderFeedback() {
     [heightAmplitudeThresholds]
   );
 
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = 'Leonardo Casati - Feedback - Big Air Scoring System';
+    return () => { document.title = previousTitle; };
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <h2 className="text-3xl font-bold mb-1">Where You Lost Points</h2>
+      <div className="flex items-start justify-between flex-wrap gap-4 mb-1">
+        <h2 className="text-3xl font-bold">Where You Lost Points</h2>
+        <Button onClick={() => window.print()} variant="outline" className="gap-2 no-print">
+          <Download className="w-4 h-4" />
+          Download PDF
+        </Button>
+      </div>
       <p className="text-muted-foreground mb-8">
         Jump-by-jump breakdown vs a perfect 10 — every point you didn't earn, and what it would take to earn it.
       </p>

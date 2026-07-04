@@ -114,3 +114,27 @@ All colors MUST be HSL.
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   }
 }
+
+/* Printer/PDF-friendly overrides — swaps the dark theme's CSS variables for
+   a light, ink-friendly palette and hides on-screen-only chrome. Scoped to
+   print media only, so the live app is untouched. */
+@media print {
+  header, .no-print {
+    display: none !important;
+  }
+
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 35%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+  }
+
+  body {
+    background: white !important;
+  }
+}

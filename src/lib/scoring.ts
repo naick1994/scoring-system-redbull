@@ -65,6 +65,15 @@ export const FREE_FALL_RANGES: Record<string, string> = {
   high: '1.2s+',
 };
 
+// Kite angle from zenith (0° = directly overhead, 180° = level with the
+// rider at the sea/water surface) — from the source scoring spec.
+export const KITE_ANGLE_RANGES: Record<string, string> = {
+  high: '0–1°',
+  average: '1–25°',
+  low: '25–40°',
+  super_low: '45–180°',
+};
+
 // Display label for the HEIGHT area — it covers both height and amplitude
 // sub-parameters, so it's always shown as "HEIGHT & AMPLITUDE" to the user.
 export const AREA_DISPLAY_NAMES: Record<string, string> = {
@@ -172,13 +181,15 @@ export const PARAMETER_CONFIG = {
   },
   EXTREMITY: {
     kite_angle: {
+      // Degrees measured from zenith (0° = directly overhead, 180° = level
+      // with the rider at the sea/water surface) — per the source spec.
       label: 'Kite Angle',
       max: 0.75,
-      map: { 
-        high: 0,        // 0° - 30°
-        average: 0.25,  // 31° - 50°
-        low: 0.5,       // 51° - 70°
-        super_low: 0.75 // 71° - 90°+
+      map: {
+        high: 0,        // 0° - 1°
+        average: 0.25,  // 1° - 25°
+        low: 0.5,       // 25° - 40°
+        super_low: 0.75 // 45° - 180°
       },
     },
     yank_power: {

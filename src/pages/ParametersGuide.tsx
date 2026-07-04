@@ -2,7 +2,7 @@ import { useScoring } from '@/contexts/ScoringContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { PARAMETER_CONFIG, PRESET_CONFIG, OVERALL_IMPRESSION_CONFIG, heightBracketLabel, amplitudeBracketLabel, YANK_POWER_RANGES, FREE_FALL_RANGES } from '@/lib/scoring';
+import { PARAMETER_CONFIG, PRESET_CONFIG, OVERALL_IMPRESSION_CONFIG, heightBracketLabel, amplitudeBracketLabel, YANK_POWER_RANGES, FREE_FALL_RANGES, KITE_ANGLE_RANGES } from '@/lib/scoring';
 import { Info } from 'lucide-react';
 
 export default function ParametersGuide() {
@@ -117,15 +117,15 @@ export default function ParametersGuide() {
                 <div className="border-l-4 border-pink-500 pl-4">
                   <h4 className="font-semibold mb-2 text-foreground">{PARAMETER_CONFIG.EXTREMITY.kite_angle.label}</h4>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Kite position at take-off (lower is riskier and scores higher)
+                    Kite position during the kiteloop (lower is riskier and scores higher)
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-destructive/20 text-destructive border-destructive/30">High: 0 pts</Badge>
-                    <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30">Medium: 0.25 pts</Badge>
-                    <Badge variant="outline" className="bg-lime-500/20 text-lime-400 border-lime-500/30">Low: 0.5 pts</Badge>
-                    <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Super Low: 0.75 pts</Badge>
+                    <Badge variant="outline" className="bg-destructive/20 text-destructive border-destructive/30">High ({KITE_ANGLE_RANGES.high}): 0 pts</Badge>
+                    <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30">Medium ({KITE_ANGLE_RANGES.average}): 0.25 pts</Badge>
+                    <Badge variant="outline" className="bg-lime-500/20 text-lime-400 border-lime-500/30">Low ({KITE_ANGLE_RANGES.low}): 0.5 pts</Badge>
+                    <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">Super Low ({KITE_ANGLE_RANGES.super_low}): 0.75 pts</Badge>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-2">Max: {PARAMETER_CONFIG.EXTREMITY.kite_angle.max} points</div>
+                  <div className="text-xs text-muted-foreground mt-2">Max: {PARAMETER_CONFIG.EXTREMITY.kite_angle.max} points · measured as angle from zenith (0° overhead, 180° level with the rider)</div>
                 </div>
 
                 {/* Yank Power */}

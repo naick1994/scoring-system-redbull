@@ -64,6 +64,7 @@ interface JumpDemoBase {
   label: string;
   athlete: string;
   trick: string;
+  category: string;
   videoSrc?: string;
   woo: WooData;
 }
@@ -79,18 +80,21 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
   {
     id: 1, label: 'Jump 1', athlete: 'Leonardo Casati',
     trick: 'Late Backroll Kiteloop Doppio Flip Added Rotation',
+    category: 'KLBRFL',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_7.33.mp4`,
     woo: { maxHeight: 15.9, airtime: 7.6, distance: 76,  maxSpeed: 46, approachSpeed: 32, windAngle: 18, quality: 'OK',   peakTimeRatio: 0.30, takeoffOffset: 0 },
   },
   {
     id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
     trick: 'Backroll Kiteloop Tornado',
+    category: 'KLFRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
     woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
   },
   {
     id: 3, label: 'Jump 3', athlete: 'Leonardo Casati',
     trick: 'Doobie Loop Boardoff by the Fin',
+    category: 'KLBRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
     woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
   },
@@ -256,7 +260,12 @@ function RecapScreen({
             {jump.athlete.toUpperCase()}
           </div>
           <div className="text-orange-400 text-xs font-semibold tracking-wide mt-1">{jump.trick}</div>
-          <div className="font-mono text-zinc-500 text-[10px] tracking-widest mt-1">{jump.label.toUpperCase()}</div>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="font-mono text-zinc-500 text-[10px] tracking-widest">{jump.label.toUpperCase()}</span>
+            <span className="font-mono text-zinc-300 text-[10px] font-bold tracking-widest bg-white/10 px-1.5 py-0.5 rounded">
+              {jump.category}
+            </span>
+          </div>
         </div>
         <div className="text-right">
           <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-1">
@@ -612,7 +621,10 @@ function JumpCard({
       <Card className="overflow-hidden shadow-[var(--shadow-card)]">
         <div className="flex items-start justify-between px-6 py-4 border-b border-border bg-gradient-to-r from-card to-primary/5">
           <div>
-            <h3 className="text-lg font-bold text-foreground">{jump.label} · {jump.athlete}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg font-bold text-foreground">{jump.label} · {jump.athlete}</h3>
+              <Badge variant="outline" className="font-mono text-[10px] tracking-widest">{jump.category}</Badge>
+            </div>
             <p className="text-sm font-semibold text-orange-500">{jump.trick}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Capital.com GKA Big Air</p>
           </div>

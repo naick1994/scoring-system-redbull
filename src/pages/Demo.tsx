@@ -780,12 +780,11 @@ function JumpCard({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 pb-4">
           <VideoPlayer ref={videoPlayerRef} jump={jump} execution={execution} onExecutionChange={onExecutionChange} />
           <div className="flex flex-col justify-center gap-4">
-            <div className="flex items-center gap-2">
-              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Score Breakdown</h4>
-              {!revealed && (
+            {!revealed && (
+              <div className="flex items-center gap-2">
                 <Badge variant="outline" className="border-amber-600 text-amber-600 text-[10px]">Execution pending</Badge>
-              )}
-            </div>
+              </div>
+            )}
             <div className="space-y-4">
               {displayAreas.map(area => <ScoreBar key={area.name} area={area} />)}
             </div>

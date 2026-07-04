@@ -524,15 +524,26 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, {
         className="relative w-full aspect-video bg-zinc-900 rounded-xl overflow-hidden group cursor-pointer"
         onClick={openModal}
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-700">
-          <Film className="w-10 h-10 mb-2" />
-          <span className="text-xs font-medium tracking-widest uppercase">Click to play</span>
-        </div>
-        {jump.videoSrc && (
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <div className="bg-black/60 backdrop-blur-sm rounded-full p-4">
-              <Play className="w-8 h-8 text-white fill-white" />
+        {jump.videoSrc ? (
+          <>
+            <video
+              src={jump.videoSrc}
+              className="absolute inset-0 w-full h-full object-cover"
+              muted
+              playsInline
+              preload="metadata"
+            />
+            <div className="absolute inset-0 bg-black/20 group-hover:bg-black/35 transition-colors" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-black/70 group-hover:bg-black/85 group-hover:scale-105 rounded-full p-5 transition-all">
+                <Play className="w-10 h-10 text-white fill-white" />
+              </div>
             </div>
+          </>
+        ) : (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-700">
+            <Film className="w-10 h-10 mb-2" />
+            <span className="text-xs font-medium tracking-widest uppercase">No video</span>
           </div>
         )}
       </div>
@@ -667,7 +678,7 @@ function JumpCard({
                 <Button
                   variant="default"
                   size="sm"
-                  className="gap-1.5 text-xs bg-amber-600 hover:bg-amber-700 text-white animate-pulse"
+                  className="gap-1.5 text-xs animate-pulse"
                   onClick={() => videoPlayerRef.current?.open()}
                 >
                   <Gauge className="w-3.5 h-3.5" />

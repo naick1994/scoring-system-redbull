@@ -86,17 +86,17 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
   },
   {
     id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
-    trick: 'Backroll Kiteloop Tornado',
+    trick: 'Doobie Loop Boardoff by the Fin',
     category: 'KLFRBO',
-    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
-    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
+    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
+    woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
   },
   {
     id: 3, label: 'Jump 3', athlete: 'Leonardo Casati',
-    trick: 'Doobie Loop Boardoff by the Fin',
+    trick: 'Backroll Kiteloop Tornado',
     category: 'KLBRBO',
-    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
-    woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0 },
+    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
+    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0 },
   },
 ];
 
@@ -116,12 +116,12 @@ const DEMO_SCORING_PARAMS: [DemoParamsCore, DemoParamsCore, DemoParamsCore] = [
   {
     landingOutcome: 'clean',
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
-    TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
+    TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
   },
   {
     landingOutcome: 'clean',
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
-    TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
+    TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'no' },
   },
 ];
 

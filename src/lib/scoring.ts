@@ -153,7 +153,7 @@ export const PARAMETER_CONFIG = {
   },
   EXTREMITY: {
     kite_angle: {
-      label: 'Kite Angle (0° Zenith - 90° Line - 180° Sea)',
+      label: 'Kite Angle',
       max: 0.75,
       map: { 
         high: 0,        // 0° - 30°
@@ -175,7 +175,7 @@ export const PARAMETER_CONFIG = {
   },
   TECHNICALITY: {
     rotations: {
-      label: 'Rotations (Front/Back)',
+      label: 'Rotations',
       max: 1.0,
       map: { '1': 0.25, '2': 0.50, '3': 0.75, '4+': 1.0 },
     },

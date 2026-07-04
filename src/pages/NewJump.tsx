@@ -235,7 +235,7 @@ export default function NewJump() {
                 <h3 className="text-xl font-semibold mb-6">HEIGHT & AMPLITUDE</h3>
                 <div className="space-y-6">
                   <div>
-                    <Label htmlFor={`height-${jumpNumber}`} className="text-base mb-2 block">Height (vertical)</Label>
+                    <Label htmlFor={`height-${jumpNumber}`} className="text-base mb-2 block">Height</Label>
                     <Select value={jump.heightParams.height} onValueChange={(v) => setJump({ ...jump, heightParams: { ...jump.heightParams, height: v } })}>
                       <SelectTrigger id={`height-${jumpNumber}`}>
                         <SelectValue />
@@ -251,7 +251,7 @@ export default function NewJump() {
                   </div>
 
                   <div>
-                    <Label htmlFor={`amplitude-${jumpNumber}`} className="text-base mb-2 block">Amplitude (horizontal distance)</Label>
+                    <Label htmlFor={`amplitude-${jumpNumber}`} className="text-base mb-2 block">Amplitude</Label>
                     <Select value={jump.heightParams.amplitude} onValueChange={(v) => setJump({ ...jump, heightParams: { ...jump.heightParams, amplitude: v } })}>
                       <SelectTrigger id={`amplitude-${jumpNumber}`}>
                         <SelectValue />
@@ -325,7 +325,7 @@ export default function NewJump() {
                 <h3 className="text-xl font-semibold mb-6">TECHNICALITY</h3>
                 <div className="space-y-6">
                   <div>
-                    <Label htmlFor={`rotations-${jumpNumber}`} className="text-base mb-2 block">Rotations (Front/Back)</Label>
+                    <Label htmlFor={`rotations-${jumpNumber}`} className="text-base mb-2 block">Rotations</Label>
                     <Select value={jump.technicalityParams.rotations} onValueChange={(v) => setJump({ ...jump, technicalityParams: { ...jump.technicalityParams, rotations: v } })}>
                       <SelectTrigger id={`rotations-${jumpNumber}`}>
                         <SelectValue />

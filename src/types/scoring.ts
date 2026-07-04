@@ -53,7 +53,7 @@ export interface JumpParameters {
     rotation_axis: string;
     board_off: string;
     board_flip?: string;
-    board_tic_tac?: string;
+    board_spin?: string;
   };
   EXECUTION: {
     style: number;

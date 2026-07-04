@@ -228,18 +228,18 @@ export default function ParametersGuide() {
                   <div className="text-xs text-muted-foreground mt-2">Max: {PARAMETER_CONFIG.TECHNICALITY.board_flip.max} points (conditional)</div>
                 </div>
 
-                {/* Board Tic Tac */}
+                {/* Board Spin */}
                 <div className="border-l-4 border-amber-500 pl-4">
-                  <h4 className="font-semibold mb-2 text-foreground">{PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.label}</h4>
+                  <h4 className="font-semibold mb-2 text-foreground">{PARAMETER_CONFIG.TECHNICALITY.board_spin.label}</h4>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Number of board tic-tacs performed (only applies if Board Off = Yes)
+                    Number of board spins performed (only applies if Board Off = Yes)
                   </p>
                   <div className="flex flex-wrap gap-2">
-                    <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30">1 tic-tac: 0.1 pts</Badge>
-                    <Badge variant="outline" className="bg-lime-500/20 text-lime-400 border-lime-500/30">2 tic-tacs: 0.2 pts</Badge>
-                    <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">3+ tic-tacs: 0.3 pts</Badge>
+                    <Badge variant="outline" className="bg-amber-500/20 text-amber-400 border-amber-500/30">1 spin: 0.1 pts</Badge>
+                    <Badge variant="outline" className="bg-lime-500/20 text-lime-400 border-lime-500/30">2 spins: 0.2 pts</Badge>
+                    <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30">3+ spins: 0.3 pts</Badge>
                   </div>
-                  <div className="text-xs text-muted-foreground mt-2">Max: {PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.max} points (conditional)</div>
+                  <div className="text-xs text-muted-foreground mt-2">Max: {PARAMETER_CONFIG.TECHNICALITY.board_spin.max} points (conditional)</div>
                 </div>
               </div>
             </AccordionContent>

@@ -33,7 +33,7 @@ interface JumpFormState {
   landingOutcome: LandingOutcome;
   heightParams: { height: string; amplitude: string };
   extremityParams: { kite_angle: string; yank_power: string; free_fall: string };
-  technicalityParams: { rotations: string; rotation_axis: string; board_off: string; board_flip: string; board_tic_tac: string };
+  technicalityParams: { rotations: string; rotation_axis: string; board_off: string; board_flip: string; board_spin: string };
   executionParams: { style: number; stability_control: number; landing_control: number; board_control: number; kite_control: number };
 }
 
@@ -41,7 +41,7 @@ const initialFormState: JumpFormState = {
   landingOutcome: 'clean',
   heightParams: { height: '', amplitude: '' },
   extremityParams: { kite_angle: '', yank_power: '', free_fall: '' },
-  technicalityParams: { rotations: '', rotation_axis: '', board_off: '', board_flip: '', board_tic_tac: '' },
+  technicalityParams: { rotations: '', rotation_axis: '', board_off: '', board_flip: '', board_spin: '' },
   executionParams: { style: 0, stability_control: 0, landing_control: 0, board_control: 0, kite_control: 0 },
 };
 
@@ -91,7 +91,7 @@ export default function NewJump() {
       rotation_axis: params.TECHNICALITY.rotation_axis,
       board_off: params.TECHNICALITY.board_off,
       board_flip: params.TECHNICALITY.board_flip || '',
-      board_tic_tac: params.TECHNICALITY.board_tic_tac || '',
+      board_spin: params.TECHNICALITY.board_spin || '',
     },
     executionParams: {
       style: (params.EXECUTION.style * 10) / 0.4,
@@ -135,7 +135,7 @@ export default function NewJump() {
       if (!jump.technicalityParams.board_off) missing.push('Board Off');
       if (jump.technicalityParams.board_off === 'yes') {
         if (!jump.technicalityParams.board_flip) missing.push('Board Flip');
-        if (!jump.technicalityParams.board_tic_tac) missing.push('Board Tic Tac');
+        if (!jump.technicalityParams.board_spin) missing.push('Board Spin');
       }
     }
     return missing.length === 0;
@@ -354,7 +354,7 @@ export default function NewJump() {
 
                   <div>
                     <Label htmlFor={`board-off-${jumpNumber}`} className="text-base mb-2 block">Board Off</Label>
-                    <Select value={jump.technicalityParams.board_off} onValueChange={(v) => setJump({ ...jump, technicalityParams: { ...jump.technicalityParams, board_off: v, board_flip: v === 'no' ? '' : jump.technicalityParams.board_flip, board_tic_tac: v === 'no' ? '' : jump.technicalityParams.board_tic_tac } })}>
+                    <Select value={jump.technicalityParams.board_off} onValueChange={(v) => setJump({ ...jump, technicalityParams: { ...jump.technicalityParams, board_off: v, board_flip: v === 'no' ? '' : jump.technicalityParams.board_flip, board_spin: v === 'no' ? '' : jump.technicalityParams.board_spin } })}>
                       <SelectTrigger id={`board-off-${jumpNumber}`}>
                         <SelectValue />
                       </SelectTrigger>
@@ -383,16 +383,16 @@ export default function NewJump() {
                       </div>
 
                       <div>
-                        <Label htmlFor={`board-tic-tac-${jumpNumber}`} className="text-base mb-2 block">Board Tic Tac</Label>
-                        <Select value={jump.technicalityParams.board_tic_tac} onValueChange={(v) => setJump({ ...jump, technicalityParams: { ...jump.technicalityParams, board_tic_tac: v } })}>
-                          <SelectTrigger id={`board-tic-tac-${jumpNumber}`}>
+                        <Label htmlFor={`board-spin-${jumpNumber}`} className="text-base mb-2 block">Board Spin</Label>
+                        <Select value={jump.technicalityParams.board_spin} onValueChange={(v) => setJump({ ...jump, technicalityParams: { ...jump.technicalityParams, board_spin: v } })}>
+                          <SelectTrigger id={`board-spin-${jumpNumber}`}>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="0" className="text-gray-600">0 tic-tacs — 0 pt</SelectItem>
-                            <SelectItem value="1" className="text-amber-400">1 tic-tac (0.07 pts)</SelectItem>
-                            <SelectItem value="2" className="text-lime-400">2 tic-tacs (0.14 pts)</SelectItem>
-                            <SelectItem value="3+" className="text-green-400">3+ tic-tacs (0.20 pts — max)</SelectItem>
+                            <SelectItem value="0" className="text-gray-600">0 spins — 0 pt</SelectItem>
+                            <SelectItem value="1" className="text-amber-400">1 spin (0.07 pts)</SelectItem>
+                            <SelectItem value="2" className="text-lime-400">2 spins (0.14 pts)</SelectItem>
+                            <SelectItem value="3+" className="text-green-400">3+ spins (0.20 pts — max)</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

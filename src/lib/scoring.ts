@@ -194,8 +194,8 @@ export const PARAMETER_CONFIG = {
       max: 0.3,
       map: { '0': 0, '1': 0.10, '2': 0.20, '3+': 0.30 },
     },
-    board_tic_tac: {
-      label: 'Board Tic Tac',
+    board_spin: {
+      label: 'Board Spin',
       max: 0.2,
       map: { '0': 0, '1': 0.07, '2': 0.14, '3+': 0.20 },
     },
@@ -365,16 +365,16 @@ export function calculateScore(
       technicalityMax += PARAMETER_CONFIG.TECHNICALITY.board_flip.max;
     }
 
-    if (parameters.TECHNICALITY.board_tic_tac) {
-      const boardTicTacPoints = PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.map[parameters.TECHNICALITY.board_tic_tac as keyof typeof PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.map] || 0;
+    if (parameters.TECHNICALITY.board_spin) {
+      const boardSpinPoints = PARAMETER_CONFIG.TECHNICALITY.board_spin.map[parameters.TECHNICALITY.board_spin as keyof typeof PARAMETER_CONFIG.TECHNICALITY.board_spin.map] || 0;
       technicalityParams.push({
-        label: PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.label,
-        value: parameters.TECHNICALITY.board_tic_tac,
-        points: boardTicTacPoints,
-        max: PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.max,
+        label: PARAMETER_CONFIG.TECHNICALITY.board_spin.label,
+        value: parameters.TECHNICALITY.board_spin,
+        points: boardSpinPoints,
+        max: PARAMETER_CONFIG.TECHNICALITY.board_spin.max,
       });
-      technicalitySubtotal += boardTicTacPoints;
-      technicalityMax += PARAMETER_CONFIG.TECHNICALITY.board_tic_tac.max;
+      technicalitySubtotal += boardSpinPoints;
+      technicalityMax += PARAMETER_CONFIG.TECHNICALITY.board_spin.max;
     }
   }
 

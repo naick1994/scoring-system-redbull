@@ -116,12 +116,12 @@ const DEMO_SCORING_PARAMS: [DemoParamsCore, DemoParamsCore, DemoParamsCore] = [
   {
     landingOutcome: 'clean',
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
-    TECHNICALITY: { rotations: '1', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '2', board_tic_tac: '0' },
+    TECHNICALITY: { rotations: '1', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '2', board_spin: '0' },
   },
   {
     landingOutcome: 'clean',
     EXTREMITY:    { kite_angle: 'low', yank_power: 'bomb', free_fall: 'high' },
-    TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_tic_tac: '0' },
+    TECHNICALITY: { rotations: '2', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_spin: '0' },
   },
   {
     landingOutcome: 'clean',
@@ -156,6 +156,33 @@ function splitObjectiveAndExecution(areas: AreaScore[]) {
   const objectiveSubtotal = objectiveAreas.reduce((s, a) => s + a.score, 0);
   const objectiveMax = objectiveAreas.reduce((s, a) => s + a.maxScore, 0);
   return { objectiveAreas, executionMeta, objectiveSubtotal, objectiveMax };
+}
+
+// Single ordered Sensor Data list mixing real Woo telemetry with the judged
+// parameter values. Board Flip/Board Spin only appear when the jump actually
+// has a Board Off, since calculateScore only adds them then.
+function buildSensorStats(woo: WooData, objectiveAreas: AreaScore[]): { label: string; value: string }[] {
+  const params = objectiveAreas.flatMap(a => a.params);
+  const detail = (label: string) => params.find(p => p.label === label)?.detail ?? '—';
+
+  const stats = [
+    { label: 'Max Height', value: `${woo.maxHeight} m` },
+    { label: 'Distance', value: `${woo.distance} m` },
+    { label: 'Airtime', value: `${woo.airtime} s` },
+    { label: 'Kite Angle', value: detail('Kite Angle') },
+    { label: 'Yank Power', value: detail('Yank Power') },
+    { label: 'Free Fall', value: detail('Free Fall') },
+    { label: 'Rotations', value: detail('Rotations') },
+    { label: 'Rotation Axis', value: detail('Rotation Axis') },
+    { label: 'Board Off', value: detail('Board Off') },
+  ];
+  if (params.some(p => p.label === 'Board Flip')) {
+    stats.push({ label: 'Board Flip', value: detail('Board Flip') });
+    stats.push({ label: 'Board Spin', value: detail('Board Spin') });
+  }
+  stats.push({ label: 'Max Speed', value: `${woo.maxSpeed} km/h` });
+  stats.push({ label: 'Approach', value: `${woo.approachSpeed} km/h` });
+  return stats;
 }
 
 function resultToAreas(result: ScoringResult, thresholds: HeightAmplitudeThresholds): AreaScore[] {
@@ -201,20 +228,11 @@ function RecapScreen({
   execution: ExecutionJudgeState;
   onExecutionChange: (state: ExecutionJudgeState) => void;
 }) {
-  const wooStats = [
-    { label: 'Max Height', value: `${jump.woo.maxHeight} m`        },
-    { label: 'Airtime',    value: `${jump.woo.airtime} s`          },
-    { label: 'Distance',   value: `${jump.woo.distance} m`         },
-    { label: 'Max Speed',  value: `${jump.woo.maxSpeed} km/h`      },
-    { label: 'Approach',   value: `${jump.woo.approachSpeed} km/h` },
-    { label: 'Wind Angle', value: `${jump.woo.windAngle}°`         },
-    { label: 'Quality',    value: jump.woo.quality                  },
-  ];
-
   const executionValues = execution.values;
   const executionRevealed = execution.revealed;
 
   const { objectiveAreas, executionMeta, objectiveSubtotal, objectiveMax } = splitObjectiveAndExecution(jump.areas);
+  const sensorStats = buildSensorStats(jump.woo, objectiveAreas);
 
   const executionSliderFraction = Object.values(executionValues).reduce((a, b) => a + b, 0) / 5 / 10;
   const executionScore = executionMeta ? executionSliderFraction * executionMeta.maxScore : 0;
@@ -456,10 +474,10 @@ function RecapScreen({
             <span className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase">Sensor Data</span>
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-6">
-            {wooStats.map(stat => (
+            {sensorStats.map(stat => (
               <div key={stat.label}>
                 <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase leading-tight">{stat.label}</div>
-                <div className="text-white font-bold text-base tabular-nums mt-1">{stat.value}</div>
+                <div className="text-white font-bold text-base mt-1">{stat.value}</div>
               </div>
             ))}
           </div>
@@ -600,16 +618,7 @@ function ScoreBar({ area }: { area: AreaScore }) {
 
 // ─── Woo panel (card) ────────────────────────────────────────────────────────
 
-function WooPanel({ woo }: { woo: WooData }) {
-  const stats = [
-    { label: 'Max Height', value: `${woo.maxHeight} m`        },
-    { label: 'Airtime',    value: `${woo.airtime} s`          },
-    { label: 'Distance',   value: `${woo.distance} m`         },
-    { label: 'Max Speed',  value: `${woo.maxSpeed} km/h`      },
-    { label: 'Approach',   value: `${woo.approachSpeed} km/h` },
-    { label: 'Wind Angle', value: `${woo.windAngle}°`         },
-    { label: 'Quality',    value: woo.quality                  },
-  ];
+function WooPanel({ stats }: { stats: { label: string; value: string }[] }) {
   return (
     <div className="border-t border-border pt-4 mt-2">
       <div className="flex items-center gap-2 mb-3">
@@ -620,7 +629,7 @@ function WooPanel({ woo }: { woo: WooData }) {
         {stats.map(s => (
           <div key={s.label} className="text-center">
             <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider leading-tight mb-0.5">{s.label}</div>
-            <div className="text-sm font-bold text-foreground tabular-nums">{s.value}</div>
+            <div className="text-sm font-bold text-foreground">{s.value}</div>
           </div>
         ))}
       </div>
@@ -641,6 +650,7 @@ function JumpCard({
   const videoPlayerRef = useRef<VideoPlayerHandle>(null);
 
   const { objectiveAreas, objectiveSubtotal, objectiveMax } = splitObjectiveAndExecution(jump.areas);
+  const sensorStats = buildSensorStats(jump.woo, objectiveAreas);
   const revealed = execution.revealed;
   const displayScore = revealed ? jump.score : objectiveSubtotal;
   const displayMax = revealed ? 10 : objectiveMax;
@@ -734,7 +744,7 @@ function JumpCard({
           </div>
         </div>
         <div className="px-6 pb-5">
-          <WooPanel woo={jump.woo} />
+          <WooPanel stats={sensorStats} />
         </div>
       </Card>
 

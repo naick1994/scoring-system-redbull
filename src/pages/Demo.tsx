@@ -104,7 +104,7 @@ const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     trick: 'Backroll Kiteloop Tornado',
     category: 'KLBRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
-    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0, yankForce: 3.5, freeFallTime: 1.8, kiteAngleDeg: 78, landingSpeedG: 2.3 },
+    woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0, yankForce: 3.5, freeFallTime: 1.0, kiteAngleDeg: 78, landingSpeedG: 2.3 },
     realScore: 8.07, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
   },
 ];
@@ -129,7 +129,7 @@ const DEMO_SCORING_PARAMS: [DemoParamsCore, DemoParamsCore, DemoParamsCore] = [
   },
   {
     landingOutcome: 'clean',
-    EXTREMITY:    { kite_angle: 'super_low', yank_power: 'medium', free_fall: 'high' },
+    EXTREMITY:    { kite_angle: 'super_low', yank_power: 'medium', free_fall: 'medium' },
     TECHNICALITY: { rotations: '3', rotation_axis: 'horizontal', board_off: 'yes', board_flip: '0', board_spin: '0' },
   },
 ];

@@ -20,6 +20,7 @@ export function Header() {
         { path: '/parameters-guide', label: 'Parameters Guide' },
         { path: '/rider', label: 'Results' },
         { path: '/rider/feedback', label: 'Feedback' },
+        { path: '/rider/ranking', label: 'Ranking' },
       ]
     : [
         { path: '/parameters-guide', label: 'Parameters Guide' },

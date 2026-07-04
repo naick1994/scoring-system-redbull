@@ -10,7 +10,7 @@ import logo from '@/assets/gka-logo.svg';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import { useScoring } from '@/contexts/ScoringContext';
-import { calculateScore, heightBracketLabel, amplitudeBracketLabel, heightBracketForValue, amplitudeBracketForValue, PARAMETER_CONFIG, AREA_DISPLAY_NAMES } from '@/lib/scoring';
+import { calculateScore, heightBracketLabel, amplitudeBracketLabel, heightBracketForValue, amplitudeBracketForValue, PARAMETER_CONFIG, AREA_DISPLAY_NAMES, KITE_ANGLE_RANGES, YANK_POWER_RANGES, FREE_FALL_RANGES } from '@/lib/scoring';
 import type { JumpParameters, ScoringResult, HeightAmplitudeThresholds } from '@/types/scoring';
 
 const EXECUTION_LABELS: Record<string, string> = Object.fromEntries(
@@ -143,7 +143,6 @@ const AREA_GRADIENT: Record<string, string> = {
 };
 
 const VALUE_DISPLAY: Record<string, string> = {
-  'super_low': 'Super Low (71°+)', 'low': 'Low (51–70°)', 'average': 'Average (31–50°)', 'high': 'High (0–30°)',
   'none': 'None', 'medium': 'Medium', 'bomb': 'Bomb', 'poor': 'Poor',
   'horizontal': 'Horizontal', 'vertical': 'Vertical',
   'yes': 'Yes', 'no': 'No',
@@ -199,6 +198,9 @@ function resultToAreas(result: ScoringResult, thresholds: HeightAmplitudeThresho
       let detail = VALUE_DISPLAY[String(p.value)] ?? String(p.value);
       if (p.label === 'Height') detail = heightBracketLabel(p.value as 'b1' | 'b2' | 'b3' | 'b4', thresholds.height);
       if (p.label === 'Amplitude') detail = amplitudeBracketLabel(p.value as 'b1' | 'b2' | 'b3' | 'b4', thresholds.amplitude);
+      if (p.label === 'Kite Angle') detail = KITE_ANGLE_RANGES[String(p.value)] ?? String(p.value);
+      if (p.label === 'Yank Power') detail = YANK_POWER_RANGES[String(p.value)] ?? String(p.value);
+      if (p.label === 'Free Fall') detail = FREE_FALL_RANGES[String(p.value)] ?? String(p.value);
       return { label: p.label, detail, pts: p.points, maxPts: p.max };
     }),
   }));
@@ -625,7 +627,7 @@ function WooPanel({ stats }: { stats: { label: string; value: string }[] }) {
   return (
     <div className="border-t border-border pt-4 mt-2">
       <div className="flex items-center gap-2 mb-3">
-        <img src={wooLogo} alt="Woo" className="h-4" />
+        <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data</span>
       </div>
       <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">

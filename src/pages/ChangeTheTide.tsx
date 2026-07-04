@@ -1,9 +1,151 @@
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowUpRight, CheckCircle2, X, Gavel, Sparkles, TrendingUp } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
+import { useScoring } from '@/contexts/ScoringContext';
+import { AREA_DISPLAY_NAMES } from '@/lib/scoring';
+import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
+import { getFakeAthleteScore } from '@/data/fakeAthleteScores';
+import { getLeonardoAverageBreakdown } from '@/data/demoJumps';
+
+const RIDER_NAME = 'Leonardo Casati';
+
+const COUNTRY_FLAGS: Record<string, string> = {
+  Italy: '🇮🇹', Netherlands: '🇳🇱', Spain: '🇪🇸', Germany: '🇩🇪',
+  Israel: '🇮🇱', Brazil: '🇧🇷', USA: '🇺🇸',
+};
+
+function LiveRankingComparison() {
+  const { heightAmplitudeThresholds } = useScoring();
+  const [selected, setSelected] = useState<RankingRow | null>(null);
+  const topEight = GKA_BIG_AIR_MEN_RANKINGS_2026.slice(0, 8);
+
+  const leonardo = useMemo(
+    () => getLeonardoAverageBreakdown(heightAmplitudeThresholds),
+    [heightAmplitudeThresholds]
+  );
+
+  const comparison = useMemo(() => {
+    if (!selected) return null;
+    const fake = getFakeAthleteScore(selected.athlete, selected.rank, leonardo.averageScore);
+    fake.areas = fake.areas.map(a => {
+      const leoArea = leonardo.areas.find(l => l.area === a.area);
+      if (leoArea && a.score >= leoArea.score) return { ...a, score: Math.max(0, leoArea.score - 0.05) };
+      return a;
+    });
+    return { fake, delta: leonardo.averageScore - fake.averageScore };
+  }, [selected, leonardo]);
+
+  return (
+    <>
+      <Card className="overflow-hidden shadow-[var(--shadow-card)]">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b-2 border-border bg-muted/40">
+              <th className="text-left py-3 px-4 font-semibold w-16 text-sm">Rank</th>
+              <th className="text-left py-3 px-4 font-semibold text-sm">Athlete</th>
+              <th className="text-left py-3 px-4 font-semibold text-sm">Country</th>
+              <th className="text-right py-3 px-4 font-semibold text-sm">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topEight.map((row, idx) => {
+              const isMe = row.athlete === RIDER_NAME;
+              return (
+                <tr
+                  key={idx}
+                  onClick={() => !isMe && setSelected(row)}
+                  className={`border-b border-border transition-colors ${isMe ? 'bg-primary/10' : 'hover:bg-muted/50 cursor-pointer'}`}
+                >
+                  <td className="py-3 px-4 font-semibold text-muted-foreground text-sm">#{row.rank}</td>
+                  <td className="py-3 px-4">
+                    <div className="flex items-center gap-3">
+                      <img src={row.photoUrl} alt={row.athlete} className="w-8 h-8 rounded-full object-cover border border-border" />
+                      <span className={`font-medium text-sm ${isMe ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
+                      {isMe && (
+                        <Badge className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary/20 text-[10px]">You</Badge>
+                      )}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4 text-xl">{COUNTRY_FLAGS[row.country] ?? row.country}</td>
+                  <td className="py-3 px-4 text-right font-semibold text-sm">{row.points}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </Card>
+      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data. Click any rider to compare — try it.</p>
+
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="max-w-lg">
+          {selected && comparison && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3">
+                  <img src={selected.photoUrl} alt={selected.athlete} className="w-14 h-14 rounded-full object-cover border border-border" />
+                  <div>
+                    <DialogTitle className="text-xl">{selected.athlete}</DialogTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {COUNTRY_FLAGS[selected.country] ?? selected.country} #{selected.rank} · {selected.points} pts
+                    </p>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <div className="flex items-center justify-between py-2">
+                <div className="text-center flex-1">
+                  <div className="text-2xl font-bold">{comparison.fake.averageScore.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">{selected.athlete.split(' ')[0]}'s avg</div>
+                </div>
+                <div className="px-4 text-center">
+                  <div className={`text-lg font-bold ${comparison.delta >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {comparison.delta >= 0 ? '+' : ''}{comparison.delta.toFixed(2)}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase">Leonardo's edge</div>
+                </div>
+                <div className="text-center flex-1">
+                  <div className="text-2xl font-bold text-primary">{leonardo.averageScore.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">Leonardo's avg</div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {comparison.fake.areas.map((fakeArea) => {
+                  const leoArea = leonardo.areas.find(a => a.area === fakeArea.area);
+                  return (
+                    <div key={fakeArea.area}>
+                      <div className="flex justify-between items-center mb-1 text-sm">
+                        <span className="font-medium">{AREA_DISPLAY_NAMES[fakeArea.area] ?? fakeArea.area}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {fakeArea.score.toFixed(2)} vs <span className="text-primary font-semibold">{leoArea?.score.toFixed(2)}</span> / {fakeArea.max.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
+                        <div
+                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} opacity-40`}
+                          style={{ width: `${(fakeArea.score / fakeArea.max) * 100}%` }}
+                        />
+                        <div
+                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} border-r-2 border-white/80`}
+                          style={{ width: `${((leoArea?.score ?? 0) / fakeArea.max) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
 
 const AREA_GRADIENT: Record<string, string> = {
   'HEIGHT & AMPLITUDE': 'from-blue-500 to-cyan-400',
@@ -392,52 +534,7 @@ export default function ChangeTheTide() {
             comparison — not just who's ahead, but where.
           </p>
 
-          <Card className="p-7 shadow-[var(--shadow-card)]">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center text-sm font-bold text-primary">JO</div>
-              <div>
-                <div className="font-bold">Jamie Overbeek</div>
-                <div className="text-xs text-muted-foreground">🇳🇱 #2 · 1700 pts</div>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between py-2 mb-6">
-              <div className="text-center flex-1">
-                <div className="text-2xl font-bold">7.76</div>
-                <div className="text-xs text-muted-foreground">Jamie's avg</div>
-              </div>
-              <div className="px-4 text-center">
-                <div className="text-lg font-bold text-green-500">+0.13</div>
-                <div className="text-[10px] text-muted-foreground uppercase">edge</div>
-              </div>
-              <div className="text-center flex-1">
-                <div className="text-2xl font-bold text-primary">7.89</div>
-                <div className="text-xs text-muted-foreground">Your avg</div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {[
-                { name: 'HEIGHT & AMPLITUDE', rival: 2.04, you: 2.5, max: 3.0 },
-                { name: 'EXTREMITY', rival: 2.33, you: 2.38, max: 3.0 },
-                { name: 'TECHNICALITY', rival: 1.33, you: 1.38, max: 2.0 },
-                { name: 'EXECUTION', rival: 1.48, you: 1.64, max: 2.0 },
-              ].map((row) => (
-                <div key={row.name}>
-                  <div className="flex justify-between items-center mb-1 text-sm">
-                    <span className="font-medium">{row.name}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {row.rival.toFixed(2)} vs <span className="text-primary font-semibold">{row.you.toFixed(2)}</span> / {row.max.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
-                    <div className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[row.name]} opacity-40`} style={{ width: `${(row.rival / row.max) * 100}%` }} />
-                    <div className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[row.name]} border-r-2 border-white/80`} style={{ width: `${(row.you / row.max) * 100}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          <LiveRankingComparison />
         </div>
       </section>
 

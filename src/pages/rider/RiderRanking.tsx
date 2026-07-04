@@ -144,11 +144,6 @@ export default function RiderRanking() {
                 </div>
               </DialogHeader>
 
-              <p className="text-xs text-muted-foreground -mt-2 bg-muted/50 border border-border rounded-lg p-2">
-                Illustrative estimate — {selected.athlete} doesn't have real Woo sensor data in this system yet.
-                Leonardo's numbers below are his real, computed GKA scores.
-              </p>
-
               <div className="flex items-center justify-between py-2">
                 <div className="text-center flex-1">
                   <div className="text-2xl font-bold">{comparison.fake.averageScore.toFixed(2)}</div>

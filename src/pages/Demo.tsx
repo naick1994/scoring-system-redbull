@@ -789,12 +789,6 @@ function JumpCard({
             <div className="space-y-4">
               {displayAreas.map(area => <ScoreBar key={area.name} area={area} />)}
             </div>
-            <div className="mt-2 pt-4 border-t border-border flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">{revealed ? 'Total' : 'Partial Total'}</span>
-              <span className={`text-2xl font-black ${revealed ? 'text-primary' : 'text-amber-600'}`}>
-                {displayScore.toFixed(2)}<span className="text-base font-normal text-muted-foreground"> / {displayMax.toFixed(2)}</span>
-              </span>
-            </div>
           </div>
         </div>
         <div className="px-6 pb-5">

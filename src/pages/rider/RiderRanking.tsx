@@ -1,9 +1,21 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GKA_BIG_AIR_MEN_RANKINGS_2026 } from '@/data/gkaRankings';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
+import { getFakeAthleteScore } from '@/data/fakeAthleteScores';
+import { getLeonardoAverageBreakdown } from '@/data/demoJumps';
+import { useScoring } from '@/contexts/ScoringContext';
+import { AREA_DISPLAY_NAMES } from '@/lib/scoring';
 
 const RIDER_NAME = 'Leonardo Casati';
+
+const AREA_GRADIENT: Record<string, string> = {
+  HEIGHT: 'from-blue-500 to-cyan-400',
+  EXTREMITY: 'from-purple-500 to-pink-400',
+  TECHNICALITY: 'from-amber-500 to-yellow-400',
+  EXECUTION: 'from-green-500 to-lime-400',
+};
 
 // Fallback initials avatar for the rare case a hotlinked GKA photo fails to load.
 function getInitials(name: string): string {
@@ -33,12 +45,12 @@ const COUNTRY_FLAGS: Record<string, string> = {
   'Greece': '🇬🇷',
 };
 
-function AthletePhoto({ name, photoUrl }: { name: string; photoUrl: string }) {
+function AthletePhoto({ name, photoUrl, size = 'w-9 h-9' }: { name: string; photoUrl: string; size?: string }) {
   const [failed, setFailed] = useState(false);
 
   if (failed) {
     return (
-      <div className="w-9 h-9 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center text-xs font-bold text-primary shrink-0">
+      <div className={`${size} rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center text-xs font-bold text-primary shrink-0`}>
         {getInitials(name)}
       </div>
     );
@@ -49,16 +61,30 @@ function AthletePhoto({ name, photoUrl }: { name: string; photoUrl: string }) {
       src={photoUrl}
       alt={name}
       onError={() => setFailed(true)}
-      className="w-9 h-9 rounded-full object-cover border border-border shrink-0"
+      className={`${size} rounded-full object-cover border border-border shrink-0`}
     />
   );
 }
 
 export default function RiderRanking() {
+  const { heightAmplitudeThresholds } = useScoring();
+  const [selected, setSelected] = useState<RankingRow | null>(null);
+
+  const leonardo = useMemo(
+    () => getLeonardoAverageBreakdown(heightAmplitudeThresholds),
+    [heightAmplitudeThresholds]
+  );
+
+  const comparison = useMemo(() => {
+    if (!selected) return null;
+    const fake = getFakeAthleteScore(selected.athlete, selected.rank);
+    return { fake, delta: leonardo.averageScore - fake.averageScore };
+  }, [selected, leonardo]);
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h2 className="text-3xl font-bold mb-1">GKA Big Air Rankings 2026</h2>
-      <p className="text-muted-foreground mb-8">Men's division — GKA Kite World Tour</p>
+      <p className="text-muted-foreground mb-8">Men's division — GKA Kite World Tour · click any rider to compare</p>
 
       <Card className="overflow-hidden shadow-[var(--shadow-card)]">
         <table className="w-full border-collapse">
@@ -76,8 +102,9 @@ export default function RiderRanking() {
               return (
                 <tr
                   key={idx}
+                  onClick={() => !isMe && setSelected(row)}
                   className={`border-b border-border transition-colors ${
-                    isMe ? 'bg-primary/10' : 'hover:bg-muted/50'
+                    isMe ? 'bg-primary/10' : 'hover:bg-muted/50 cursor-pointer'
                   }`}
                 >
                   <td className="py-3 px-4 font-semibold text-muted-foreground">#{row.rank}</td>
@@ -100,6 +127,74 @@ export default function RiderRanking() {
           </tbody>
         </table>
       </Card>
+
+      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+        <DialogContent className="max-w-lg">
+          {selected && comparison && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-3">
+                  <AthletePhoto name={selected.athlete} photoUrl={selected.photoUrl} size="w-14 h-14" />
+                  <div>
+                    <DialogTitle className="text-xl">{selected.athlete}</DialogTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {COUNTRY_FLAGS[selected.country] ?? selected.country} #{selected.rank} · {selected.points} pts
+                    </p>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <p className="text-xs text-muted-foreground -mt-2 bg-muted/50 border border-border rounded-lg p-2">
+                Illustrative estimate — {selected.athlete} doesn't have real Woo sensor data in this system yet.
+                Leonardo's numbers below are his real, computed GKA scores.
+              </p>
+
+              <div className="flex items-center justify-between py-2">
+                <div className="text-center flex-1">
+                  <div className="text-2xl font-bold">{comparison.fake.averageScore.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">{selected.athlete.split(' ')[0]}'s avg</div>
+                </div>
+                <div className="px-4 text-center">
+                  <div className={`text-lg font-bold ${comparison.delta >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {comparison.delta >= 0 ? '+' : ''}{comparison.delta.toFixed(2)}
+                  </div>
+                  <div className="text-[10px] text-muted-foreground uppercase">Leonardo's edge</div>
+                </div>
+                <div className="text-center flex-1">
+                  <div className="text-2xl font-bold text-primary">{leonardo.averageScore.toFixed(2)}</div>
+                  <div className="text-xs text-muted-foreground">Leonardo's avg</div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {comparison.fake.areas.map((fakeArea) => {
+                  const leoArea = leonardo.areas.find(a => a.area === fakeArea.area);
+                  return (
+                    <div key={fakeArea.area}>
+                      <div className="flex justify-between items-center mb-1 text-sm">
+                        <span className="font-medium">{AREA_DISPLAY_NAMES[fakeArea.area] ?? fakeArea.area}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {fakeArea.score.toFixed(2)} vs <span className="text-primary font-semibold">{leoArea?.score.toFixed(2)}</span> / {fakeArea.max.toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
+                        <div
+                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} opacity-40`}
+                          style={{ width: `${(fakeArea.score / fakeArea.max) * 100}%` }}
+                        />
+                        <div
+                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} border-r-2 border-white/80`}
+                          style={{ width: `${((leoArea?.score ?? 0) / fakeArea.max) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

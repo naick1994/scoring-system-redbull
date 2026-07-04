@@ -114,3 +114,31 @@ export function buildDemoJumpResult(index: number, thresholds: HeightAmplitudeTh
   };
   return calculateScore(params, PRESET_WEIGHTS.GKA, 'GKA');
 }
+
+// Leonardo's real average score and per-area breakdown across his 3 GKA
+// jumps — used as the "real data" side of any athlete comparison view.
+export function getLeonardoAverageBreakdown(thresholds: HeightAmplitudeThresholds): {
+  averageScore: number;
+  areas: { area: string; score: number; max: number }[];
+} {
+  const results = DEMO_JUMPS_BASE.map((_, i) => buildDemoJumpResult(i, thresholds));
+  const averageScore = results.reduce((sum, r) => sum + r.totalScore, 0) / results.length;
+
+  const areaTotals = new Map<string, { score: number; max: number }>();
+  results.forEach(r => {
+    r.areaScores.forEach(a => {
+      const entry = areaTotals.get(a.area) ?? { score: 0, max: 0 };
+      entry.score += a.finalScore;
+      entry.max += a.weight * 10;
+      areaTotals.set(a.area, entry);
+    });
+  });
+
+  const areas = Array.from(areaTotals.entries()).map(([area, { score, max }]) => ({
+    area,
+    score: score / results.length,
+    max: max / results.length,
+  }));
+
+  return { averageScore, areas };
+}

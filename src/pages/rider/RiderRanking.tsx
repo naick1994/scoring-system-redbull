@@ -95,7 +95,7 @@ function SeasonRanking({ onSelect, showYouBadge }: { onSelect: (row: RankingRow)
                 key={idx}
                 onClick={() => !isMe && onSelect(row)}
                 className={`border-b border-border transition-colors ${
-                  isMe ? 'bg-primary/10' : 'hover:bg-muted/50 cursor-pointer'
+                  isMe && showYouBadge ? 'bg-primary/10' : isMe ? '' : 'hover:bg-muted/50 cursor-pointer'
                 }`}
               >
                 <td className="py-3 px-4 font-semibold text-muted-foreground">
@@ -107,7 +107,7 @@ function SeasonRanking({ onSelect, showYouBadge }: { onSelect: (row: RankingRow)
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-3">
                     <AthletePhoto name={row.athlete} photoUrl={row.photoUrl} />
-                    <span className={`font-medium ${isMe ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
+                    <span className={`font-medium ${isMe && showYouBadge ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
                     {isMe && showYouBadge && (
                       <Badge className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary/20 text-[10px]">
                         You
@@ -147,7 +147,7 @@ function EventStandings({ event, showYouBadge }: { event: GkaEvent; showYouBadge
               return (
                 <tr
                   key={idx}
-                  className={`border-b border-border transition-colors ${isMe ? 'bg-primary/10' : ''}`}
+                  className={`border-b border-border transition-colors ${isMe && showYouBadge ? 'bg-primary/10' : ''}`}
                 >
                   <td className="py-3 px-4 font-semibold text-muted-foreground">
                     <span className="inline-flex items-center gap-1.5">
@@ -158,7 +158,7 @@ function EventStandings({ event, showYouBadge }: { event: GkaEvent; showYouBadge
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <AthletePhoto name={row.athlete} photoUrl={getPhotoForAthlete(row.athlete)} />
-                      <span className={`font-medium ${isMe ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
+                      <span className={`font-medium ${isMe && showYouBadge ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
                       {isMe && showYouBadge && (
                         <Badge className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary/20 text-[10px]">
                           You

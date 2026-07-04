@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, forwardRef, useImperativeHandle } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { X, Play, Pause, Film, ChevronRight, BarChart2, Gauge, RotateCcw } from 'lucide-react';
+import { X, Play, Pause, Film, ChevronRight, BarChart2, Gauge, RotateCcw, SkipBack, SkipForward } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -555,6 +555,16 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, {
     }
   };
 
+  // Assumes ~30fps — HTML5 video has no true frame API, so this is the
+  // standard approximation for stepping one frame at a time.
+  const FRAME_STEP = 1 / 30;
+  const stepFrame = (direction: 1 | -1) => {
+    if (!videoRef.current) return;
+    videoRef.current.pause();
+    setIsPaused(true);
+    videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime + direction * FRAME_STEP);
+  };
+
   return (
     <>
       <div
@@ -595,12 +605,26 @@ const VideoPlayer = forwardRef<VideoPlayerHandle, {
               >
                 <X className="w-4 h-4" />
               </button>
-              <button
-                onClick={togglePause}
-                className="absolute bottom-4 left-4 z-10 w-11 h-11 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
-              >
-                {isPaused ? <Play className="w-5 h-5 fill-white" /> : <Pause className="w-5 h-5 fill-white" />}
-              </button>
+              <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
+                <button
+                  onClick={() => stepFrame(-1)}
+                  className="w-9 h-9 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                >
+                  <SkipBack className="w-4 h-4 fill-white" />
+                </button>
+                <button
+                  onClick={togglePause}
+                  className="w-11 h-11 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                >
+                  {isPaused ? <Play className="w-5 h-5 fill-white" /> : <Pause className="w-5 h-5 fill-white" />}
+                </button>
+                <button
+                  onClick={() => stepFrame(1)}
+                  className="w-9 h-9 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+                >
+                  <SkipForward className="w-4 h-4 fill-white" />
+                </button>
+              </div>
             </>
           )}
           <div className="relative w-full h-full" style={{ background: '#000' }}>

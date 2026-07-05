@@ -31,10 +31,10 @@ const CURRENT_ROLES: TimelineItem[] = [
     ],
   },
   {
-    title: 'Manager', org: 'Lorenzo & Leonardo Casati', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoLorenzoCasati,
+    title: 'Manager', org: 'Casati Brothers', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoLorenzoCasati,
     desc: [
       'Athlete representation, sponsorships, partnerships, and strategic growth.',
-      "Currently managing two of the most talented riders in the world. Leonardo's real jump data is what powers this pitch's live demo.",
+      'Currently managing two of the most talented riders in the world.',
     ],
   },
   {
@@ -64,7 +64,7 @@ const TRACK_RECORD: TimelineItem[] = [
   },
   {
     title: 'Chief Operating Officer', org: 'Tribala', period: 'May 2023 - Feb 2025 · 1 yr 10 mos', logo: logoTribala,
-    desc: ['Founding COO across the wider group of brands, alongside Snowit.'],
+    desc: [],
   },
   {
     title: 'Digital & Innovation Ambassador', org: 'FNM S.p.A.', period: 'Sep 2022 - Oct 2024 · 2 yrs 2 mos', logo: logoFnm,

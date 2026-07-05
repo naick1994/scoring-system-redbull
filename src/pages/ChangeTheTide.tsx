@@ -978,8 +978,8 @@ export default function ChangeTheTide() {
           <p className="text-lg text-muted-foreground max-w-2xl">
             Break a jump down and it's really four separate, measurable areas — Height &amp; Amplitude,
             Extremity, Technicality, Execution — that can each be scored on their own, then added together.
-            The reductionist approach doesn't ask a judge to feel the whole trick at once; it asks four
-            separate, simpler questions and sums the answers.
+            The reductionist approach doesn't rely on one overall impression of the whole trick; it breaks
+            the question into four separate, simpler ones and sums the answers.
           </p>
           <p className="text-lg text-muted-foreground max-w-2xl mt-4">
             Big Air wouldn't be the first sport to make this trade.

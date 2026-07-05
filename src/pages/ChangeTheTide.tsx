@@ -1059,7 +1059,7 @@ function SolutionSection() {
         <RevealOnScroll direction="up">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The solution</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Every problem, answered.
+            Every problem, <span className="text-primary">answered.</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             The same reductionist model, restated as answers to every problem holistic judging has.
@@ -1135,7 +1135,7 @@ function HistorySection() {
         <RevealOnScroll direction="right">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Not the first sport to do this</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Every sport eventually drops the eye test.
+            Every sport eventually drops <span className="text-primary">the eye test.</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             Most judged sports have already made this exact trade, usually after the same holistic
@@ -1234,7 +1234,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The idea</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-              A trick is a sum of parts, not a single impression.
+              A trick is a <span className="text-primary">sum of parts,</span> not a single impression.
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Break a jump down and it's four separate, measurable areas: Height &amp; Amplitude,
@@ -1259,7 +1259,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The shift</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Break the jump into what can be measured.
+              Break the jump into what can be <span className="text-primary">measured.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Every jump is decomposed into four areas, each scored against fixed, published parameters.
@@ -1279,7 +1279,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="right">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Tunable, not rigid</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Objective doesn't mean fixed.
+              Objective doesn't mean <span className="text-primary">fixed.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Conditions change event to event, and so does what an organizer wants a heat to reward.
@@ -1300,7 +1300,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Why now</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-              The data doesn't need to be invented.
+              The data doesn't need to be <span className="text-primary">invented.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Woo's sensors are already strapped to riders in competition, recording height, speed,
@@ -1321,7 +1321,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The sensors</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              One sensor sees the jump. Three see the whole trick.
+              One sensor sees the jump. Three see <span className="text-primary">the whole trick.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               A single board-mounted sensor captures height, speed, and rotations, but not what the kite
@@ -1341,7 +1341,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="right">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">A login of their own</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Athletes don't just receive a score. They get an account.
+              Athletes don't just receive a score. They get <span className="text-primary">an account.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               A separate rider login surfaces every area, every point, for every jump, not just a
@@ -1361,7 +1361,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The real unlock</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              "What do I need to improve?" gets a real answer.
+              "What do I need to improve?" gets <span className="text-primary">a real answer.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Today, an athlete who loses a heat gets an opinion. This model gives every rider a
@@ -1383,7 +1383,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="right">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Where they stand</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Compare against anyone in the field, not just the leaderboard.
+              Compare against anyone in the field, not just <span className="text-primary">the leaderboard.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               From the season ranking, a rider can pick any other athlete and see an area-by-area
@@ -1403,7 +1403,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">What else it unlocks</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-12">
-              More than a scoring change.
+              More than a <span className="text-primary">scoring change.</span>
             </h2>
           </RevealOnScroll>
 
@@ -1416,7 +1416,7 @@ export default function ChangeTheTide() {
         <div className="container mx-auto px-4 py-28 max-w-3xl text-center">
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">See it work</div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">A working demo is live.</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">A working demo <span className="text-primary">is live.</span></h2>
             <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
               Every screen referenced here, the four-area breakdown, the coaching receipt, exists
               today, running, not as a slide.

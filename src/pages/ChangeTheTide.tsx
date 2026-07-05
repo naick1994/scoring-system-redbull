@@ -762,6 +762,88 @@ function useInViewOnce<T extends HTMLElement>() {
   return { ref, seen };
 }
 
+const IDEA_SPLIT_AREAS = [
+  { name: 'HEIGHT & AMPLITUDE', short: 'Height & Amplitude' },
+  { name: 'EXTREMITY', short: 'Extremity' },
+  { name: 'TECHNICALITY', short: 'Technicality' },
+  { name: 'EXECUTION', short: 'Execution' },
+];
+
+// One impression fades out as four area chips fly outward from its
+// center and settle into a row, then sum into a single total pill —
+// a literal restatement of "sum of parts, not one impression."
+function IdeaSplitVisual() {
+  const { ref, seen } = useInViewOnce<HTMLDivElement>();
+
+  return (
+    <div ref={ref} className="mt-14 relative" style={{ minHeight: 190 }}>
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{
+          opacity: seen ? 0 : 1,
+          transform: seen ? 'scale(0.85)' : 'scale(1)',
+          transition: 'opacity 0.5s ease, transform 0.5s ease',
+        }}
+      >
+        <div className="rounded-full border border-border bg-card px-8 py-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          One impression
+        </div>
+      </div>
+
+      <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {IDEA_SPLIT_AREAS.map((area, i) => (
+            <div key={area.name} className="flex items-center gap-3">
+              <div
+                className={`rounded-lg px-4 py-3 text-xs font-bold text-white bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
+                style={{
+                  opacity: seen ? 1 : 0,
+                  transform: seen
+                    ? 'translateY(0) scale(1)'
+                    : `translateY(${i % 2 === 0 ? -16 : 16}px) scale(0.4)`,
+                  transitionProperty: 'opacity, transform',
+                  transitionDuration: '0.5s',
+                  transitionTimingFunction: 'ease',
+                  transitionDelay: `${i * 110}ms`,
+                }}
+              >
+                {area.short}
+              </div>
+              {i < IDEA_SPLIT_AREAS.length - 1 && (
+                <span
+                  className="text-lg font-bold text-muted-foreground"
+                  style={{
+                    opacity: seen ? 1 : 0,
+                    transition: 'opacity 0.4s ease',
+                    transitionDelay: `${i * 110 + 60}ms`,
+                  }}
+                >
+                  +
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div
+          className="flex items-center gap-3"
+          style={{
+            opacity: seen ? 1 : 0,
+            transform: seen ? 'translateY(0)' : 'translateY(10px)',
+            transition: 'opacity 0.5s ease, transform 0.5s ease',
+            transitionDelay: `${IDEA_SPLIT_AREAS.length * 110 + 150}ms`,
+          }}
+        >
+          <span className="text-lg font-bold text-muted-foreground">=</span>
+          <div className="rounded-full border border-primary/40 bg-primary/10 px-6 py-2 text-sm font-bold text-primary">
+            One total score
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function useRoundRobinIndex(length: number, periodMs: number) {
   const [index, setIndex] = useState(0);
   const reducedMotion = useRef(
@@ -981,6 +1063,8 @@ export default function ChangeTheTide() {
             The reductionist approach doesn't rely on one overall impression of the whole trick; it breaks
             the question into four separate, simpler ones and sums the answers.
           </p>
+
+          <IdeaSplitVisual />
         </div>
       </section>
 
@@ -1092,6 +1176,22 @@ export default function ChangeTheTide() {
         </div>
       </section>
 
+      {/* ───────── Their results, broken down ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">A login of their own</div>
+          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+            Athletes don't just receive a score. They get an account.
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+            A separate rider login surfaces their own results in full: every area, every point,
+            for every jump, not just a final number.
+          </p>
+
+          <JumpBreakdownCard />
+        </div>
+      </section>
+
       {/* ───────── Coaching & education ───────── */}
       <section className="border-b border-border">
         <div className="container mx-auto px-4 py-24 max-w-5xl">
@@ -1107,22 +1207,6 @@ export default function ChangeTheTide() {
           </p>
 
           <AutoWhatIfDemo />
-        </div>
-      </section>
-
-      {/* ───────── Their results, broken down ───────── */}
-      <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-5xl">
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">A login of their own</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Athletes don't just receive a score. They get an account.
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-            A separate rider login surfaces their own results in full: every area, every point,
-            for every jump, not just a final number.
-          </p>
-
-          <JumpBreakdownCard />
         </div>
       </section>
 

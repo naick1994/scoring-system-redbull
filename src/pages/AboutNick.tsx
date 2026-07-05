@@ -105,11 +105,11 @@ function Timeline({ items }: { items: TimelineItem[] }) {
   useEffect(() => { const id = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(id); }, []);
 
   return (
-    <div className="space-y-4">
+    <div className="divide-y divide-border border-t border-border">
       {items.map((item, i) => (
         <div
           key={item.title + item.org}
-          className="flex gap-4 rounded-lg border border-border bg-card p-4"
+          className="flex gap-4 py-5"
           style={{
             opacity: mounted ? 1 : 0,
             transform: mounted ? 'translateX(0)' : 'translateX(-12px)',
@@ -121,8 +121,8 @@ function Timeline({ items }: { items: TimelineItem[] }) {
           )}
           <div className="min-w-0 flex-1">
             <div className="font-bold text-sm">{item.title}</div>
-            <div className="text-xs text-muted-foreground">{item.org}</div>
-            <div className="text-xs font-mono text-muted-foreground mt-0.5">{item.period}</div>
+            <div className="text-sm text-muted-foreground">{item.org}</div>
+            <div className="text-xs text-muted-foreground mt-0.5">{item.period}</div>
             {item.desc.length > 0 && (
               <ul className="text-sm text-muted-foreground mt-2 space-y-1 list-disc list-inside">
                 {item.desc.map((line) => <li key={line}>{line}</li>)}

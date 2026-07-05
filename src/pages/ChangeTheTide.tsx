@@ -1212,7 +1212,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The problem</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-              One impression can outweigh everything else.
+              One impression can outweigh <span className="text-primary">everything else.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Holistic judging asks one person to weigh height, rotation, execution, and risk all at once,

@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, CheckCircle2, X, Sparkles } from 'lucide-react';
@@ -232,10 +233,38 @@ const JUMP_BREAKDOWNS = [
 
 function JumpBreakdownCard() {
   const [selected, setSelected] = useState(0);
+  const userInteractedRef = useRef(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const reducedMotion = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ).current;
+
+  useEffect(() => {
+    if (reducedMotion || !cardRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.5 }
+    );
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || !inView) return;
+    const id = setInterval(() => {
+      if (userInteractedRef.current) return;
+      setSelected(prev => (prev + 1) % JUMP_BREAKDOWNS.length);
+    }, 3200);
+    return () => clearInterval(id);
+  }, [reducedMotion, inView]);
+
   const jump = JUMP_BREAKDOWNS[selected];
+  const activeAreaIndex = useRoundRobinIndex(jump.areas.length, 2600);
+  const activeAreaName = jump.areas[activeAreaIndex].name;
 
   return (
-    <Card className="p-8 shadow-[var(--shadow-card)]">
+    <Card ref={cardRef} className="p-8 shadow-[var(--shadow-card)]">
       <div className="text-center mb-8">
         <div className="text-xs text-muted-foreground mb-1 font-mono uppercase tracking-wide">Total Score</div>
         <div className="text-6xl font-bold text-primary">23.82<span className="text-2xl text-muted-foreground"> / 30</span></div>
@@ -243,7 +272,7 @@ function JumpBreakdownCard() {
           {JUMP_BREAKDOWNS.map((j, i) => (
             <button
               key={j.label}
-              onClick={() => setSelected(i)}
+              onClick={() => { userInteractedRef.current = true; setSelected(i); }}
               className={`rounded-lg px-4 py-2 text-sm transition-colors ${
                 i === selected ? 'bg-primary/15 border border-primary/40' : 'bg-muted/40 hover:bg-muted/60 border border-transparent'
               }`}
@@ -256,21 +285,53 @@ function JumpBreakdownCard() {
       </div>
 
       <div className="text-sm font-semibold mb-4 text-left">{jump.label} — Detailed Breakdown</div>
-      <div key={jump.label} className="space-y-4" style={{ animation: 'whatIfPop 0.35s ease' }}>
-        {jump.areas.map((area) => (
-          <div key={area.name}>
-            <div className="flex justify-between items-center mb-1.5 text-sm">
-              <span className="font-medium">{area.name}</span>
-              <span className="font-semibold text-primary">{area.score.toFixed(2)} / {area.max.toFixed(2)}</span>
+      <div key={jump.label} className="space-y-3" style={{ animation: 'whatIfPop 0.35s ease' }}>
+        {jump.areas.map((area, i) => {
+          const isActive = i === activeAreaIndex;
+          return (
+            <div
+              key={area.name}
+              className="rounded-lg p-3 -mx-3 transition-colors duration-500"
+              style={isActive ? { background: 'hsl(var(--primary) / 0.06)' } : undefined}
+            >
+              <div className="flex justify-between items-center mb-1.5 text-sm">
+                <span className={`font-medium transition-colors duration-500 ${isActive ? 'text-primary' : ''}`}>{area.name}</span>
+                <span className="font-semibold text-primary">{area.score.toFixed(2)} / {area.max.toFixed(2)}</span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+                <div
+                  className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
+                  style={{ width: `${(area.score / area.max) * 100}%`, transition: 'width 0.5s ease' }}
+                />
+              </div>
             </div>
-            <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
-              <div
-                className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
-                style={{ width: `${(area.score / area.max) * 100}%`, transition: 'width 0.5s ease' }}
-              />
-            </div>
+          );
+        })}
+      </div>
+
+      {/* Fixed-height panel so switching the active area never resizes the card. */}
+      <div className="mt-3 pt-4 border-t border-border overflow-y-auto" style={{ height: 190 }}>
+        <div key={`${selected}-${activeAreaName}`} style={{ animation: 'whatIfPop 0.35s ease' }}>
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-bold text-sm tracking-wide">{activeAreaName}</span>
           </div>
-        ))}
+          <div className="space-y-2">
+            {JUMP_SUB_PARAMS[selected][activeAreaName].map((p) => (
+              <div key={p.label} className="flex items-center justify-between gap-3 text-xs">
+                <span className="text-muted-foreground shrink-0 w-32">{p.label}</span>
+                <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div
+                    className={`h-full bg-gradient-to-r ${AREA_GRADIENT[activeAreaName]}`}
+                    style={{ width: `${p.max > 0 ? (p.pts / p.max) * 100 : 0}%` }}
+                  />
+                </div>
+                <span className="font-semibold tabular-nums shrink-0 w-16 text-right">
+                  {p.pts.toFixed(2)}/{p.max.toFixed(2)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </Card>
   );
@@ -327,11 +388,6 @@ function AutoWhatIfDemo() {
         <WhatIfParamRow label="Height" tip="Push for more raw airtime off the kicker." max={1.5} state={heightState} />
         <WhatIfParamRow label="Amplitude" tip="Ride more power into the takeoff to extend the arc." max={1.0} state={amplitudeState} />
       </div>
-
-      <p className="text-[11px] text-muted-foreground mt-4 pt-4 border-t border-border font-mono">
-        Auto-playing — Height and Amplitude cycling independently through their real thresholds, live on
-        the actual scoring model. Two separate data streams, one combined score.
-      </p>
     </Card>
   );
 }
@@ -472,6 +528,69 @@ const AREA_GRADIENT: Record<string, string> = {
   EXECUTION: 'from-green-500 to-lime-400',
 };
 
+const AREA_DOT_COLOR: Record<string, string> = {
+  'HEIGHT & AMPLITUDE': 'bg-cyan-500',
+  EXTREMITY: 'bg-pink-500',
+  TECHNICALITY: 'bg-amber-500',
+  EXECUTION: 'bg-lime-500',
+};
+
+// Same parameter definitions shown in the real Parameters Guide page — the
+// published rulebook each area is scored against, not a specific jump's result.
+const TIER_COLORS = [
+  'bg-destructive/20 text-destructive border-destructive/30',
+  'bg-amber-500/20 text-amber-400 border-amber-500/30',
+  'bg-lime-500/20 text-lime-400 border-lime-500/30',
+  'bg-green-500/20 text-green-400 border-green-500/30',
+];
+const PARAM_GUIDE: Record<string, { label: string; desc: string; tiers: string[]; max: string; continuous?: boolean }[]> = {
+  'HEIGHT & AMPLITUDE': [
+    {
+      label: 'Height', desc: 'Maximum vertical height achieved during the jump',
+      tiers: ['0–10m: 0 pts', '10–15m: 0.6 pts', '15–17.5m: 0.9 pts', '+17.5m: 1.5 pts'], max: '1.5',
+    },
+    {
+      label: 'Amplitude', desc: 'Horizontal distance covered during the jump',
+      tiers: ['0–50m: 0 pts', '50–75m: 0.33 pts', '75–100m: 0.67 pts', '+100m: 1.0 pts'], max: '1.0',
+    },
+  ],
+  EXTREMITY: [
+    {
+      label: 'Kite Angle', desc: 'Kite position during the kiteloop (lower is riskier and scores higher)',
+      tiers: ['High: 0 pts', 'Medium: 0.25 pts', 'Low: 0.5 pts', 'Super Low: 0.75 pts'], max: '0.75',
+    },
+    {
+      label: 'Yank Power', desc: 'Force and explosiveness of the take-off',
+      tiers: ['None: 0 pts', 'Low: 0.25 pts', 'Medium: 0.5 pts', 'Bomb: 0.75 pts'], max: '0.75',
+    },
+    {
+      label: 'Free Fall', desc: 'Quality and duration of free fall after take-off',
+      tiers: ['Poor: 0 pts', 'Medium: 0.25 pts', 'High: 0.5 pts'], max: '0.5',
+    },
+  ],
+  TECHNICALITY: [
+    {
+      label: 'Rotations', desc: 'Number of front or back rotations completed during the jump',
+      tiers: ['1 rotation: 0.25 pts', '2 rotations: 0.5 pts', '3 rotations: 0.75 pts', '4+: 1.0 pts'], max: '1.0',
+    },
+    {
+      label: 'Rotation Axis', desc: 'Horizontal rotations score higher than vertical rotations',
+      tiers: ['Vertical: 0.2 pts', 'Horizontal: 0.5 pts'], max: '0.5',
+    },
+    {
+      label: 'Board Off', desc: 'Whether the board is released from the feet during the trick',
+      tiers: ['No: 0 pts', 'Yes: 0.3 pts'], max: '0.3',
+    },
+  ],
+  EXECUTION: [
+    { label: 'Style', desc: '', tiers: [], max: '', continuous: true },
+    { label: 'Stability & Control', desc: '', tiers: [], max: '', continuous: true },
+    { label: 'Landing Control', desc: '', tiers: [], max: '', continuous: true },
+    { label: 'Board Control', desc: '', tiers: [], max: '', continuous: true },
+    { label: 'Kite Control', desc: '', tiers: [], max: '', continuous: true },
+  ],
+};
+
 const AREAS = [
   { name: 'HEIGHT & AMPLITUDE', weight: 30, desc: 'Peak height and distance covered, measured directly against event thresholds.', subjective: false },
   { name: 'EXTREMITY', weight: 30, desc: 'Kite angle, load on entry, and hang time during the loop.', subjective: false },
@@ -481,31 +600,86 @@ const AREAS = [
 
 // Real Jump 1 (Leonardo Casati, Mykonos) per-parameter breakdown, shown when
 // each area card auto-expands — same numbers as the rest of the page.
-const AREA_SUB_PARAMS: Record<string, { label: string; pts: number; max: number }[]> = {
-  'HEIGHT & AMPLITUDE': [
-    { label: 'Height', pts: 0.90, max: 1.50 },
-    { label: 'Amplitude', pts: 0.67, max: 1.00 },
-  ],
-  EXTREMITY: [
-    { label: 'Kite Angle', pts: 0.75, max: 0.75 },
-    { label: 'Yank Power', pts: 0.50, max: 0.75 },
-    { label: 'Free Fall', pts: 0.25, max: 0.50 },
-  ],
-  TECHNICALITY: [
-    { label: 'Rotations', pts: 0.25, max: 1.00 },
-    { label: 'Rotation Axis', pts: 0.50, max: 0.50 },
-    { label: 'Board Off', pts: 1.00, max: 1.00 },
-    { label: 'Board Flip', pts: 0.20, max: 0.30 },
-    { label: 'Board Spin', pts: 0.00, max: 0.20 },
-  ],
-  EXECUTION: [
-    { label: 'Style', pts: 0.35, max: 0.40 },
-    { label: 'Stability & Control', pts: 0.33, max: 0.40 },
-    { label: 'Landing Control', pts: 0.34, max: 0.40 },
-    { label: 'Board Control', pts: 0.36, max: 0.40 },
-    { label: 'Kite Control', pts: 0.32, max: 0.40 },
-  ],
-};
+// Real per-jump, per-parameter breakdown for all 3 of Leonardo Casati's
+// Mykonos jumps — derived from the same real Woo/execution data used
+// throughout the page, verified against each jump's known area totals.
+const JUMP_SUB_PARAMS: Record<string, { label: string; pts: number; max: number }[]>[] = [
+  {
+    'HEIGHT & AMPLITUDE': [
+      { label: 'Height', pts: 0.90, max: 1.50 },
+      { label: 'Amplitude', pts: 0.67, max: 1.00 },
+    ],
+    EXTREMITY: [
+      { label: 'Kite Angle', pts: 0.75, max: 0.75 },
+      { label: 'Yank Power', pts: 0.50, max: 0.75 },
+      { label: 'Free Fall', pts: 0.25, max: 0.50 },
+    ],
+    TECHNICALITY: [
+      { label: 'Rotations', pts: 0.25, max: 1.00 },
+      { label: 'Rotation Axis', pts: 0.50, max: 0.50 },
+      { label: 'Board Off', pts: 1.00, max: 1.00 },
+      { label: 'Board Flip', pts: 0.20, max: 0.30 },
+      { label: 'Board Spin', pts: 0.00, max: 0.20 },
+    ],
+    EXECUTION: [
+      { label: 'Style', pts: 0.35, max: 0.40 },
+      { label: 'Stability & Control', pts: 0.33, max: 0.40 },
+      { label: 'Landing Control', pts: 0.34, max: 0.40 },
+      { label: 'Board Control', pts: 0.36, max: 0.40 },
+      { label: 'Kite Control', pts: 0.32, max: 0.40 },
+    ],
+  },
+  {
+    'HEIGHT & AMPLITUDE': [
+      { label: 'Height', pts: 1.50, max: 1.50 },
+      { label: 'Amplitude', pts: 0.67, max: 1.00 },
+    ],
+    EXTREMITY: [
+      { label: 'Kite Angle', pts: 0.50, max: 0.75 },
+      { label: 'Yank Power', pts: 0.75, max: 0.75 },
+      { label: 'Free Fall', pts: 0.50, max: 0.50 },
+    ],
+    TECHNICALITY: [
+      { label: 'Rotations', pts: 0.50, max: 1.00 },
+      { label: 'Rotation Axis', pts: 0.50, max: 0.50 },
+      { label: 'Board Off', pts: 1.00, max: 1.00 },
+      { label: 'Board Flip', pts: 0.00, max: 0.30 },
+      { label: 'Board Spin', pts: 0.00, max: 0.20 },
+    ],
+    EXECUTION: [
+      { label: 'Style', pts: 0.37, max: 0.40 },
+      { label: 'Stability & Control', pts: 0.36, max: 0.40 },
+      { label: 'Landing Control', pts: 0.35, max: 0.40 },
+      { label: 'Board Control', pts: 0.35, max: 0.40 },
+      { label: 'Kite Control', pts: 0.35, max: 0.40 },
+    ],
+  },
+  {
+    'HEIGHT & AMPLITUDE': [
+      { label: 'Height', pts: 1.50, max: 1.50 },
+      { label: 'Amplitude', pts: 1.00, max: 1.00 },
+    ],
+    EXTREMITY: [
+      { label: 'Kite Angle', pts: 0.75, max: 0.75 },
+      { label: 'Yank Power', pts: 0.50, max: 0.75 },
+      { label: 'Free Fall', pts: 0.25, max: 0.50 },
+    ],
+    TECHNICALITY: [
+      { label: 'Rotations', pts: 0.75, max: 1.00 },
+      { label: 'Rotation Axis', pts: 0.50, max: 0.50 },
+      { label: 'Board Off', pts: 1.00, max: 1.00 },
+      { label: 'Board Flip', pts: 0.00, max: 0.30 },
+      { label: 'Board Spin', pts: 0.00, max: 0.20 },
+    ],
+    EXECUTION: [
+      { label: 'Style', pts: 0.32, max: 0.40 },
+      { label: 'Stability & Control', pts: 0.32, max: 0.40 },
+      { label: 'Landing Control', pts: 0.32, max: 0.40 },
+      { label: 'Board Control', pts: 0.32, max: 0.40 },
+      { label: 'Kite Control', pts: 0.32, max: 0.40 },
+    ],
+  },
+];
 
 // Real Woo sensor readouts for all 3 of Leonardo Casati's Mykonos jumps —
 // same numbers used everywhere else on the page, just the full sensor grid.
@@ -618,131 +792,48 @@ function WooSensorPanel() {
   );
 }
 
-const COMPARISON_PAIRS = [
-  {
-    problem: 'One overall impression, formed in seconds',
-    fix: 'Four weighted areas, scored independently',
-  },
-  {
-    problem: 'Not tied to any fixed, published parameter',
-    fix: 'Every point tied to a published parameter',
-  },
-  {
-    problem: 'Hard to audit after the fact',
-    fix: 'Fully auditable — every score is explainable',
-  },
-  {
-    problem: 'Varies between judges and events',
-    fix: 'Same method, every judge, every event',
-  },
-  {
-    problem: 'No specific feedback on what to improve',
-    fix: 'Precise, per-parameter feedback for every rider',
-  },
-  {
-    problem: 'Rewards how it looked, not what it measured',
-    fix: 'Every score traced to a real measurement',
-  },
-  {
-    problem: 'No answer to "what should I train?"',
-    fix: 'The exact parameter that cost you points',
-  },
-  {
-    problem: 'No way to compare beyond the final rank',
-    fix: 'Area-by-area comparison against any rider',
-  },
+const PROBLEM_ITEMS = [
+  'One overall impression, formed in seconds',
+  'Not tied to any fixed, published parameter',
+  'Hard to audit after the fact',
+  'Varies between judges and events',
+  'No specific feedback on what to improve',
+  'Rewards how it looked, not what it measured',
+  'No answer to "what should I train?"',
+  'No way to compare beyond the final rank',
 ];
 
-function ComparisonSection() {
-  const [selected, setSelected] = useState(0);
-  const userInteractedRef = useRef(false);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  const reducedMotion = useRef(
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ).current;
+const SOLUTION_ITEMS = [
+  'Four weighted areas, scored independently',
+  'Every point tied to a published parameter',
+  'Fully auditable — every score is explainable',
+  'Same method, every judge, every event',
+  'Precise, per-parameter feedback for every rider',
+  'Every score traced to a real measurement',
+  'The exact parameter that cost you points',
+  'Area-by-area comparison against any rider',
+];
 
+const PROBLEM_ITEM_COLORS = [
+  'text-red-400', 'text-orange-400', 'text-rose-400', 'text-pink-400',
+];
+const SOLUTION_ITEM_COLORS = [
+  'text-green-400', 'text-emerald-400', 'text-teal-400', 'text-cyan-400',
+];
+
+function useInViewOnce<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [seen, setSeen] = useState(false);
   useEffect(() => {
-    if (reducedMotion || !sectionRef.current) return;
+    if (!ref.current || seen) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.4 }
+      ([entry]) => { if (entry.isIntersecting) setSeen(true); },
+      { threshold: 0.2 }
     );
-    observer.observe(sectionRef.current);
+    observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [reducedMotion]);
-
-  useEffect(() => {
-    if (reducedMotion || !inView) return;
-    const id = setInterval(() => {
-      if (userInteractedRef.current) return;
-      setSelected(prev => (prev + 1) % COMPARISON_PAIRS.length);
-    }, 2400);
-    return () => clearInterval(id);
-  }, [reducedMotion, inView]);
-
-  const handleSelect = (i: number) => {
-    userInteractedRef.current = true;
-    setSelected(i);
-  };
-
-  return (
-    <section className="border-b border-border">
-      <div ref={sectionRef} className="container mx-auto px-4 py-24 max-w-5xl">
-        <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The comparison</div>
-        <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-          Holistic vs. reductionist, side by side.
-        </h2>
-        <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-          Eight problems with today's judging, and the eight things the reductionist model does instead.
-          Pick one to line them up.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card className="p-7 shadow-[var(--shadow-card)]">
-            <div className="text-sm font-mono uppercase tracking-wide text-muted-foreground mb-5">Holistic (today)</div>
-            <div className="space-y-2">
-              {COMPARISON_PAIRS.map((pair, i) => {
-                const isSelected = i === selected;
-                return (
-                  <button
-                    key={pair.problem}
-                    onClick={() => handleSelect(i)}
-                    className={`w-full flex items-center gap-3 text-sm text-left rounded-lg px-3 h-11 transition-colors ${
-                      isSelected ? 'bg-red-500/10 text-foreground' : 'text-muted-foreground hover:bg-muted/50'
-                    }`}
-                  >
-                    <X className={`w-4 h-4 shrink-0 ${isSelected ? 'text-red-400' : 'text-red-400/50'}`} />
-                    <span className="truncate">{pair.problem}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-          <Card className="p-7 shadow-[var(--shadow-card)] border-green-500/30">
-            <div className="text-sm font-mono uppercase tracking-wide text-green-400 mb-5">Reductionist (this system)</div>
-            <div className="space-y-2">
-              {COMPARISON_PAIRS.map((pair, i) => {
-                const isSelected = i === selected;
-                return (
-                  <button
-                    key={pair.fix}
-                    onClick={() => handleSelect(i)}
-                    className={`w-full flex items-center gap-3 text-sm text-left rounded-lg px-3 h-11 transition-colors ${
-                      isSelected ? 'bg-green-500/10 text-foreground' : 'text-muted-foreground hover:bg-muted/50'
-                    }`}
-                  >
-                    <CheckCircle2 className={`w-4 h-4 shrink-0 ${isSelected ? 'text-green-400' : 'text-green-400/50'}`} />
-                    <span className="truncate">{pair.fix}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </Card>
-        </div>
-      </div>
-    </section>
-  );
+  }, [seen]);
+  return { ref, seen };
 }
 
 function useRoundRobinIndex(length: number, periodMs: number) {
@@ -760,9 +851,150 @@ function useRoundRobinIndex(length: number, periodMs: number) {
   return index;
 }
 
-export default function ChangeTheTide() {
-  const activeShiftIndex = useRoundRobinIndex(AREAS.length, 3200);
+function ProblemList() {
+  const { ref, seen } = useInViewOnce<HTMLDivElement>();
+  const activeIndex = useRoundRobinIndex(PROBLEM_ITEMS.length, 500);
 
+  return (
+    <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-10">
+      {PROBLEM_ITEMS.map((text, i) => {
+        const color = PROBLEM_ITEM_COLORS[i % PROBLEM_ITEM_COLORS.length];
+        const isActive = i === activeIndex;
+        return (
+          <div
+            key={text}
+            className={`flex items-center gap-3 text-sm rounded-lg border px-4 py-3 transition-colors duration-300 ${
+              isActive ? 'border-red-500/60 bg-red-500/15' : 'border-red-500/20 bg-red-500/5'
+            }`}
+            style={{
+              opacity: seen ? 1 : 0,
+              transform: seen ? 'translateY(0)' : 'translateY(10px)',
+              transition: `opacity 0.5s ease ${i * 80}ms, transform 0.5s ease ${i * 80}ms`,
+            }}
+          >
+            <X className={`w-4 h-4 shrink-0 ${color}`} />
+            <span className={isActive ? 'text-foreground' : 'text-foreground/90'}>{text}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function SolutionSection() {
+  const { ref, seen } = useInViewOnce<HTMLDivElement>();
+  const activeIndex = useRoundRobinIndex(SOLUTION_ITEMS.length, 500);
+
+  return (
+    <section className="border-b border-border">
+      <div className="container mx-auto px-4 py-24 max-w-5xl">
+        <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The solution</div>
+        <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+          Every problem, answered.
+        </h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+          The same reductionist model, restated as answers to every problem holistic judging has.
+        </p>
+
+        <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {SOLUTION_ITEMS.map((text, i) => {
+            const color = SOLUTION_ITEM_COLORS[i % SOLUTION_ITEM_COLORS.length];
+            const isActive = i === activeIndex;
+            return (
+              <div
+                key={text}
+                className={`flex items-center gap-3 text-sm rounded-lg border px-4 py-3 transition-colors duration-300 ${
+                  isActive ? 'border-green-500/60 bg-green-500/15' : 'border-green-500/20 bg-green-500/5'
+                }`}
+                style={{
+                  opacity: seen ? 1 : 0,
+                  transform: seen ? 'translateY(0)' : 'translateY(10px)',
+                  transition: `opacity 0.5s ease ${i * 80}ms, transform 0.5s ease ${i * 80}ms`,
+                }}
+              >
+                <CheckCircle2 className={`w-4 h-4 shrink-0 ${color}`} />
+                <span className={isActive ? 'text-foreground' : 'text-foreground/90'}>{text}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const HISTORY_ITEMS = [
+  {
+    sport: 'Figure skating', year: '2004', color: 'blue',
+    change: 'Replaced the subjective 6.0 scale with the International Judging System — every element scored against a fixed base value.',
+    why: 'Introduced after the 2002 Salt Lake City judging scandal exposed how much a final score could depend on who was judging.',
+  },
+  {
+    sport: 'Artistic gymnastics', year: '2006', color: 'purple',
+    change: 'Abolished the "Perfect 10" for an open-ended Code of Points — difficulty and execution scored as two separate numbers.',
+    why: 'Removed the ceiling a holistic 10 put on innovation, and reduced how much a routine\'s score depended on a judge\'s reputation for it.',
+  },
+  {
+    sport: 'Taekwondo', year: '2012', color: 'orange',
+    change: 'Introduced electronic body-protector sensors at the London Olympics — hits register and score automatically.',
+    why: 'Removed judge bias from the single moment a sport is most contested: whether a hit actually landed.',
+  },
+  {
+    sport: 'Skateboarding', year: '2021', color: 'pink',
+    change: 'Adopted a numeric run/trick scoring system for its Olympic debut in Tokyo — built from difficulty, variety, and execution.',
+    why: 'Needed a scoring method that could hold up to Olympic scrutiny, not just contest-day judging.',
+  },
+];
+
+const HISTORY_COLOR_CLASSES: Record<string, { border: string; text: string }> = {
+  blue:   { border: 'hsl(217 91% 60% / 0.5)', text: 'text-blue-400' },
+  purple: { border: 'hsl(270 91% 65% / 0.5)', text: 'text-purple-400' },
+  orange: { border: 'hsl(25 95% 53% / 0.5)',  text: 'text-orange-400' },
+  cyan:   { border: 'hsl(190 91% 55% / 0.5)', text: 'text-cyan-400' },
+  pink:   { border: 'hsl(330 81% 60% / 0.5)', text: 'text-pink-400' },
+};
+
+function HistorySection() {
+  const activeIndex = useRoundRobinIndex(HISTORY_ITEMS.length, 3000);
+
+  return (
+    <section className="border-b border-border">
+      <div className="container mx-auto px-4 py-24 max-w-5xl">
+        <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Not the first sport to do this</div>
+        <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+          Every sport eventually drops the eye test.
+        </h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+          Most judged sports have already made this exact trade — usually after the same holistic
+          problems became too visible to ignore.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {HISTORY_ITEMS.map((item, i) => {
+            const isActive = i === activeIndex;
+            const colors = HISTORY_COLOR_CLASSES[item.color];
+            return (
+              <Card
+                key={item.sport}
+                className="p-6 shadow-[var(--shadow-card)] transition-colors duration-500"
+                style={isActive ? { borderColor: colors.border } : undefined}
+              >
+                <div className={`text-3xl font-bold mb-1 tabular-nums transition-colors duration-500 ${isActive ? colors.text : 'text-foreground'}`}>
+                  {item.year}
+                </div>
+                <div className="font-bold text-sm mb-3">{item.sport}</div>
+                <p className="text-sm text-muted-foreground mb-3">{item.change}</p>
+                <p className="text-xs text-muted-foreground/80 border-t border-border pt-3">{item.why}</p>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function ChangeTheTide() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Shared entrance transition for auto-cycling values — never drops to
@@ -791,7 +1023,7 @@ export default function ChangeTheTide() {
 
       {/* ───────── The problem ───────── */}
       <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-4xl">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The problem</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
             One impression can outweigh everything else.
@@ -805,8 +1037,35 @@ export default function ChangeTheTide() {
           <p className="text-lg text-muted-foreground max-w-2xl mt-4">
             The result: a scoreboard that's hard to predict, and even harder to explain.
           </p>
+
+          <ProblemList />
         </div>
       </section>
+
+      {/* ───────── The idea: reductionist method intro ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The idea</div>
+          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
+            A trick is a sum of parts, not a single impression.
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Break a jump down and it's really a set of individual, measurable variables — height, angle,
+            rotation, load — that can each be scored on their own, then added together. The reductionist
+            approach doesn't ask a judge to feel the whole trick at once; it asks a few separate, simpler
+            questions and sums the answers.
+          </p>
+          <p className="text-lg text-muted-foreground max-w-2xl mt-4">
+            Big Air wouldn't be the first sport to make this trade.
+          </p>
+        </div>
+      </section>
+
+      {/* ───────── Historical precedent ───────── */}
+      <HistorySection />
+
+      {/* ───────── The solution ───────── */}
+      <SolutionSection />
 
       {/* ───────── The shift: 4 areas ───────── */}
       <section className="border-b border-border">
@@ -821,65 +1080,65 @@ export default function ChangeTheTide() {
             — and it's the one area labeled as such.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {AREAS.map((area, i) => {
-              const isActive = i === activeShiftIndex;
-              return (
-                <Card
-                  key={area.name}
-                  className="p-6 shadow-[var(--shadow-card)] transition-colors duration-500"
-                  style={isActive ? { borderColor: 'hsl(var(--primary) / 0.4)' } : undefined}
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-bold text-sm tracking-wide">{area.name}</span>
-                    <span className="font-mono text-primary font-semibold">{area.weight}%</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-4">{area.desc}</p>
-                  <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
-                    <div
-                      className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
-                      style={{ width: `${area.weight * 2}%` }}
-                    />
-                  </div>
-                  {area.subjective && (
-                    <Badge variant="outline" className="mt-4 border-amber-500/40 text-amber-400 text-[10px] tracking-wide">
-                      SUBJECTIVE BY DESIGN
-                    </Badge>
-                  )}
-
-                  <div
-                    className="overflow-hidden transition-all duration-500 ease-out"
-                    style={{ maxHeight: isActive ? 260 : 0, opacity: isActive ? 1 : 0, marginTop: isActive ? '1rem' : 0 }}
-                  >
-                    <div className="pt-4 border-t border-border space-y-2">
-                      <div className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground mb-1">
-                        Jump 1 breakdown (Leonardo Casati)
-                      </div>
-                      {AREA_SUB_PARAMS[area.name].map((p) => (
-                        <div key={p.label} className="flex items-center justify-between gap-3 text-xs">
-                          <span className="text-muted-foreground shrink-0 w-28">{p.label}</span>
-                          <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
-                              style={{ width: `${p.max > 0 ? (p.pts / p.max) * 100 : 0}%` }}
-                            />
-                          </div>
-                          <span className="font-semibold tabular-nums shrink-0 w-16 text-right">
-                            {p.pts.toFixed(2)}/{p.max.toFixed(2)}
-                          </span>
-                        </div>
-                      ))}
+          <Accordion type="single" collapsible defaultValue={AREAS[0].name} className="space-y-3">
+            {AREAS.map((area) => (
+              <AccordionItem key={area.name} value={area.name} className="border rounded-lg bg-card px-2">
+                <AccordionTrigger className="px-4 hover:no-underline">
+                  <div className="flex items-center gap-3 text-left">
+                    <div className={`w-2.5 h-2.5 rounded-full ${AREA_DOT_COLOR[area.name]} shrink-0`} />
+                    <div>
+                      <div className="font-bold text-sm tracking-wide">{area.name}</div>
+                      <div className="text-xs text-muted-foreground">Weight: {area.weight}%</div>
                     </div>
+                    {area.subjective && (
+                      <Badge variant="outline" className="border-amber-500/40 text-amber-400 text-[10px] tracking-wide ml-2">
+                        SUBJECTIVE BY DESIGN
+                      </Badge>
+                    )}
                   </div>
-                </Card>
-              );
-            })}
-          </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-4 pb-5">
+                  <p className="text-sm text-muted-foreground mb-4">{area.desc}</p>
+                  {area.name === 'EXECUTION' && (
+                    <p className="text-sm text-muted-foreground mb-4">
+                      All EXECUTION parameters are judged on a continuous scale from 0 to 10.
+                    </p>
+                  )}
+                  <div className="space-y-5">
+                    {PARAM_GUIDE[area.name].map((p) => (
+                      <div key={p.label} className="border-l-4 pl-4" style={{ borderColor: `hsl(var(--primary) / 0.4)` }}>
+                        <h4 className="font-semibold mb-1.5 text-sm text-foreground">{p.label}</h4>
+                        {p.continuous ? (
+                          <div className="flex items-center gap-4">
+                            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                              <div className="h-full w-full bg-gradient-to-r from-destructive via-amber-500 via-lime-500 to-green-500" />
+                            </div>
+                            <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30 text-[11px] shrink-0">
+                              0 - 10 pts
+                            </Badge>
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-xs text-muted-foreground mb-2.5">{p.desc}</p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {p.tiers.map((tier, ti) => (
+                                <Badge key={tier} variant="outline" className={`${TIER_COLORS[ti % TIER_COLORS.length]} text-[11px]`}>
+                                  {tier}
+                                </Badge>
+                              ))}
+                            </div>
+                            <div className="text-[11px] text-muted-foreground mt-2">Max: {p.max} points</div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </section>
-
-      {/* ───────── Reductionist vs Holistic ───────── */}
-      <ComparisonSection />
 
       {/* ───────── Tunable, not rigid ───────── */}
       <section className="border-b border-border">
@@ -902,7 +1161,7 @@ export default function ChangeTheTide() {
 
       {/* ───────── Why now ───────── */}
       <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-4xl">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Why now</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
             The data doesn't need to be invented.
@@ -986,7 +1245,7 @@ export default function ChangeTheTide() {
 
       {/* ───────── Their results, broken down ───────── */}
       <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-4xl">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">A login of their own</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
             Athletes don't just receive a score. They get an account.
@@ -1002,7 +1261,7 @@ export default function ChangeTheTide() {
 
       {/* ───────── Where they stand, against anyone ───────── */}
       <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-4xl">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Where they stand</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
             Compare against anyone in the field, not just the leaderboard.

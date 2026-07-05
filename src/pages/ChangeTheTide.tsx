@@ -1426,7 +1426,7 @@ export default function ChangeTheTide() {
               to="/login"
               className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground font-semibold px-8 py-4 text-lg hover:opacity-90 transition-opacity"
             >
-              Open the app
+              Open the scoring system
               <ArrowUpRight className="w-5 h-5" />
             </Link>
           </RevealOnScroll>

@@ -117,9 +117,7 @@ function Timeline({ items }: { items: TimelineItem[] }) {
           }}
         >
           {item.logo && (
-            <div className="w-12 h-12 rounded-lg bg-white/95 border border-border flex items-center justify-center shrink-0 overflow-hidden">
-              <img src={item.logo} alt={`${item.org} logo`} className="w-full h-full object-contain p-1.5" />
-            </div>
+            <img src={item.logo} alt={`${item.org} logo`} className="w-12 h-12 rounded-lg object-contain shrink-0" />
           )}
           <div className="min-w-0 flex-1">
             <div className="font-bold text-sm">{item.title}</div>

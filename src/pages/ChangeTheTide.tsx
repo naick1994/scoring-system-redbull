@@ -97,25 +97,17 @@ function useCyclingIndex(length: number, periodMs: number) {
   return index;
 }
 
-function ThresholdCard() {
-  const [t3, setT3] = useState(17.5);
-  const directionRef = useRef<1 | -1>(1);
-  const reducedMotion = useRef(
-    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ).current;
+// Moving the top threshold shifts the whole curve, not just one number —
+// steps in blocks of 5m so the change reads as a deliberate re-set of the
+// day's conditions, not a slider drifting.
+const THRESHOLD_SHIFT_STEPS = [0, 5, 10];
 
-  useEffect(() => {
-    if (reducedMotion) return;
-    const id = setInterval(() => {
-      setT3(prev => {
-        let next = prev + directionRef.current * 0.3;
-        if (next >= 30) { next = 30; directionRef.current = -1; }
-        if (next <= 17.5) { next = 17.5; directionRef.current = 1; }
-        return next;
-      });
-    }, 60);
-    return () => clearInterval(id);
-  }, [reducedMotion]);
+function ThresholdCard() {
+  const stepIndex = useCyclingIndex(THRESHOLD_SHIFT_STEPS.length, 1800);
+  const shift = THRESHOLD_SHIFT_STEPS[stepIndex];
+  const t1 = 10 + shift;
+  const t2 = 15 + shift;
+  const t3 = 17.5 + shift;
 
   return (
     <Card className="p-6 shadow-[var(--shadow-card)]">
@@ -125,16 +117,14 @@ function ThresholdCard() {
         marginal one don't get graded on the same curve.
       </p>
       <div className="flex flex-wrap gap-2">
-        <Badge variant="outline" className="border-red-500/40 text-red-400 text-[11px]">0–10m: 0 pts</Badge>
-        <Badge variant="outline" className="border-amber-500/40 text-amber-400 text-[11px]">10–15m: 0.6 pts</Badge>
-        <Badge variant="outline" className="border-lime-500/40 text-lime-400 text-[11px]">15–17.5m: 0.9 pts</Badge>
-        <Badge variant="outline" className="border-green-500/40 text-green-400 text-[11px] tabular-nums">
-          +{t3.toFixed(1)}m: 1.5 pts
-        </Badge>
+        <Badge variant="outline" className="border-red-500/40 text-red-400 text-[11px] tabular-nums">0–{t1}m: 0 pts</Badge>
+        <Badge variant="outline" className="border-amber-500/40 text-amber-400 text-[11px] tabular-nums">{t1}–{t2}m: 0.6 pts</Badge>
+        <Badge variant="outline" className="border-lime-500/40 text-lime-400 text-[11px] tabular-nums">{t2}–{t3}m: 0.9 pts</Badge>
+        <Badge variant="outline" className="border-green-500/40 text-green-400 text-[11px] tabular-nums">+{t3}m: 1.5 pts</Badge>
       </div>
       <p className="text-[11px] text-muted-foreground mt-4 font-mono">
-        Top threshold shown adjustable up to 30m — an extreme-wind event can set the bar wherever the
-        conditions call for.
+        Move the top threshold and the rest shift with it — the chief judge sets the whole curve for
+        the day's conditions, not just one number.
       </p>
     </Card>
   );
@@ -270,10 +260,49 @@ function AutoWhatIfDemo() {
   );
 }
 
+const AUTO_COMPARE_NAMES = ['Jamie Overbeek', 'Lorenzo Casati', 'Finn Flügel'];
+
 function LiveRankingComparison() {
   const { heightAmplitudeThresholds } = useScoring();
   const [selected, setSelected] = useState<RankingRow | null>(null);
   const topEight = GKA_BIG_AIR_MEN_RANKINGS_2026.slice(0, 8);
+  const userInteractedRef = useRef(false);
+  const tableRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const reducedMotion = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ).current;
+
+  // Don't auto-play until this section actually scrolls into view — firing
+  // immediately on mount would pop a fullscreen dialog over the hero before
+  // anyone has scrolled anywhere near it.
+  useEffect(() => {
+    if (reducedMotion || !tableRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      { threshold: 0.4 }
+    );
+    observer.observe(tableRef.current);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  // Auto-plays a rotating comparison (Jamie, Lorenzo, Finn) so the feature
+  // is visible without anyone touching the page — stops for good the
+  // moment a visitor clicks a row or closes the dialog themselves.
+  useEffect(() => {
+    if (reducedMotion || !inView) return;
+    let i = 0;
+    const applySelection = () => {
+      if (userInteractedRef.current) return;
+      const name = AUTO_COMPARE_NAMES[i % AUTO_COMPARE_NAMES.length];
+      const row = GKA_BIG_AIR_MEN_RANKINGS_2026.find(r => r.athlete === name) ?? null;
+      setSelected(row);
+      i += 1;
+    };
+    applySelection();
+    const id = setInterval(applySelection, 4000);
+    return () => clearInterval(id);
+  }, [reducedMotion, inView]);
 
   const leonardo = useMemo(
     () => getLeonardoAverageBreakdown(heightAmplitudeThresholds),
@@ -293,7 +322,7 @@ function LiveRankingComparison() {
 
   return (
     <>
-      <Card className="overflow-hidden shadow-[var(--shadow-card)]">
+      <Card ref={tableRef} className="overflow-hidden shadow-[var(--shadow-card)]">
         <table className="w-full border-collapse">
           <thead>
             <tr className="border-b-2 border-border bg-muted/40">
@@ -309,7 +338,7 @@ function LiveRankingComparison() {
               return (
                 <tr
                   key={idx}
-                  onClick={() => !isMe && setSelected(row)}
+                  onClick={() => { if (!isMe) { userInteractedRef.current = true; setSelected(row); } }}
                   className={`border-b border-border transition-colors ${isMe ? 'bg-primary/10' : 'hover:bg-muted/50 cursor-pointer'}`}
                 >
                   <td className="py-3 px-4 font-semibold text-muted-foreground text-sm">#{row.rank}</td>
@@ -330,12 +359,12 @@ function LiveRankingComparison() {
           </tbody>
         </table>
       </Card>
-      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data. Click any rider to compare — try it.</p>
+      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data, auto-playing a few comparisons — click any rider to try your own.</p>
 
-      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
+      <Dialog open={!!selected} onOpenChange={(open) => { if (!open) { userInteractedRef.current = true; setSelected(null); } }}>
         <DialogContent className="max-w-lg">
           {selected && comparison && (
-            <>
+            <div key={selected.athlete} style={{ animation: 'whatIfPop 0.45s ease' }}>
               <DialogHeader>
                 <div className="flex items-center gap-3">
                   <img src={selected.photoUrl} alt={selected.athlete} className="w-14 h-14 rounded-full object-cover border border-border" />
@@ -378,11 +407,11 @@ function LiveRankingComparison() {
                       </div>
                       <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
                         <div
-                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} opacity-40`}
+                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} opacity-40 transition-all duration-700`}
                           style={{ width: `${(fakeArea.score / fakeArea.max) * 100}%` }}
                         />
                         <div
-                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} border-r-2 border-white/80`}
+                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} border-r-2 border-white/80 transition-all duration-700`}
                           style={{ width: `${((leoArea?.score ?? 0) / fakeArea.max) * 100}%` }}
                         />
                       </div>
@@ -390,7 +419,7 @@ function LiveRankingComparison() {
                   );
                 })}
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
@@ -434,17 +463,6 @@ export default function ChangeTheTide() {
             Every jump in Big Air can now be measured — height, rotation, load, hang time, landing.
             The scoring model just hasn't caught up. This one has.
           </p>
-
-          <div className="flex flex-wrap items-center gap-4 mt-10">
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground font-semibold px-7 py-3.5 text-base hover:opacity-90 transition-opacity"
-            >
-              See it live
-              <ArrowUpRight className="w-5 h-5" />
-            </Link>
-            <span className="text-sm text-muted-foreground font-mono">Everything below is the real, running product — not a mockup.</span>
-          </div>
         </div>
       </section>
 

@@ -35,11 +35,11 @@ export function Header() {
     <header className="bg-card border-b border-border shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-5">
+          <Link to="/change-the-tide" className="flex items-center gap-5">
             <img src={wooLogo}     alt="Woo"        className="h-8" style={{ filter: 'brightness(0) invert(1)' }} />
             <div className="w-px h-6 bg-border" />
             <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-          </div>
+          </Link>
           <h1 className="text-2xl font-bold text-foreground">Big Air Scoring System</h1>
         </div>
         

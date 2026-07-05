@@ -212,7 +212,6 @@ export default function AboutNick() {
             transition: 'opacity 0.6s ease, transform 0.6s ease',
           }}
         >
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Who built this</div>
           <div className="flex items-center gap-5 mb-6">
             <img
               src={nickAvatar}

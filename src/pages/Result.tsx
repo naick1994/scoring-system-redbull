@@ -69,7 +69,7 @@ export default function Result() {
           <p className="text-muted-foreground mb-6">
             Enter parameters for all 3 jumps to view results
           </p>
-          <Button onClick={() => navigate('/')} size="lg">
+          <Button onClick={() => navigate('/new-score')} size="lg">
             <Plus className="w-4 h-4 mr-2" />
             New Score
           </Button>
@@ -91,11 +91,11 @@ export default function Result() {
     setJump3Result(null);
     setRealTotalReference(null);
     setJumpMeta(null);
-    navigate('/');
+    navigate('/new-score');
   };
 
   const handleEditParameters = () => {
-    navigate('/');
+    navigate('/new-score');
   };
 
   const handlePresetChange = (preset: string) => {

@@ -31,7 +31,7 @@ const Login = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="bg-card border border-border rounded-lg shadow-lg p-8">
-          <Link to="/change-the-tide" className="flex items-center justify-center gap-4 mb-6">
+          <Link to="/" className="flex items-center justify-center gap-4 mb-6">
             <img src={wooLogo}     alt="Woo"         className="h-8" style={{ filter: 'brightness(0) invert(1)' }} />
             <div className="w-px h-6 bg-border" />
             <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />

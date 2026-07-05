@@ -14,7 +14,7 @@ export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) 
   }
 
   if (allowedRoles && role && !allowedRoles.includes(role)) {
-    return <Navigate to={role === 'rider' ? '/rider' : '/'} replace />;
+    return <Navigate to={role === 'rider' ? '/rider' : '/new-score'} replace />;
   }
 
   return <>{children}</>;

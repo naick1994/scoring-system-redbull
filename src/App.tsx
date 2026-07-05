@@ -40,6 +40,7 @@ const App = () => (
           <BrowserRouter basename={import.meta.env.BASE_URL}>
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/" element={<ChangeTheTide />} />
               <Route path="/change-the-tide" element={<ChangeTheTide />} />
               <Route path="/about-nick" element={<AboutNick />} />
               <Route
@@ -48,7 +49,7 @@ const App = () => (
                   <ProtectedRoute>
                     <Header />
                     <Routes>
-                      <Route path="/" element={<ProtectedRoute allowedRoles={['judge']}><NewJump /></ProtectedRoute>} />
+                      <Route path="/new-score" element={<ProtectedRoute allowedRoles={['judge']}><NewJump /></ProtectedRoute>} />
                       <Route path="/preset" element={<ProtectedRoute allowedRoles={['judge']}><PresetEvents /></ProtectedRoute>} />
                       <Route path="/result" element={<ProtectedRoute allowedRoles={['judge']}><Result /></ProtectedRoute>} />
                       <Route path="/parameters-guide" element={<ParametersGuide />} />

@@ -1199,7 +1199,7 @@ export default function ChangeTheTide() {
             </div>
             <Link
               to="/login"
-              className="inline-flex items-center gap-2 rounded-full border border-border text-sm font-semibold px-4 py-2 hover:bg-card transition-colors"
+              className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity"
             >
               Open the scoring system
               <ArrowUpRight className="w-4 h-4" />

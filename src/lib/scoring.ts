@@ -1,8 +1,8 @@
 import { JumpParameters, PresetWeights, ScoringResult, AreaScore, ParameterScore, HeightAmplitudeThresholds } from '@/types/scoring';
 
 export const DEFAULT_HEIGHT_AMPLITUDE_THRESHOLDS: HeightAmplitudeThresholds = {
-  height: { t1: 10, t2: 15, t3: 20 },
-  amplitude: { t1: 40, t2: 80, t3: 120 },
+  height: { t1: 10, t2: 15, t3: 17.5 },
+  amplitude: { t1: 50, t2: 75, t3: 100 },
 };
 
 // Bracket ids are stable identifiers independent of the actual meter

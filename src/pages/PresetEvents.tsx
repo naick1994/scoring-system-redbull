@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 import { useScoring } from '@/contexts/ScoringContext';
 import { PRESET_WEIGHTS, PRESET_CONFIG, heightBracketLabel, amplitudeBracketLabel, HEIGHT_BRACKET_POINTS, AMPLITUDE_BRACKET_POINTS } from '@/lib/scoring';
 import { EventPreset, PresetWeights, HeightAmplitudeThresholds } from '@/types/scoring';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
 import { CheckCircle2, XCircle, Check } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -54,7 +52,6 @@ const textToThresholds = (t: ThresholdText): HeightAmplitudeThresholds => ({
 
 export default function PresetEvents() {
   const { activePreset, setActivePreset, weights, setWeights, heightAmplitudeThresholds, setHeightAmplitudeThresholds } = useScoring();
-  const [selectedPreset, setSelectedPreset] = useState<EventPreset>(activePreset);
   const [customWeights, setCustomWeights] = useState<PresetWeights>(weights);
   const [isValid, setIsValid] = useState(true);
   const [thresholdText, setThresholdText] = useState<ThresholdText>(thresholdsToText(heightAmplitudeThresholds));
@@ -68,25 +65,22 @@ export default function PresetEvents() {
     draftThresholds.amplitude.t1 < draftThresholds.amplitude.t2 &&
     draftThresholds.amplitude.t2 < draftThresholds.amplitude.t3;
 
+  // Everything below auto-saves as you type/select — there is no separate
+  // "activate"/"save" step. Thresholds only push to context once every tier
+  // is in ascending order; custom weights only push once they sum to 100.
   const handleThresholdChange = (
     area: 'height' | 'amplitude',
     tier: ThresholdTier,
     value: string
   ) => {
     if (!/^\d*\.?\d*$/.test(value)) return;
-    setThresholdText({
-      ...thresholdText,
-      [area]: { ...thresholdText[area], [tier]: value },
-    });
-  };
-
-  const handleSaveThresholds = () => {
-    if (!thresholdsValid) {
-      toast.error('Each threshold must be greater than the previous one');
-      return;
-    }
-    setHeightAmplitudeThresholds(draftThresholds);
-    toast.success('HEIGHT/AMPLITUDE thresholds saved for this event');
+    const next = { ...thresholdText, [area]: { ...thresholdText[area], [tier]: value } };
+    setThresholdText(next);
+    const parsed = textToThresholds(next);
+    const valid =
+      parsed.height.t1 < parsed.height.t2 && parsed.height.t2 < parsed.height.t3 &&
+      parsed.amplitude.t1 < parsed.amplitude.t2 && parsed.amplitude.t2 < parsed.amplitude.t3;
+    if (valid) setHeightAmplitudeThresholds(parsed);
   };
 
   useEffect(() => {
@@ -95,31 +89,21 @@ export default function PresetEvents() {
   }, [customWeights]);
 
   const handlePresetChange = (preset: string) => {
-    setSelectedPreset(preset as EventPreset);
-    if (preset !== 'Custom') {
-      setCustomWeights(PRESET_WEIGHTS[preset as keyof typeof PRESET_WEIGHTS]);
+    const p = preset as EventPreset;
+    setActivePreset(p);
+    if (p === 'Custom') {
+      setCustomWeights(weights);
+    } else {
+      setCustomWeights(PRESET_WEIGHTS[p as keyof typeof PRESET_WEIGHTS]);
     }
-  };
-
-  const handleActivatePreset = () => {
-    if (selectedPreset === 'Custom' && !isValid) {
-      toast.error('Weights must sum to exactly 100%');
-      return;
-    }
-    setActivePreset(selectedPreset);
-    setWeights(customWeights);
-    toast.success(`Preset "${selectedPreset}" activated successfully`);
   };
 
   const handleCustomWeightChange = (judge: keyof PresetWeights, value: string) => {
-    // Permetti di cancellare completamente il campo
-    if (value === '') {
-      setCustomWeights({ ...customWeights, [judge]: 0 });
-      return;
-    }
-    // Accetta solo numeri
-    const numValue = parseInt(value) || 0;
-    setCustomWeights({ ...customWeights, [judge]: numValue });
+    const numValue = value === '' ? 0 : parseInt(value) || 0;
+    const next = { ...customWeights, [judge]: numValue };
+    setCustomWeights(next);
+    const sum = next.HEIGHT + next.EXTREMITY + next.TECHNICALITY + next.EXECUTION;
+    if (sum === 100) setWeights(next);
   };
 
   const presetData = [
@@ -140,7 +124,7 @@ export default function PresetEvents() {
             <Label htmlFor="preset-select" className="text-base mb-2 block">
               Choose a preset
             </Label>
-            <Select value={selectedPreset} onValueChange={handlePresetChange}>
+            <Select value={activePreset} onValueChange={handlePresetChange}>
               <SelectTrigger id="preset-select" className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -171,16 +155,9 @@ export default function PresetEvents() {
                 </SelectItem>
               </SelectContent>
             </Select>
-            
-            {selectedPreset !== activePreset && (
-              <p className="text-sm text-muted-foreground mt-2">
-                Selected preset: <span className="font-semibold">{selectedPreset}</span> 
-                {activePreset && <span> • Active preset: <span className="font-semibold text-primary">{activePreset}</span></span>}
-              </p>
-            )}
           </div>
 
-          {selectedPreset === 'Custom' ? (
+          {activePreset === 'Custom' ? (
             <div className="space-y-4 p-4 bg-muted rounded-lg">
               <div className="flex items-center gap-2 mb-4">
                 <h4 className="font-semibold">Custom Weights</h4>
@@ -216,25 +193,17 @@ export default function PresetEvents() {
             </div>
           ) : (
             <div className="p-4 bg-muted/50 rounded-lg">
-              <h4 className="font-semibold mb-3">Preset Preview "{selectedPreset}"</h4>
+              <h4 className="font-semibold mb-3">Preset Preview "{activePreset}"</h4>
               <div className="grid grid-cols-2 gap-3">
                 {(['HEIGHT', 'EXTREMITY', 'TECHNICALITY', 'EXECUTION'] as const).map((judge) => (
                   <div key={judge} className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground">{JUDGE_NAMES_SHORT[judge]}:</span>
-                    <span className="font-semibold">{customWeights[judge]}%</span>
+                    <span className="font-semibold">{weights[judge]}%</span>
                   </div>
                 ))}
               </div>
             </div>
           )}
-
-          <Button
-            onClick={handleActivatePreset}
-            className="w-full h-12 text-lg font-semibold"
-            size="lg"
-          >
-            Activate Preset
-          </Button>
         </div>
       </Card>
 
@@ -304,12 +273,8 @@ export default function PresetEvents() {
         </div>
 
         {!thresholdsValid && (
-          <p className="text-sm text-destructive mb-4">Each threshold must be greater than the previous one, for both Height and Amplitude.</p>
+          <p className="text-sm text-destructive">Each threshold must be greater than the previous one, for both Height and Amplitude — not saved until fixed.</p>
         )}
-
-        <Button onClick={handleSaveThresholds} className="w-full h-12 text-lg font-semibold" size="lg">
-          Save Thresholds
-        </Button>
       </Card>
 
       <Card className="p-6 shadow-[var(--shadow-card)]">

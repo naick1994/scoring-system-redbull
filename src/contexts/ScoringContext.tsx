@@ -34,8 +34,8 @@ interface ScoringContextType {
 const ScoringContext = createContext<ScoringContextType | undefined>(undefined);
 
 export function ScoringProvider({ children }: { children: React.ReactNode }) {
-  const [activePreset, setActivePresetState] = useState<EventPreset>('KOTA');
-  const [weights, setWeightsState] = useState<PresetWeights>(PRESET_WEIGHTS.KOTA);
+  const [activePreset, setActivePresetState] = useState<EventPreset>('GKA');
+  const [weights, setWeightsState] = useState<PresetWeights>(PRESET_WEIGHTS.GKA);
   
   const [jump1Result, setJump1Result] = useState<ScoringResult | null>(null);
   const [jump2Result, setJump2Result] = useState<ScoringResult | null>(null);
@@ -63,7 +63,7 @@ export function ScoringProvider({ children }: { children: React.ReactNode }) {
     if (saved && saved in PRESET_WEIGHTS) {
       setActivePresetState(saved as EventPreset);
       setWeightsState(saved === 'Custom'
-        ? JSON.parse(localStorage.getItem('customWeights') || JSON.stringify(PRESET_WEIGHTS.KOTA))
+        ? JSON.parse(localStorage.getItem('customWeights') || JSON.stringify(PRESET_WEIGHTS.GKA))
         : PRESET_WEIGHTS[saved as keyof typeof PRESET_WEIGHTS]);
     }
   }, []);

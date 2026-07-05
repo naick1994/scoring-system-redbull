@@ -1303,9 +1303,10 @@ export default function ChangeTheTide() {
               The data doesn't need to be <span className="text-primary">invented.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Sensor technology like Woo's can already capture height, speed, rotations, and load on every
-              jump. Turning that into a scoring model is mostly a matter of structuring that data, plus a
-              few additional readings layered on top.
+              Sensor technology like Woo's can already capture height, speed, and rotations on every jump.
+              Turning that into a complete scoring system means adding a few new measurements, like kite
+              angle, yank, and free fall. It's not about building from scratch, but evolving what already
+              exists.
             </p>
           </RevealOnScroll>
 

@@ -16,7 +16,7 @@ import logoNtuTaiwan from '@/assets/logo-ntu-taiwan.jpg';
 
 const STATS = [
   { value: '50+', label: 'Team scaled from 3, as founding COO' },
-  { value: '2', label: "World-class riders managed: Lorenzo & Leonardo Casati" },
+  { value: '2', label: "World Champion riders managed: Lorenzo & Leonardo Casati" },
   { value: '110/110', label: 'Bocconi MSc in Management' },
 ];
 

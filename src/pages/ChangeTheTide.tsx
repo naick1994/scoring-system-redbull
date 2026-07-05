@@ -314,6 +314,7 @@ function LiveRankingComparison() {
 
 const AREA_GRADIENT: Record<string, string> = {
   'HEIGHT & AMPLITUDE': 'from-blue-500 to-cyan-400',
+  HEIGHT: 'from-blue-500 to-cyan-400', // raw scoring-engine key, used by real computed area data
   EXTREMITY: 'from-purple-500 to-pink-400',
   TECHNICALITY: 'from-amber-500 to-yellow-400',
   EXECUTION: 'from-green-500 to-lime-400',

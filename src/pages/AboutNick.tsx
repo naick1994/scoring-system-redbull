@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import nickAvatar from '@/assets/nick-avatar.jpg';
+import logoFlightMode from '@/assets/logo-flight-mode.jpg';
+import logoLorenzoCasati from '@/assets/logo-lorenzo-casati.jpg';
+import logoRidesk from '@/assets/logo-ridesk.jpg';
+import logoHarlem from '@/assets/logo-harlem.jpg';
+import logoSnowit from '@/assets/logo-snowit.jpg';
+import logoTribala from '@/assets/logo-tribala.jpg';
+import logoFnm from '@/assets/logo-fnm.jpg';
+import logoDgm from '@/assets/logo-dgm.jpg';
+import logoBocconi from '@/assets/logo-bocconi.jpg';
+import logoNtuTaiwan from '@/assets/logo-ntu-taiwan.jpg';
 
 const STATS = [
   { value: '50+', label: 'Team scaled from 3, as founding COO' },
@@ -10,57 +20,55 @@ const STATS = [
   { value: '110/110', label: 'Bocconi MSc in Management' },
 ];
 
-const DOT_COLORS = ['bg-cyan-500', 'bg-pink-500', 'bg-amber-500', 'bg-lime-500'];
-
 const CURRENT_ROLES = [
   {
-    role: 'Co-Founder & CEO', org: 'Flight Mode', period: 'Mar 2025 - Present · 1 yr 5 mos',
+    role: 'Co-Founder & CEO', org: 'Flight Mode', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoFlightMode,
     desc: 'Building the tools to innovate and revolutionise the kitesurf industry.',
   },
   {
-    role: 'Manager', org: 'Lorenzo & Leonardo Casati', period: 'Mar 2025 - Present · 1 yr 5 mos',
+    role: 'Manager', org: 'Lorenzo & Leonardo Casati', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoLorenzoCasati,
     desc: "Representation, sponsorships, and strategic growth for two of the world's most talented riders. Leonardo's real jump data is what powers this pitch's live demo.",
   },
   {
-    role: 'Co-Founder & CEO', org: 'Ridesk', period: 'Oct 2025 - Present · 10 mos',
+    role: 'Co-Founder & CEO', org: 'Ridesk', period: 'Oct 2025 - Present · 10 mos', logo: logoRidesk,
     desc: 'A SaaS platform simplifying the watersport school industry: bookings, instructors, payments, and daily operations in one system.',
   },
   {
-    role: 'Italy and Spain Distributor', org: 'Harlem Kitesurfing', period: 'Mar 2025 - Present · 1 yr 5 mos',
+    role: 'Italy and Spain Distributor', org: 'Harlem Kitesurfing', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoHarlem,
     desc: 'Exclusive distribution partner for Harlem across Italy, Spain, and the Canary Islands.',
   },
 ];
 
 const TRACK_RECORD = [
   {
-    title: 'Chief Operating Officer', org: 'Snowit', period: 'May 2019 - Feb 2025 · 5 yrs 10 mos',
+    title: 'Chief Operating Officer', org: 'Snowit', period: 'May 2019 - Feb 2025 · 5 yrs 10 mos', logo: logoSnowit,
     desc: 'Founding COO. Scaled the team from 3 to 50+ people; led Product, Ops, and Customer Care; managed P&L and introduced agile project management.',
   },
   {
-    title: 'Chief Operating Officer', org: 'Tribala', period: 'May 2023 - Feb 2025 · 1 yr 10 mos',
+    title: 'Chief Operating Officer', org: 'Tribala', period: 'May 2023 - Feb 2025 · 1 yr 10 mos', logo: logoTribala,
     desc: 'Founding COO across the wider group of brands.',
   },
   {
-    title: 'Digital & Innovation Ambassador', org: 'FNM S.p.A.', period: 'Sep 2022 - Oct 2024 · 2 yrs 2 mos',
+    title: 'Digital & Innovation Ambassador', org: 'FNM S.p.A.', period: 'Sep 2022 - Oct 2024 · 2 yrs 2 mos', logo: logoFnm,
     desc: 'Selected to promote innovation across the FNM group.',
   },
   {
-    title: 'Consultant', org: 'DGM Consulting Srl', period: 'Apr 2018 - Aug 2018 · 5 mos',
+    title: 'Consultant', org: 'DGM Consulting Srl', period: 'Apr 2018 - Aug 2018 · 5 mos', logo: logoDgm,
     desc: 'Data analytics and strategic consulting in the hospitality and industrial sectors.',
   },
 ];
 
 const EDUCATION = [
   {
-    title: 'MSc in Management', org: 'Bocconi University', period: 'Sep 2016 - Dec 2018',
+    title: 'MSc in Management', org: 'Bocconi University', period: 'Sep 2016 - Dec 2018', logo: logoBocconi,
     desc: 'Graduated 110/110. Final thesis on budgeting effectiveness and behavior.',
   },
   {
-    title: 'Exchange Program', org: 'National Taiwan University of Taipei', period: 'Aug 2016 - Dec 2018',
+    title: 'Exchange Program', org: 'National Taiwan University of Taipei', period: 'Aug 2016 - Dec 2018', logo: logoNtuTaiwan,
     desc: 'Business & culture exchange. GPA 4/4.',
   },
   {
-    title: 'BSc', org: 'Bocconi University', period: 'Sep 2013 - Jul 2016',
+    title: 'BSc', org: 'Bocconi University', period: 'Sep 2013 - Jul 2016', logo: logoBocconi,
     desc: 'Undergraduate studies at Bocconi University.',
   },
 ];
@@ -74,25 +82,26 @@ const LANGUAGES = [
 // A simple left-rail timeline: a vertical line with a colored dot per
 // entry, entries fading/sliding in on mount instead of on scroll (this
 // is a short standalone page, most of it is visible without scrolling).
-function Timeline({ items }: { items: { title: string; org: string; period: string; desc: string }[] }) {
+function Timeline({ items }: { items: { title: string; org: string; period: string; desc: string; logo?: string }[] }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { const id = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(id); }, []);
 
   return (
-    <div className="relative pl-8">
-      <div className="absolute left-[5px] top-2 bottom-2 w-px bg-border" />
-      <div className="space-y-8">
-        {items.map((item, i) => (
-          <div
-            key={item.title}
-            className="relative"
-            style={{
-              opacity: mounted ? 1 : 0,
-              transform: mounted ? 'translateX(0)' : 'translateX(-12px)',
-              transition: `opacity 0.5s ease ${i * 90}ms, transform 0.5s ease ${i * 90}ms`,
-            }}
-          >
-            <div className={`absolute -left-8 top-1.5 w-2.5 h-2.5 rounded-full ${DOT_COLORS[i % DOT_COLORS.length]}`} />
+    <div className="space-y-5">
+      {items.map((item, i) => (
+        <div
+          key={item.title + item.org}
+          className="flex gap-4 rounded-lg border border-border bg-card p-4"
+          style={{
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? 'translateX(0)' : 'translateX(-12px)',
+            transition: `opacity 0.5s ease ${i * 90}ms, transform 0.5s ease ${i * 90}ms`,
+          }}
+        >
+          {item.logo && (
+            <img src={item.logo} alt={`${item.org} logo`} className="w-10 h-10 rounded-md object-cover shrink-0" />
+          )}
+          <div className="min-w-0">
             <div className="flex items-baseline justify-between flex-wrap gap-x-3 mb-0.5">
               <span className="font-bold text-sm">{item.title}</span>
               <span className="text-xs font-mono text-muted-foreground shrink-0">{item.period}</span>
@@ -100,8 +109,8 @@ function Timeline({ items }: { items: { title: string; org: string; period: stri
             {item.org && <div className="text-xs text-muted-foreground mb-1.5">{item.org}</div>}
             <p className="text-sm text-muted-foreground">{item.desc}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -162,7 +171,7 @@ export default function AboutNick() {
         <div className="space-y-14">
           <div>
             <h2 className="font-bold mb-6">Right now</h2>
-            <Timeline items={CURRENT_ROLES.map(r => ({ title: `${r.role} · ${r.org}`, org: '', period: r.period, desc: r.desc }))} />
+            <Timeline items={CURRENT_ROLES.map(r => ({ title: `${r.role} · ${r.org}`, org: '', period: r.period, desc: r.desc, logo: r.logo }))} />
           </div>
 
           <div>

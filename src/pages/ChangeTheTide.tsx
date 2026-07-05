@@ -441,7 +441,52 @@ const AREAS = [
   { name: 'EXECUTION', weight: 20, desc: 'Style, control, and landing quality — the one judged, human call.', subjective: true },
 ];
 
+// Real Jump 1 (Leonardo Casati, Mykonos) per-parameter breakdown, shown when
+// each area card auto-expands — same numbers as the rest of the page.
+const AREA_SUB_PARAMS: Record<string, { label: string; pts: number; max: number }[]> = {
+  'HEIGHT & AMPLITUDE': [
+    { label: 'Height', pts: 0.90, max: 1.50 },
+    { label: 'Amplitude', pts: 0.67, max: 1.00 },
+  ],
+  EXTREMITY: [
+    { label: 'Kite Angle', pts: 0.75, max: 0.75 },
+    { label: 'Yank Power', pts: 0.50, max: 0.75 },
+    { label: 'Free Fall', pts: 0.25, max: 0.50 },
+  ],
+  TECHNICALITY: [
+    { label: 'Rotations', pts: 0.25, max: 1.00 },
+    { label: 'Rotation Axis', pts: 0.50, max: 0.50 },
+    { label: 'Board Off', pts: 1.00, max: 1.00 },
+    { label: 'Board Flip', pts: 0.20, max: 0.30 },
+    { label: 'Board Spin', pts: 0.00, max: 0.20 },
+  ],
+  EXECUTION: [
+    { label: 'Style', pts: 0.35, max: 0.40 },
+    { label: 'Stability & Control', pts: 0.33, max: 0.40 },
+    { label: 'Landing Control', pts: 0.34, max: 0.40 },
+    { label: 'Board Control', pts: 0.36, max: 0.40 },
+    { label: 'Kite Control', pts: 0.32, max: 0.40 },
+  ],
+};
+
+function useRoundRobinIndex(length: number, periodMs: number) {
+  const [index, setIndex] = useState(0);
+  const reducedMotion = useRef(
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ).current;
+
+  useEffect(() => {
+    if (reducedMotion) return;
+    const id = setInterval(() => setIndex(prev => (prev + 1) % length), periodMs);
+    return () => clearInterval(id);
+  }, [reducedMotion, length, periodMs]);
+
+  return index;
+}
+
 export default function ChangeTheTide() {
+  const activeShiftIndex = useRoundRobinIndex(AREAS.length, 3200);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* ───────── Hero ───────── */}
@@ -498,26 +543,58 @@ export default function ChangeTheTide() {
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {AREAS.map((area) => (
-              <Card key={area.name} className="p-6 shadow-[var(--shadow-card)]">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="font-bold text-sm tracking-wide">{area.name}</span>
-                  <span className="font-mono text-primary font-semibold">{area.weight}%</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-4">{area.desc}</p>
-                <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
+            {AREAS.map((area, i) => {
+              const isActive = i === activeShiftIndex;
+              return (
+                <Card
+                  key={area.name}
+                  className="p-6 shadow-[var(--shadow-card)] transition-colors duration-500"
+                  style={isActive ? { borderColor: 'hsl(var(--primary) / 0.4)' } : undefined}
+                >
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="font-bold text-sm tracking-wide">{area.name}</span>
+                    <span className="font-mono text-primary font-semibold">{area.weight}%</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-4">{area.desc}</p>
+                  <div className="w-full bg-muted rounded-full h-2.5 overflow-hidden">
+                    <div
+                      className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
+                      style={{ width: `${area.weight * 2}%` }}
+                    />
+                  </div>
+                  {area.subjective && (
+                    <Badge variant="outline" className="mt-4 border-amber-500/40 text-amber-400 text-[10px] tracking-wide">
+                      SUBJECTIVE BY DESIGN
+                    </Badge>
+                  )}
+
                   <div
-                    className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
-                    style={{ width: `${area.weight * 2}%` }}
-                  />
-                </div>
-                {area.subjective && (
-                  <Badge variant="outline" className="mt-4 border-amber-500/40 text-amber-400 text-[10px] tracking-wide">
-                    SUBJECTIVE BY DESIGN
-                  </Badge>
-                )}
-              </Card>
-            ))}
+                    className="overflow-hidden transition-all duration-500 ease-out"
+                    style={{ maxHeight: isActive ? 260 : 0, opacity: isActive ? 1 : 0, marginTop: isActive ? '1rem' : 0 }}
+                  >
+                    <div className="pt-4 border-t border-border space-y-2">
+                      <div className="text-[10px] font-mono uppercase tracking-wide text-muted-foreground mb-1">
+                        Jump 1 breakdown (Leonardo Casati)
+                      </div>
+                      {AREA_SUB_PARAMS[area.name].map((p) => (
+                        <div key={p.label} className="flex items-center justify-between gap-3 text-xs">
+                          <span className="text-muted-foreground shrink-0 w-28">{p.label}</span>
+                          <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                            <div
+                              className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
+                              style={{ width: `${p.max > 0 ? (p.pts / p.max) * 100 : 0}%` }}
+                            />
+                          </div>
+                          <span className="font-semibold tabular-nums shrink-0 w-16 text-right">
+                            {p.pts.toFixed(2)}/{p.max.toFixed(2)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>

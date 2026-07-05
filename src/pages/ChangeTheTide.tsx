@@ -763,79 +763,105 @@ function useInViewOnce<T extends HTMLElement>() {
 }
 
 const IDEA_SPLIT_AREAS = [
-  { name: 'HEIGHT & AMPLITUDE', short: 'Height & Amplitude' },
-  { name: 'EXTREMITY', short: 'Extremity' },
-  { name: 'TECHNICALITY', short: 'Technicality' },
-  { name: 'EXECUTION', short: 'Execution' },
+  { name: 'HEIGHT & AMPLITUDE', short: 'Height & Amplitude', dot: 'bg-cyan-500' },
+  { name: 'EXTREMITY', short: 'Extremity', dot: 'bg-pink-500' },
+  { name: 'TECHNICALITY', short: 'Technicality', dot: 'bg-amber-500' },
+  { name: 'EXECUTION', short: 'Execution', dot: 'bg-lime-500' },
 ];
 
-// One impression fades out as four area chips fly outward from its
-// center and settle into a row, then sum into a single total pill —
-// a literal restatement of "sum of parts, not one impression."
+// Re-fires every time the block re-enters the viewport (unlike
+// useInViewOnce), so scrolling away and back replays the split.
+function useInViewRepeatable<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setSeen(entry.isIntersecting),
+      { threshold: 0.35 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return { ref, seen };
+}
+
+// One plain "one impression" pill fades as four neutral, dot-accented
+// cards spring outward from its exact center into a row, then sum into
+// a quiet total pill — a literal, physical restatement of "sum of
+// parts, not one impression," kept in the same understated dark-card
+// language as the rest of the page (no gradient fills, no glow).
 function IdeaSplitVisual() {
-  const { ref, seen } = useInViewOnce<HTMLDivElement>();
+  const { ref, seen } = useInViewRepeatable<HTMLDivElement>();
+  const spring = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+  const n = IDEA_SPLIT_AREAS.length;
 
   return (
-    <div ref={ref} className="mt-14 relative" style={{ minHeight: 190 }}>
+    <div ref={ref} className="mt-8 relative" style={{ minHeight: 160 }}>
       <div
         className="absolute inset-0 flex items-center justify-center"
         style={{
           opacity: seen ? 0 : 1,
-          transform: seen ? 'scale(0.85)' : 'scale(1)',
+          transform: seen ? 'scale(1.1)' : 'scale(1)',
           transition: 'opacity 0.5s ease, transform 0.5s ease',
         }}
       >
-        <div className="rounded-full border border-border bg-card px-8 py-4 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+        <div className="rounded-full border border-border bg-card px-10 py-6 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
           One impression
         </div>
       </div>
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
         <div className="flex flex-wrap items-center justify-center gap-3">
-          {IDEA_SPLIT_AREAS.map((area, i) => (
-            <div key={area.name} className="flex items-center gap-3">
-              <div
-                className={`rounded-lg px-4 py-3 text-xs font-bold text-white bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
-                style={{
-                  opacity: seen ? 1 : 0,
-                  transform: seen
-                    ? 'translateY(0) scale(1)'
-                    : `translateY(${i % 2 === 0 ? -16 : 16}px) scale(0.4)`,
-                  transitionProperty: 'opacity, transform',
-                  transitionDuration: '0.5s',
-                  transitionTimingFunction: 'ease',
-                  transitionDelay: `${i * 110}ms`,
-                }}
-              >
-                {area.short}
-              </div>
-              {i < IDEA_SPLIT_AREAS.length - 1 && (
-                <span
-                  className="text-lg font-bold text-muted-foreground"
+          {IDEA_SPLIT_AREAS.map((area, i) => {
+            const centerOffset = i - (n - 1) / 2;
+            return (
+              <div key={area.name} className="flex items-center gap-3">
+                <div
+                  className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground"
                   style={{
                     opacity: seen ? 1 : 0,
-                    transition: 'opacity 0.4s ease',
-                    transitionDelay: `${i * 110 + 60}ms`,
+                    transform: seen
+                      ? 'translate(0, 0) scale(1)'
+                      : `translate(${centerOffset * -28}px, 8px) scale(0.4)`,
+                    transitionProperty: 'opacity, transform',
+                    transitionDuration: '0.6s',
+                    transitionTimingFunction: spring,
+                    transitionDelay: `${i * 100}ms`,
                   }}
                 >
-                  +
-                </span>
-              )}
-            </div>
-          ))}
+                  <span className={`w-2 h-2 rounded-full shrink-0 ${area.dot}`} />
+                  {area.short}
+                </div>
+                {i < n - 1 && (
+                  <span
+                    className="flex items-center justify-center w-6 h-6 rounded-full border border-border text-xs font-bold text-muted-foreground shrink-0"
+                    style={{
+                      opacity: seen ? 1 : 0,
+                      transform: seen ? 'scale(1)' : 'scale(0)',
+                      transition: 'opacity 0.4s ease, transform 0.4s ease',
+                      transitionDelay: `${i * 100 + 250}ms`,
+                    }}
+                  >
+                    +
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div
           className="flex items-center gap-3"
           style={{
             opacity: seen ? 1 : 0,
-            transform: seen ? 'translateY(0)' : 'translateY(10px)',
+            transform: seen ? 'translateY(0)' : 'translateY(14px)',
             transition: 'opacity 0.5s ease, transform 0.5s ease',
-            transitionDelay: `${IDEA_SPLIT_AREAS.length * 110 + 150}ms`,
+            transitionDelay: `${n * 100 + 350}ms`,
           }}
         >
-          <span className="text-lg font-bold text-muted-foreground">=</span>
-          <div className="rounded-full border border-primary/40 bg-primary/10 px-6 py-2 text-sm font-bold text-primary">
+          <span className="flex items-center justify-center w-6 h-6 rounded-full border border-border text-xs font-bold text-muted-foreground">=</span>
+          <div className="rounded-full border border-primary/40 bg-primary/10 px-6 py-2.5 text-sm font-bold text-primary">
             One total score
           </div>
         </div>

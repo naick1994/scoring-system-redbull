@@ -130,13 +130,12 @@ function ThresholdCard() {
   );
 }
 
-// Real preset weights (H&A / Extremity / Technicality / Execution), generic
-// names per the neutral-branding direction — Standard/Technical/Power map to
-// the real GKA/KOTA/Megaloop weight splits without naming a federation.
+// Real preset weights (H&A / Extremity / Technicality / Execution), matching
+// the actual presets available in the app's Event Presets picker.
 const PRESET_ROWS = [
-  { name: 'Standard',  h: 30, e: 30, t: 20, x: 20 },
-  { name: 'Technical', h: 30, e: 30, t: 25, x: 15 },
-  { name: 'Power',     h: 45, e: 45, t: 10, x: 0 },
+  { name: 'GKA',      h: 30, e: 30, t: 20, x: 20 },
+  { name: 'KOTA',     h: 30, e: 30, t: 25, x: 15 },
+  { name: 'Megaloop', h: 45, e: 45, t: 10, x: 0 },
 ];
 
 function PresetWeightsCard() {

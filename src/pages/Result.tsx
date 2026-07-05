@@ -250,12 +250,14 @@ export default function Result() {
             <p className="text-sm font-semibold text-amber-400">{jumpMeta[0].trick}</p>
           )}
           <div className="mt-2 no-print">
+            {/* Override Score disabled for now
             <JudgeOverride
               calculatedScore={jump1Result.totalScore}
               override={jump1Result.override}
               onApply={(override) => setJump1Result({ ...jump1Result, override })}
               onRemove={() => setJump1Result({ ...jump1Result, override: null })}
             />
+            */}
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -342,12 +344,14 @@ export default function Result() {
             <p className="text-sm font-semibold text-amber-400">{jumpMeta[1].trick}</p>
           )}
           <div className="mt-2 no-print">
+            {/* Override Score disabled for now
             <JudgeOverride
               calculatedScore={jump2Result.totalScore}
               override={jump2Result.override}
               onApply={(override) => setJump2Result({ ...jump2Result, override })}
               onRemove={() => setJump2Result({ ...jump2Result, override: null })}
             />
+            */}
           </div>
         </CardHeader>
         <CardContent className="p-0">
@@ -434,12 +438,14 @@ export default function Result() {
             <p className="text-sm font-semibold text-amber-400">{jumpMeta[2].trick}</p>
           )}
           <div className="mt-2 no-print">
+            {/* Override Score disabled for now
             <JudgeOverride
               calculatedScore={jump3Result.totalScore}
               override={jump3Result.override}
               onApply={(override) => setJump3Result({ ...jump3Result, override })}
               onRemove={() => setJump3Result({ ...jump3Result, override: null })}
             />
+            */}
           </div>
         </CardHeader>
         <CardContent className="p-0">

@@ -697,6 +697,7 @@ function JumpCard({
                   Reset Execution
                 </Button>
               )}
+              {/* Override Score disabled for now
               <JudgeOverride
                 calculatedScore={calculatedScore}
                 maxScore={10}
@@ -704,6 +705,7 @@ function JumpCard({
                 onApply={onOverrideApply}
                 onRemove={onOverrideRemove}
               />
+              */}
             </div>
             <div className="text-right shrink-0">
               <div className={`text-4xl font-black leading-none ${revealed || override ? 'text-primary' : 'text-amber-600'}`}>

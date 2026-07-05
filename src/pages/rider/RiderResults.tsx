@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
-import { heightBracketLabel, amplitudeBracketLabel, AREA_DISPLAY_NAMES } from '@/lib/scoring';
+import { heightBracketLabel, amplitudeBracketLabel, AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
 import { DEMO_JUMPS_BASE, buildDemoJumpResult } from '@/data/demoJumps';
 import { HeightAmplitudeThresholds } from '@/types/scoring';
 
@@ -31,13 +31,6 @@ const getPointsColor = (points: number, max: number): string => {
   if (percentage <= 50) return 'text-amber-400/80';
   if (percentage <= 75) return 'text-lime-400/80';
   return 'text-green-400/80';
-};
-
-const getProgressGradient = (finalScore: number, maxScore: number): string => {
-  const percentage = (finalScore / maxScore) * 100;
-  if (percentage < 50) return 'from-red-500 to-amber-500';
-  if (percentage < 75) return 'from-amber-500 to-lime-500';
-  return 'from-lime-500 to-green-500';
 };
 
 export default function RiderResults() {
@@ -120,10 +113,11 @@ export default function RiderResults() {
                     {area.finalScore.toFixed(2)} / {(area.weight * 10).toFixed(2)}
                   </span>
                 </div>
-                <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
+                <div className="relative w-full bg-muted rounded-full h-4 overflow-hidden">
+                  <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${AREA_GRADIENT[area.area]}`} />
                   <div
-                    className={`h-full bg-gradient-to-r ${getProgressGradient(area.finalScore, area.weight * 10)} transition-all duration-500`}
-                    style={{ width: `${(area.finalScore / (area.weight * 10)) * 100}%` }}
+                    className="absolute inset-y-0 right-0 bg-muted rounded-r-full transition-all duration-500"
+                    style={{ width: `${100 - (area.finalScore / (area.weight * 10)) * 100}%` }}
                   />
                 </div>
               </div>

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Download, Plus, AlertCircle, Edit } from 'lucide-react';
 import { toast } from 'sonner';
-import { calculateScore, PRESET_WEIGHTS, PRESET_CONFIG, OVERALL_IMPRESSION_CONFIG, heightBracketLabel, amplitudeBracketLabel, AREA_DISPLAY_NAMES } from '@/lib/scoring';
+import { calculateScore, PRESET_WEIGHTS, PRESET_CONFIG, OVERALL_IMPRESSION_CONFIG, heightBracketLabel, amplitudeBracketLabel, AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
 import { EventPreset, HeightAmplitudeThresholds, JudgeOverride as JudgeOverrideType, ScoringResult } from '@/types/scoring';
 import { JudgeOverride } from '@/components/JudgeOverride';
 
@@ -40,12 +40,6 @@ const getPointsColor = (points: number, max: number): string => {
   return 'text-green-400/80';
 };
 
-const getProgressGradient = (finalScore: number, maxScore: number): string => {
-  const percentage = (finalScore / maxScore) * 100;
-  if (percentage < 50) return 'from-red-500 to-amber-500';
-  if (percentage < 75) return 'from-amber-500 to-lime-500';
-  return 'from-lime-500 to-green-500';
-};
 
 export default function Result() {
   const navigate = useNavigate();
@@ -274,10 +268,11 @@ export default function Result() {
                     {area.finalScore.toFixed(2)} / {(area.weight * 10).toFixed(2)}
                   </span>
                 </div>
-                <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
+                <div className="relative w-full bg-muted rounded-full h-4 overflow-hidden">
+                  <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${AREA_GRADIENT[area.area]}`} />
                   <div
-                    className={`h-full bg-gradient-to-r ${getProgressGradient(area.finalScore, area.weight * 10)} transition-all duration-500`}
-                    style={{ width: `${(area.finalScore / (area.weight * 10)) * 100}%` }}
+                    className="absolute inset-y-0 right-0 bg-muted rounded-r-full transition-all duration-500"
+                    style={{ width: `${100 - (area.finalScore / (area.weight * 10)) * 100}%` }}
                   />
                 </div>
               </div>
@@ -365,10 +360,11 @@ export default function Result() {
                     {area.finalScore.toFixed(2)} / {(area.weight * 10).toFixed(2)}
                   </span>
                 </div>
-                <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
+                <div className="relative w-full bg-muted rounded-full h-4 overflow-hidden">
+                  <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${AREA_GRADIENT[area.area]}`} />
                   <div
-                    className={`h-full bg-gradient-to-r ${getProgressGradient(area.finalScore, area.weight * 10)} transition-all duration-500`}
-                    style={{ width: `${(area.finalScore / (area.weight * 10)) * 100}%` }}
+                    className="absolute inset-y-0 right-0 bg-muted rounded-r-full transition-all duration-500"
+                    style={{ width: `${100 - (area.finalScore / (area.weight * 10)) * 100}%` }}
                   />
                 </div>
               </div>
@@ -456,10 +452,11 @@ export default function Result() {
                     {area.finalScore.toFixed(2)} / {(area.weight * 10).toFixed(2)}
                   </span>
                 </div>
-                <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
+                <div className="relative w-full bg-muted rounded-full h-4 overflow-hidden">
+                  <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${AREA_GRADIENT[area.area]}`} />
                   <div
-                    className={`h-full bg-gradient-to-r ${getProgressGradient(area.finalScore, area.weight * 10)} transition-all duration-500`}
-                    style={{ width: `${(area.finalScore / (area.weight * 10)) * 100}%` }}
+                    className="absolute inset-y-0 right-0 bg-muted rounded-r-full transition-all duration-500"
+                    style={{ width: `${100 - (area.finalScore / (area.weight * 10)) * 100}%` }}
                   />
                 </div>
               </div>

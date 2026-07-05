@@ -1,14 +1,14 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, CheckCircle2, X, Sparkles } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import { useScoring } from '@/contexts/ScoringContext';
-import { AREA_DISPLAY_NAMES } from '@/lib/scoring';
+import { AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
 import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
 import { getFakeAthleteScore } from '@/data/fakeAthleteScores';
 import { getLeonardoAverageBreakdown } from '@/data/demoJumps';
@@ -520,76 +520,6 @@ function LiveRankingComparison() {
   );
 }
 
-const AREA_GRADIENT: Record<string, string> = {
-  'HEIGHT & AMPLITUDE': 'from-blue-500 to-cyan-400',
-  HEIGHT: 'from-blue-500 to-cyan-400', // raw scoring-engine key, used by real computed area data
-  EXTREMITY: 'from-purple-500 to-pink-400',
-  TECHNICALITY: 'from-amber-500 to-yellow-400',
-  EXECUTION: 'from-green-500 to-lime-400',
-};
-
-const AREA_DOT_COLOR: Record<string, string> = {
-  'HEIGHT & AMPLITUDE': 'bg-cyan-500',
-  EXTREMITY: 'bg-pink-500',
-  TECHNICALITY: 'bg-amber-500',
-  EXECUTION: 'bg-lime-500',
-};
-
-// Same parameter definitions shown in the real Parameters Guide page — the
-// published rulebook each area is scored against, not a specific jump's result.
-const TIER_COLORS = [
-  'bg-destructive/20 text-destructive border-destructive/30',
-  'bg-amber-500/20 text-amber-400 border-amber-500/30',
-  'bg-lime-500/20 text-lime-400 border-lime-500/30',
-  'bg-green-500/20 text-green-400 border-green-500/30',
-];
-const PARAM_GUIDE: Record<string, { label: string; desc: string; tiers: string[]; max: string; continuous?: boolean }[]> = {
-  'HEIGHT & AMPLITUDE': [
-    {
-      label: 'Height', desc: 'Maximum vertical height achieved during the jump',
-      tiers: ['0–10m: 0 pts', '10–15m: 0.6 pts', '15–17.5m: 0.9 pts', '+17.5m: 1.5 pts'], max: '1.5',
-    },
-    {
-      label: 'Amplitude', desc: 'Horizontal distance covered during the jump',
-      tiers: ['0–50m: 0 pts', '50–75m: 0.33 pts', '75–100m: 0.67 pts', '+100m: 1.0 pts'], max: '1.0',
-    },
-  ],
-  EXTREMITY: [
-    {
-      label: 'Kite Angle', desc: 'Kite position during the kiteloop (lower is riskier and scores higher)',
-      tiers: ['High: 0 pts', 'Medium: 0.25 pts', 'Low: 0.5 pts', 'Super Low: 0.75 pts'], max: '0.75',
-    },
-    {
-      label: 'Yank Power', desc: 'Force and explosiveness of the take-off',
-      tiers: ['None: 0 pts', 'Low: 0.25 pts', 'Medium: 0.5 pts', 'Bomb: 0.75 pts'], max: '0.75',
-    },
-    {
-      label: 'Free Fall', desc: 'Quality and duration of free fall after take-off',
-      tiers: ['Poor: 0 pts', 'Medium: 0.25 pts', 'High: 0.5 pts'], max: '0.5',
-    },
-  ],
-  TECHNICALITY: [
-    {
-      label: 'Rotations', desc: 'Number of front or back rotations completed during the jump',
-      tiers: ['1 rotation: 0.25 pts', '2 rotations: 0.5 pts', '3 rotations: 0.75 pts', '4+: 1.0 pts'], max: '1.0',
-    },
-    {
-      label: 'Rotation Axis', desc: 'Horizontal rotations score higher than vertical rotations',
-      tiers: ['Vertical: 0.2 pts', 'Horizontal: 0.5 pts'], max: '0.5',
-    },
-    {
-      label: 'Board Off', desc: 'Whether the board is released from the feet during the trick',
-      tiers: ['No: 0 pts', 'Yes: 0.3 pts'], max: '0.3',
-    },
-  ],
-  EXECUTION: [
-    { label: 'Style', desc: '', tiers: [], max: '', continuous: true },
-    { label: 'Stability & Control', desc: '', tiers: [], max: '', continuous: true },
-    { label: 'Landing Control', desc: '', tiers: [], max: '', continuous: true },
-    { label: 'Board Control', desc: '', tiers: [], max: '', continuous: true },
-    { label: 'Kite Control', desc: '', tiers: [], max: '', continuous: true },
-  ],
-};
 
 const AREAS = [
   { name: 'HEIGHT & AMPLITUDE', weight: 30, desc: 'Peak height and distance covered, measured directly against event thresholds.', subjective: false },
@@ -1076,63 +1006,7 @@ export default function ChangeTheTide() {
             — and it's the one area labeled as such.
           </p>
 
-          <Accordion type="single" collapsible defaultValue={AREAS[0].name} className="space-y-3">
-            {AREAS.map((area) => (
-              <AccordionItem key={area.name} value={area.name} className="border rounded-lg bg-card px-2">
-                <AccordionTrigger className="px-4 hover:no-underline">
-                  <div className="flex items-center gap-3 text-left">
-                    <div className={`w-2.5 h-2.5 rounded-full ${AREA_DOT_COLOR[area.name]} shrink-0`} />
-                    <div>
-                      <div className="font-bold text-sm tracking-wide">{area.name}</div>
-                      <div className="text-xs text-muted-foreground">Weight: {area.weight}%</div>
-                    </div>
-                    {area.subjective && (
-                      <Badge variant="outline" className="border-amber-500/40 text-amber-400 text-[10px] tracking-wide ml-2">
-                        SUBJECTIVE BY DESIGN
-                      </Badge>
-                    )}
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="px-4 pb-5">
-                  <p className="text-sm text-muted-foreground mb-4">{area.desc}</p>
-                  {area.name === 'EXECUTION' && (
-                    <p className="text-sm text-muted-foreground mb-4">
-                      All EXECUTION parameters are judged on a continuous scale from 0 to 10.
-                    </p>
-                  )}
-                  <div className="space-y-5">
-                    {PARAM_GUIDE[area.name].map((p) => (
-                      <div key={p.label} className="border-l-4 pl-4" style={{ borderColor: `hsl(var(--primary) / 0.4)` }}>
-                        <h4 className="font-semibold mb-1.5 text-sm text-foreground">{p.label}</h4>
-                        {p.continuous ? (
-                          <div className="flex items-center gap-4">
-                            <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                              <div className="h-full w-full bg-gradient-to-r from-destructive via-amber-500 via-lime-500 to-green-500" />
-                            </div>
-                            <Badge variant="outline" className="bg-green-500/20 text-green-400 border-green-500/30 text-[11px] shrink-0">
-                              0 - 10 pts
-                            </Badge>
-                          </div>
-                        ) : (
-                          <>
-                            <p className="text-xs text-muted-foreground mb-2.5">{p.desc}</p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {p.tiers.map((tier, ti) => (
-                                <Badge key={tier} variant="outline" className={`${TIER_COLORS[ti % TIER_COLORS.length]} text-[11px]`}>
-                                  {tier}
-                                </Badge>
-                              ))}
-                            </div>
-                            <div className="text-[11px] text-muted-foreground mt-2">Max: {p.max} points</div>
-                          </>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <ParametersAccordion />
         </div>
       </section>
 

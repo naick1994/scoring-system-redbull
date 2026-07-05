@@ -23,11 +23,10 @@ const getSliderValueColor = (value: number): string => {
   return 'text-green-400';
 };
 
-const getProgressGradient = (percentage: number): string => {
-  if (percentage < 50) return 'from-red-500 to-amber-500';
-  if (percentage < 75) return 'from-amber-500 to-lime-500';
-  return 'from-lime-500 to-green-500';
-};
+// One fixed red-to-green gradient, revealed by width — not a different
+// gradient per range, which used to make the bar's hue jump at each
+// threshold instead of reading as a single continuous scale.
+const PROGRESS_GRADIENT = 'from-red-500/70 to-green-500/70';
 
 interface JumpFormState {
   landingOutcome: LandingOutcome;
@@ -190,10 +189,11 @@ export default function NewJump() {
               {liveScore.toFixed(2)}<span className="text-sm font-normal text-muted-foreground"> / 10</span>
             </span>
           </div>
-          <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+          <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
+            <div className={`absolute inset-0 rounded-full bg-gradient-to-r ${PROGRESS_GRADIENT}`} />
             <div
-              className={`h-full rounded-full bg-gradient-to-r ${getProgressGradient(livePercentage)} transition-all duration-300`}
-              style={{ width: `${livePercentage}%` }}
+              className="absolute inset-y-0 right-0 bg-muted rounded-r-full transition-all duration-300"
+              style={{ width: `${100 - livePercentage}%` }}
             />
           </div>
         </Card>
@@ -428,6 +428,8 @@ export default function NewJump() {
                         value={[jump.executionParams[key as keyof typeof jump.executionParams]]}
                         onValueChange={([v]) => setJump({ ...jump, executionParams: { ...jump.executionParams, [key]: v } })}
                         className="w-full"
+                        trackClassName="bg-gradient-to-r from-red-500/70 to-green-500/70"
+                        rangeClassName="bg-transparent"
                       />
                       <div className="flex justify-between text-xs text-muted-foreground mt-1">
                         <span>0</span>

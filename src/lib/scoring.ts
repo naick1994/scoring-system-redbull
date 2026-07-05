@@ -83,6 +83,17 @@ export const AREA_DISPLAY_NAMES: Record<string, string> = {
   EXECUTION: 'EXECUTION',
 };
 
+// One color per judging area, reused everywhere an area's score bar is
+// shown — Result, Rider Results, and the /change-the-tide pitch page —
+// so the same category always reads as the same color across the app.
+export const AREA_GRADIENT: Record<string, string> = {
+  'HEIGHT & AMPLITUDE': 'from-blue-500 to-cyan-400',
+  HEIGHT: 'from-blue-500 to-cyan-400',
+  EXTREMITY: 'from-purple-500 to-pink-400',
+  TECHNICALITY: 'from-amber-500 to-yellow-400',
+  EXECUTION: 'from-green-500 to-lime-400',
+};
+
 export const PRESET_WEIGHTS: Record<string, PresetWeights> = {
   GKA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 20, EXECUTION: 20 },
   KOTA: { HEIGHT: 30, EXTREMITY: 30, TECHNICALITY: 25, EXECUTION: 15 },

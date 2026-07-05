@@ -976,10 +976,10 @@ export default function ChangeTheTide() {
             A trick is a sum of parts, not a single impression.
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Break a jump down and it's really a set of individual, measurable variables — height, angle,
-            rotation, load — that can each be scored on their own, then added together. The reductionist
-            approach doesn't ask a judge to feel the whole trick at once; it asks a few separate, simpler
-            questions and sums the answers.
+            Break a jump down and it's really four separate, measurable areas — Height &amp; Amplitude,
+            Extremity, Technicality, Execution — that can each be scored on their own, then added together.
+            The reductionist approach doesn't ask a judge to feel the whole trick at once; it asks four
+            separate, simpler questions and sums the answers.
           </p>
           <p className="text-lg text-muted-foreground max-w-2xl mt-4">
             Big Air wouldn't be the first sport to make this trade.

@@ -1260,7 +1260,7 @@ export default function ChangeTheTide() {
             More than a scoring change.
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="p-6 shadow-[var(--shadow-card)]">
               <h3 className="font-bold mb-2">Community &amp; amateurs</h3>
               <p className="text-sm text-muted-foreground">
@@ -1273,6 +1273,34 @@ export default function ChangeTheTide() {
               <p className="text-sm text-muted-foreground">
                 Organizers can shortlist and seed athletes from auditable numbers instead of
                 reputation.
+              </p>
+            </Card>
+            <Card className="p-6 shadow-[var(--shadow-card)]">
+              <h3 className="font-bold mb-2">Real training data</h3>
+              <p className="text-sm text-muted-foreground">
+                Every session, not just contest day, produces the same area-by-area breakdown a
+                rider can actually train against.
+              </p>
+            </Card>
+            <Card className="p-6 shadow-[var(--shadow-card)]">
+              <h3 className="font-bold mb-2">Broadcast &amp; spectators</h3>
+              <p className="text-sm text-muted-foreground">
+                Live, on-screen area breakdowns turn a ten-second trick into something a new
+                viewer can actually follow.
+              </p>
+            </Card>
+            <Card className="p-6 shadow-[var(--shadow-card)]">
+              <h3 className="font-bold mb-2">A real data asset</h3>
+              <p className="text-sm text-muted-foreground">
+                Every jump becomes a comparable, storable data point, the raw material for
+                rankings, content, and sponsor storytelling.
+              </p>
+            </Card>
+            <Card className="p-6 shadow-[var(--shadow-card)]">
+              <h3 className="font-bold mb-2">Portable beyond Big Air</h3>
+              <p className="text-sm text-muted-foreground">
+                The same four-area model applies to any sensor-equipped board sport: wakeboarding,
+                wing foiling, freestyle skiing and snowboarding.
               </p>
             </Card>
           </div>

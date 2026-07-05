@@ -21,7 +21,7 @@ const Login = () => {
 
     const success = login(email, password, role);
     if (success) {
-      navigate(role === 'rider' ? '/rider' : '/');
+      navigate(role === 'rider' ? '/rider' : '/parameters-guide');
     } else {
       setError('Invalid credentials. Please try again.');
     }

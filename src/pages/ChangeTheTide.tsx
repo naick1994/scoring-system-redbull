@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ArrowUpRight, CheckCircle2, X, Sparkles } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
@@ -334,11 +333,12 @@ function LiveRankingComparison() {
           <tbody>
             {topEight.map((row, idx) => {
               const isMe = row.athlete === RIDER_NAME;
+              const isSelected = selected?.athlete === row.athlete;
               return (
                 <tr
                   key={idx}
                   onClick={() => { if (!isMe) { userInteractedRef.current = true; setSelected(row); } }}
-                  className={`border-b border-border transition-colors ${isMe ? 'bg-primary/10' : 'hover:bg-muted/50 cursor-pointer'}`}
+                  className={`border-b border-border transition-colors ${isMe ? 'bg-primary/10' : isSelected ? 'bg-primary/5' : 'hover:bg-muted/50 cursor-pointer'}`}
                 >
                   <td className="py-3 px-4 font-semibold text-muted-foreground text-sm">#{row.rank}</td>
                   <td className="py-3 px-4">
@@ -347,6 +347,9 @@ function LiveRankingComparison() {
                       <span className={`font-medium text-sm ${isMe ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
                       {isMe && (
                         <Badge className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary/20 text-[10px]">You</Badge>
+                      )}
+                      {isSelected && !isMe && (
+                        <Badge variant="outline" className="text-[10px] border-primary/40 text-primary">Comparing</Badge>
                       )}
                     </div>
                   </td>
@@ -357,26 +360,33 @@ function LiveRankingComparison() {
             })}
           </tbody>
         </table>
-      </Card>
-      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data, auto-playing a few comparisons — click any rider to try your own.</p>
 
-      <Dialog open={!!selected} onOpenChange={(open) => { if (!open) { userInteractedRef.current = true; setSelected(null); } }}>
-        <DialogContent className="max-w-lg">
+        <div
+          className="overflow-hidden transition-all duration-500 ease-out border-t border-border"
+          style={{ maxHeight: selected && comparison ? 520 : 0, opacity: selected && comparison ? 1 : 0 }}
+        >
           {selected && comparison && (
-            <div key={selected.athlete} style={{ animation: 'whatIfPop 0.45s ease' }}>
-              <DialogHeader>
+            <div key={selected.athlete} className="p-5" style={{ animation: 'whatIfPop 0.45s ease' }}>
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <img src={selected.photoUrl} alt={selected.athlete} className="w-14 h-14 rounded-full object-cover border border-border" />
+                  <img src={selected.photoUrl} alt={selected.athlete} className="w-12 h-12 rounded-full object-cover border border-border" />
                   <div>
-                    <DialogTitle className="text-xl">{selected.athlete}</DialogTitle>
-                    <p className="text-sm text-muted-foreground">
+                    <div className="font-bold">{selected.athlete}</div>
+                    <p className="text-xs text-muted-foreground">
                       {COUNTRY_FLAGS[selected.country] ?? selected.country} #{selected.rank} · {selected.points} pts
                     </p>
                   </div>
                 </div>
-              </DialogHeader>
+                <button
+                  onClick={() => { userInteractedRef.current = true; setSelected(null); }}
+                  className="w-7 h-7 rounded-full hover:bg-muted flex items-center justify-center text-muted-foreground shrink-0"
+                  aria-label="Close comparison"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
 
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 mb-4">
                 <div className="text-center flex-1">
                   <div className="text-2xl font-bold">{comparison.fake.averageScore.toFixed(2)}</div>
                   <div className="text-xs text-muted-foreground">{selected.athlete.split(' ')[0]}'s avg</div>
@@ -420,8 +430,9 @@ function LiveRankingComparison() {
               </div>
             </div>
           )}
-        </DialogContent>
-      </Dialog>
+        </div>
+      </Card>
+      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data, auto-playing a few comparisons — click any rider to try your own.</p>
     </>
   );
 }

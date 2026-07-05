@@ -114,7 +114,7 @@ function ThresholdCard() {
     <Card className="p-6 shadow-[var(--shadow-card)]">
       <h3 className="font-bold mb-1">Thresholds, set per event</h3>
       <p className="text-sm text-muted-foreground mb-5">
-        The chief judge sets what height and distance earn full marks — a big-wind day and a
+        The chief judge sets what height and distance earn full marks, so a big-wind day and a
         marginal one don't get graded on the same curve.
       </p>
       <div className="flex flex-wrap gap-2">
@@ -124,7 +124,7 @@ function ThresholdCard() {
         <Badge variant="outline" className="border-green-500/40 text-green-400 text-[11px] tabular-nums">+{t3}m: 1.5 pts</Badge>
       </div>
       <p className="text-[11px] text-muted-foreground mt-4 font-mono">
-        Move the top threshold and the rest shift with it — the chief judge sets the whole curve for
+        Move the top threshold and the rest shift with it. The chief judge sets the whole curve for
         the day's conditions, not just one number.
       </p>
     </Card>
@@ -190,7 +190,7 @@ function WhatIfParamRow({ label, tip, max, state }: { label: string; tip: string
             className="inline-flex items-center rounded-md border border-primary/30 bg-primary/10 px-2 py-1 text-[11px] gap-1"
             style={{ animation: 'whatIfPop 0.4s ease' }}
           >
-            <Sparkles className="w-3 h-3 text-primary" /> {state.label} — {state.pts.toFixed(2)} pts
+            <Sparkles className="w-3 h-3 text-primary" /> {state.label}: {state.pts.toFixed(2)} pts
             {state.isReal && <span className="text-muted-foreground">(real)</span>}
           </span>
         </div>
@@ -284,7 +284,7 @@ function JumpBreakdownCard() {
         </div>
       </div>
 
-      <div className="text-sm font-semibold mb-4 text-left">{jump.label} — Detailed Breakdown</div>
+      <div className="text-sm font-semibold mb-4 text-left">{jump.label}: Detailed Breakdown</div>
       <div key={jump.label} className="space-y-3" style={{ animation: 'whatIfPop 0.35s ease' }}>
         {jump.areas.map((area, i) => {
           const isActive = i === activeAreaIndex;
@@ -452,7 +452,7 @@ function LiveRankingComparison() {
           </tbody>
         </table>
       </Card>
-      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data. Click any rider to compare — try it.</p>
+      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data. Click any rider to compare. Try it.</p>
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="max-w-lg">
@@ -524,8 +524,8 @@ function LiveRankingComparison() {
 const AREAS = [
   { name: 'HEIGHT & AMPLITUDE', weight: 30, desc: 'Peak height and distance covered, measured directly against event thresholds.', subjective: false },
   { name: 'EXTREMITY', weight: 30, desc: 'Kite angle, load on entry, and hang time during the loop.', subjective: false },
-  { name: 'TECHNICALITY', weight: 20, desc: 'Rotations, axis, and board variations — what the trick consisted of.', subjective: false },
-  { name: 'EXECUTION', weight: 20, desc: 'Style, control, and landing quality — the one judged, human call.', subjective: true },
+  { name: 'TECHNICALITY', weight: 20, desc: 'Rotations, axis, and board variations: what the trick consisted of.', subjective: false },
+  { name: 'EXECUTION', weight: 20, desc: 'Style, control, and landing quality: the one judged, human call.', subjective: true },
 ];
 
 // Real Jump 1 (Leonardo Casati, Mykonos) per-parameter breakdown, shown when
@@ -693,7 +693,7 @@ function WooSensorPanel() {
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex items-center gap-2">
           <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data — Leonardo Casati</span>
+          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data: Leonardo Casati</span>
         </div>
         <div className="flex items-center gap-1.5">
           {WOO_SENSOR_JUMPS.map((j, i) => (
@@ -736,7 +736,7 @@ const PROBLEM_ITEMS = [
 const SOLUTION_ITEMS = [
   'Four weighted areas, scored independently',
   'Every point tied to a published parameter',
-  'Fully auditable — every score is explainable',
+  'Fully auditable: every score is explainable',
   'Same method, every judge, every event',
   'Precise, per-parameter feedback for every rider',
   'Every score traced to a real measurement',
@@ -852,22 +852,22 @@ function SolutionSection() {
 const HISTORY_ITEMS = [
   {
     sport: 'Figure skating', year: '2004', color: 'blue',
-    change: 'Replaced the subjective 6.0 scale with the International Judging System — every element scored against a fixed base value.',
+    change: 'Replaced the subjective 6.0 scale with the International Judging System: every element scored against a fixed base value.',
     why: 'Introduced after the 2002 Salt Lake City judging scandal exposed how much a final score could depend on who was judging.',
   },
   {
     sport: 'Artistic gymnastics', year: '2006', color: 'purple',
-    change: 'Abolished the "Perfect 10" for an open-ended Code of Points — difficulty and execution scored as two separate numbers.',
+    change: 'Abolished the "Perfect 10" for an open-ended Code of Points: difficulty and execution scored as two separate numbers.',
     why: 'Removed the ceiling a holistic 10 put on innovation, and reduced how much a routine\'s score depended on a judge\'s reputation for it.',
   },
   {
     sport: 'Taekwondo', year: '2012', color: 'orange',
-    change: 'Introduced electronic body-protector sensors at the London Olympics — hits register and score automatically.',
+    change: 'Introduced electronic body-protector sensors at the London Olympics: hits register and score automatically.',
     why: 'Removed judge bias from the single moment a sport is most contested: whether a hit actually landed.',
   },
   {
     sport: 'Skateboarding', year: '2021', color: 'pink',
-    change: 'Adopted a numeric run/trick scoring system for its Olympic debut in Tokyo — built from difficulty, variety, and execution.',
+    change: 'Adopted a numeric run/trick scoring system for its Olympic debut in Tokyo, built from difficulty, variety, and execution.',
     why: 'Needed a scoring method that could hold up to Olympic scrutiny, not just contest-day judging.',
   },
 ];
@@ -891,7 +891,7 @@ function HistorySection() {
           Every sport eventually drops the eye test.
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-          Most judged sports have already made this exact trade — usually after the same holistic
+          Most judged sports have already made this exact trade, usually after the same holistic
           problems became too visible to ignore.
         </p>
 
@@ -941,7 +941,7 @@ export default function ChangeTheTide() {
             <span className="text-primary">objective judging.</span>
           </h1>
           <p className="text-xl text-muted-foreground mt-8 max-w-2xl">
-            Every jump in Big Air can now be measured — height, rotation, load, hang time, landing.
+            Every jump in Big Air can now be measured: height, rotation, load, hang time, landing.
             The scoring model just hasn't caught up. This one has.
           </p>
         </div>
@@ -956,8 +956,8 @@ export default function ChangeTheTide() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
             Holistic judging asks one person to weigh height, rotation, execution, and risk all at once,
-            from a single vantage point, in the seconds after a jump ends. One dominant impression — how
-            high it looked, how clean the landing looked — tends to eclipse every other parameter that
+            from a single vantage point, in the seconds after a jump ends. One dominant impression, how
+            high it looked, how clean the landing looked, tends to eclipse every other parameter that
             went into the trick.
           </p>
           <p className="text-lg text-muted-foreground max-w-2xl mt-4">
@@ -976,13 +976,10 @@ export default function ChangeTheTide() {
             A trick is a sum of parts, not a single impression.
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Break a jump down and it's really four separate, measurable areas — Height &amp; Amplitude,
-            Extremity, Technicality, Execution — that can each be scored on their own, then added together.
+            Break a jump down and it's really four separate, measurable areas: Height &amp; Amplitude,
+            Extremity, Technicality, Execution, that can each be scored on their own, then added together.
             The reductionist approach doesn't rely on one overall impression of the whole trick; it breaks
             the question into four separate, simpler ones and sums the answers.
-          </p>
-          <p className="text-lg text-muted-foreground max-w-2xl mt-4">
-            Big Air wouldn't be the first sport to make this trade.
           </p>
         </div>
       </section>
@@ -1002,8 +999,8 @@ export default function ChangeTheTide() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             Every jump is decomposed into four areas, each scored against fixed, published parameters.
-            Three of the four are grounded in objective sensor data. Only Execution stays a judged call
-            — and it's the one area labeled as such.
+            Three of the four are grounded in objective sensor data. Only Execution stays a judged call,
+            and it's the one area labeled as such.
           </p>
 
           <ParametersAccordion />
@@ -1041,8 +1038,8 @@ export default function ChangeTheTide() {
             rotations, and load on every jump.
           </p>
           <p className="text-lg text-muted-foreground max-w-2xl mt-4">
-            Turning that into a scoring model isn't a hardware problem. It's a matter of structuring
-            data that's already being collected.
+            Turning that into a scoring model is mostly a matter of structuring data that's already
+            being collected, with a few additional readings layered on top.
           </p>
 
           <WooSensorPanel />
@@ -1058,11 +1055,11 @@ export default function ChangeTheTide() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-3">
             A single board-mounted sensor already captures height, speed, and rotations. It can't see
-            what the kite is doing in the air, or how hard the rider loaded into the move — and those
+            what the kite is doing in the air, or how hard the rider loaded into the move, and those
             are exactly the parameters Extremity is built on.
           </p>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-            A three-point sensor system — kite, harness, board — closes that gap, with each sensor
+            A three-point sensor system (kite, harness, board) closes that gap, with each sensor
             feeding a different part of the model.
           </p>
 
@@ -1071,7 +1068,7 @@ export default function ChangeTheTide() {
               <div className="text-xs font-mono uppercase tracking-wide text-primary mb-2">Kite</div>
               <h3 className="font-bold mb-2">Where the kite is</h3>
               <p className="text-sm text-muted-foreground">
-                Tracks the kite's position and angle relative to the rider — the core reading behind
+                Tracks the kite's position and angle relative to the rider. The core reading behind
                 Kite Angle, one of the most contested calls in holistic judging today.
               </p>
             </Card>
@@ -1080,14 +1077,14 @@ export default function ChangeTheTide() {
               <h3 className="font-bold mb-2">How hard it was loaded</h3>
               <p className="text-sm text-muted-foreground">
                 Captures the load through the rider's body on entry to the move and the hang time
-                during it — Yank Power and Free Fall, the parameters behind how extreme a jump feels.
+                during it: Yank Power and Free Fall, the parameters behind how extreme a jump feels.
               </p>
             </Card>
             <Card className="p-6 shadow-[var(--shadow-card)]">
               <div className="text-xs font-mono uppercase tracking-wide text-primary mb-2">Board</div>
               <h3 className="font-bold mb-2">What the trick was</h3>
               <p className="text-sm text-muted-foreground">
-                Height, distance, rotations, axis, and board variations — the mechanics of the jump
+                Height, distance, rotations, axis, and board variations: the mechanics of the jump
                 itself, plus how in control the landing was.
               </p>
             </Card>
@@ -1105,8 +1102,8 @@ export default function ChangeTheTide() {
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             Today, an athlete who loses a heat gets an opinion. Under this model, every rider gets a
             jump-by-jump breakdown of exactly where points were left on the table. Below, watch what
-            happens to one of Leonardo Casati's real Mykonos jumps as just the Height reading changes —
-            the total score recalculates live, on the real scoring model.
+            happens to one of Leonardo Casati's real Mykonos jumps as just the Height reading changes.
+            The total score recalculates live, on the real scoring model.
           </p>
 
           <AutoWhatIfDemo />
@@ -1121,8 +1118,8 @@ export default function ChangeTheTide() {
             Athletes don't just receive a score. They get an account.
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-            A separate rider login surfaces their own results in full — every area, every point,
-            for every jump — not just a final number.
+            A separate rider login surfaces their own results in full: every area, every point,
+            for every jump, not just a final number.
           </p>
 
           <JumpBreakdownCard />
@@ -1138,7 +1135,7 @@ export default function ChangeTheTide() {
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             From the season ranking, a rider can pick any other athlete and see an area-by-area
-            comparison — not just who's ahead, but where.
+            comparison: not just who's ahead, but where.
           </p>
 
           <LiveRankingComparison />
@@ -1178,7 +1175,7 @@ export default function ChangeTheTide() {
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">See it work</div>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">A working demo is live.</h2>
           <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-            Every screen referenced here — the four-area breakdown, the coaching receipt — exists
+            Every screen referenced here, the four-area breakdown, the coaching receipt, exists
             today, running, not as a slide.
           </p>
           <Link

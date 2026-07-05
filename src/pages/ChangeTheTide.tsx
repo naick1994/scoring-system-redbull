@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, CheckCircle2, X, Sparkles } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import nickAvatar from '@/assets/nick-avatar.jpg';
@@ -1187,22 +1187,29 @@ export default function ChangeTheTide() {
           opacity 0, so a fast tick never reads as content vanishing. */}
       <style>{`@keyframes whatIfPop { from { opacity: 0.5; transform: translateY(1px); } to { opacity: 1; transform: translateY(0); } }`}</style>
       {/* ───────── Hero ───────── */}
-      <section className="relative overflow-hidden border-b border-border">
+      <section className="relative overflow-hidden border-b border-border min-h-screen flex flex-col">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
-        <div className="container mx-auto px-4 pt-16 pb-24 max-w-5xl relative">
-          <div className="flex items-center gap-4 mb-16">
+
+        <div className="container mx-auto px-4 pt-10 max-w-5xl relative">
+          <div className="flex items-center gap-4">
             <img src={wooLogo} alt="Woo" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
             <div className="w-px h-5 bg-border" />
             <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
           </div>
+        </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight max-w-4xl">
+        <div className="container mx-auto px-4 max-w-5xl relative flex-1 flex flex-col justify-center">
+          <h1 className="text-6xl md:text-8xl font-bold leading-[1.05] tracking-tight max-w-5xl">
             It's time for<br />
             <span className="text-primary">objective judging.</span>
           </h1>
-          <p className="text-xl text-muted-foreground mt-8 max-w-2xl">
+          <p className="text-xl md:text-2xl text-muted-foreground mt-8 max-w-2xl">
             Big Air has objective data. It deserves objective judging.
           </p>
+        </div>
+
+        <div className="relative pb-10 flex justify-center">
+          <ChevronDown className="w-6 h-6 text-muted-foreground animate-bounce" />
         </div>
       </section>
 

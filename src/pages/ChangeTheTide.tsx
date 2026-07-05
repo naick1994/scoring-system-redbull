@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, CheckCircle2, X, Sparkles } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
+import nickAvatar from '@/assets/nick-avatar.jpg';
 import { useScoring } from '@/contexts/ScoringContext';
 import { AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
 import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
@@ -1430,6 +1431,19 @@ export default function ChangeTheTide() {
           </RevealOnScroll>
         </div>
       </section>
+
+      <footer className="border-t border-border py-8">
+        <div className="container mx-auto px-4 max-w-5xl text-center">
+          <Link
+            to="/about-nick"
+            className="inline-flex items-center gap-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <img src={nickAvatar} alt="Nicholas Baruffaldi" className="w-7 h-7 rounded-full object-cover border border-border" />
+            Built and prototyped by Nicholas Baruffaldi
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 }

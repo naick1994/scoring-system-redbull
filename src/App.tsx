@@ -20,6 +20,7 @@ import RiderFeedback from "./pages/rider/RiderFeedback";
 import RiderRanking from "./pages/rider/RiderRanking";
 import Admin from "./pages/Admin";
 import ChangeTheTide from "./pages/ChangeTheTide";
+import AboutNick from "./pages/AboutNick";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/change-the-tide" element={<ChangeTheTide />} />
+              <Route path="/about-nick" element={<AboutNick />} />
               <Route
                 path="/*"
                 element={

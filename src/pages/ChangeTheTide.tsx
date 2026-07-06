@@ -1127,8 +1127,8 @@ const PROBLEM_ITEMS = [
   'Varies between judges and events',
   'No specific feedback on what to improve',
   'Rewards how it looked, not what it measured',
-  'No answer to "what should I train?"',
   'No way to compare beyond the final rank',
+  'No insight for the viewer into why a score was given',
 ];
 
 const SOLUTION_ITEMS = [
@@ -1138,8 +1138,8 @@ const SOLUTION_ITEMS = [
   'Same method, every judge, every event',
   'Precise, per-parameter feedback for every rider',
   'Every score traced to a real measurement',
-  'The exact parameter that cost you points',
   'Area-by-area comparison against any rider',
+  'Live, on-screen breakdown of why a trick scored what it did',
 ];
 
 const PROBLEM_ITEM_COLORS = ['text-red-400'];

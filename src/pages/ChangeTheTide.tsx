@@ -620,6 +620,7 @@ const JUMP_SUB_PARAMS: Record<string, { label: string; pts: number; max: number 
 const WOO_SENSOR_JUMPS = [
   {
     label: 'Jump 1', category: 'KLBRFL', trick: 'Late Backroll Kiteloop Double Flip Added Rotation',
+    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_7.33.mp4`,
     stats: [
       { label: 'Max Height', value: '15.9 m' }, { label: 'Distance', value: '76 m' },
       { label: 'Airtime', value: '7.6 s' }, { label: 'Kite Angle', value: '76°' },
@@ -633,6 +634,7 @@ const WOO_SENSOR_JUMPS = [
   },
   {
     label: 'Jump 2', category: 'KLFRBO', trick: 'Doobie Loop Boardoff by the Fin',
+    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
     stats: [
       { label: 'Max Height', value: '19.8 m' }, { label: 'Distance', value: '83 m' },
       { label: 'Airtime', value: '7.5 s' }, { label: 'Kite Angle', value: '73°' },
@@ -646,6 +648,7 @@ const WOO_SENSOR_JUMPS = [
   },
   {
     label: 'Jump 3', category: 'KLBRBO', trick: 'Backroll Kiteloop Tornado',
+    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
     stats: [
       { label: 'Max Height', value: '17.5 m' }, { label: 'Distance', value: '121 m' },
       { label: 'Airtime', value: '7.0 s' }, { label: 'Kite Angle', value: '78°' },
@@ -681,14 +684,10 @@ function WooSensorPanel() {
     return () => observer.disconnect();
   }, [reducedMotion]);
 
-  useEffect(() => {
-    if (reducedMotion || !inView) return;
-    const id = setInterval(() => {
-      if (userInteractedRef.current) return;
-      setIndex(prev => (prev + 1) % WOO_SENSOR_JUMPS.length);
-    }, 3000);
-    return () => clearInterval(id);
-  }, [reducedMotion, inView]);
+  const handleVideoEnded = () => {
+    if (userInteractedRef.current || reducedMotion) return;
+    setIndex(prev => (prev + 1) % WOO_SENSOR_JUMPS.length);
+  };
 
   const jump = WOO_SENSOR_JUMPS[index];
 
@@ -714,13 +713,28 @@ function WooSensorPanel() {
         </div>
       </div>
       <p className="text-xs font-semibold text-amber-400 mb-4">{jump.category} · {jump.trick}</p>
-      <div key={jump.label} className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-4" style={{ animation: 'whatIfPop 0.4s ease' }}>
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+        {inView && (
+          <div key={jump.videoSrc} className="rounded-lg overflow-hidden border border-border bg-black w-full lg:w-3/5 shrink-0" style={{ animation: 'whatIfPop 0.4s ease' }}>
+            <video
+              src={jump.videoSrc}
+              className="w-full aspect-video object-cover"
+              muted
+              autoPlay
+              playsInline
+              preload="none"
+              onEnded={handleVideoEnded}
+            />
+          </div>
+        )}
+        <div key={jump.label} className="grid grid-cols-2 gap-x-6 gap-y-4 lg:pt-1" style={{ animation: 'whatIfPop 0.4s ease' }}>
         {jump.stats.map(s => (
           <div key={s.label}>
             <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider leading-tight mb-0.5">{s.label}</div>
             <div className="text-sm font-bold text-foreground tabular-nums">{s.value}</div>
           </div>
         ))}
+        </div>
       </div>
     </Card>
   );

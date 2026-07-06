@@ -699,30 +699,73 @@ function WooSensorPanel() {
     return () => observer.disconnect();
   }, [reducedMotion]);
 
+  const [paused, setPaused] = useState(false);
+
   const handleVideoEnded = () => {
     if (userInteractedRef.current || reducedMotion) return;
-    setIndex(prev => (prev + 1) % WOO_SENSOR_JUMPS.length);
+    setPaused(true);
   };
+
+  // Hold on a blank beat with just the brand logos once a jump's video
+  // ends, so the fully-revealed data is actually readable before the
+  // panel auto-advances to the next jump.
+  useEffect(() => {
+    if (!paused) return;
+    const id = setTimeout(() => {
+      setPaused(false);
+      if (userInteractedRef.current) return;
+      setIndex(prev => (prev + 1) % WOO_SENSOR_JUMPS.length);
+    }, 5000);
+    return () => clearTimeout(id);
+  }, [paused]);
 
   const jump = WOO_SENSOR_JUMPS[index];
 
   const revealOrder = useMemo(() => shuffledIndices(jump.stats.length), [jump]);
 
+  // Once the trick is mostly done, stats stream in one at a time on a
+  // steady clock (not tied to video timeupdate ticks, which cluster near
+  // the end and would otherwise dump several stats in the same frame).
+  // Allowed to keep ticking into the post-video pause screen, so a short
+  // clip doesn't force multiple reveals into one tick.
+  const revealStartedRef = useRef(false);
+  const revealIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startReveal = () => {
+    if (revealStartedRef.current) return;
+    revealStartedRef.current = true;
+    revealIntervalRef.current = setInterval(() => {
+      setRevealedCount(prev => {
+        if (prev + 1 >= jump.stats.length && revealIntervalRef.current) {
+          clearInterval(revealIntervalRef.current);
+        }
+        return Math.min(jump.stats.length, prev + 1);
+      });
+    }, 500);
+  };
+
+  // Reset when the jump changes.
   useEffect(() => {
+    revealStartedRef.current = false;
+    if (revealIntervalRef.current) clearInterval(revealIntervalRef.current);
     setRevealedCount(reducedMotion ? jump.stats.length : 0);
+    return () => {
+      if (revealIntervalRef.current) clearInterval(revealIntervalRef.current);
+    };
   }, [jump, reducedMotion]);
+
+  // Fallback: also start once paused (post-video screen), in case the clip
+  // ends before crossing the reveal threshold during playback.
+  useEffect(() => {
+    if (!paused || reducedMotion) return;
+    startReveal();
+  }, [paused, reducedMotion]);
 
   const handleVideoTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     if (reducedMotion) return;
     const video = e.currentTarget;
     if (!video.duration) return;
-    const pct = video.currentTime / video.duration;
-    if (pct < REVEAL_START_PCT) {
-      setRevealedCount(0);
-      return;
-    }
-    const t = (pct - REVEAL_START_PCT) / (1 - REVEAL_START_PCT);
-    setRevealedCount(Math.min(jump.stats.length, Math.round(t * jump.stats.length)));
+    if (video.currentTime / video.duration >= REVEAL_START_PCT) startReveal();
   };
 
   return (
@@ -736,7 +779,7 @@ function WooSensorPanel() {
           {WOO_SENSOR_JUMPS.map((j, i) => (
             <button
               key={j.label}
-              onClick={() => { userInteractedRef.current = true; setIndex(i); }}
+              onClick={() => { userInteractedRef.current = true; setPaused(false); setIndex(i); }}
               className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
                 i === index ? 'bg-primary/15 border-primary/40 text-primary' : 'border-border text-muted-foreground hover:bg-muted/50'
               }`}
@@ -749,17 +792,26 @@ function WooSensorPanel() {
       <p className="text-xs font-semibold text-amber-400 mb-4">{jump.category} · {jump.trick}</p>
       <div className="flex flex-col lg:flex-row gap-6 items-stretch">
         {inView && (
-          <div key={jump.videoSrc} className="rounded-lg overflow-hidden border border-border bg-black w-full lg:w-3/5 shrink-0" style={{ animation: 'whatIfPop 0.4s ease' }}>
-            <video
-              src={jump.videoSrc}
-              className="w-full h-full object-cover"
-              muted
-              autoPlay
-              playsInline
-              preload="none"
-              onEnded={handleVideoEnded}
-              onTimeUpdate={handleVideoTimeUpdate}
-            />
+          <div className="rounded-lg overflow-hidden border border-border bg-black w-full lg:w-3/5 shrink-0" style={{ animation: 'whatIfPop 0.4s ease' }}>
+            {paused ? (
+              <div className="w-full h-full flex items-center justify-center gap-4 aspect-video">
+                <img src={wooLogo} alt="Woo" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+                <div className="w-px h-5 bg-border" />
+                <img src={capitalLogo} alt="Capital.com" className="h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+              </div>
+            ) : (
+              <video
+                key={jump.videoSrc}
+                src={jump.videoSrc}
+                className="w-full h-full object-cover"
+                muted
+                autoPlay
+                playsInline
+                preload="none"
+                onEnded={handleVideoEnded}
+                onTimeUpdate={handleVideoTimeUpdate}
+              />
+            )}
           </div>
         )}
         <div

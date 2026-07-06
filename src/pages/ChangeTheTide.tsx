@@ -662,6 +662,20 @@ const WOO_SENSOR_JUMPS = [
   },
 ];
 
+// Stats only start streaming in once the trick is mostly done (most
+// readings, like kite angle, can only be derived after the loop
+// completes), and arrive in a shuffled order rather than top-to-bottom.
+const REVEAL_START_PCT = 0.55;
+
+function shuffledIndices(n: number) {
+  const arr = Array.from({ length: n }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 function WooSensorPanel() {
   const [index, setIndex] = useState(0);
   const userInteractedRef = useRef(false);
@@ -692,16 +706,24 @@ function WooSensorPanel() {
 
   const jump = WOO_SENSOR_JUMPS[index];
 
-  // Stats "arrive" one by one as the jump video plays, like live sensor
-  // telemetry streaming in, instead of appearing all at once.
+  const revealOrder = useMemo(() => shuffledIndices(jump.stats.length), [jump]);
+
   useEffect(() => {
     setRevealedCount(reducedMotion ? jump.stats.length : 0);
-    if (reducedMotion || !inView) return;
-    const id = setInterval(() => {
-      setRevealedCount(prev => (prev >= jump.stats.length ? prev : prev + 1));
-    }, 480);
-    return () => clearInterval(id);
-  }, [jump, inView, reducedMotion]);
+  }, [jump, reducedMotion]);
+
+  const handleVideoTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    if (reducedMotion) return;
+    const video = e.currentTarget;
+    if (!video.duration) return;
+    const pct = video.currentTime / video.duration;
+    if (pct < REVEAL_START_PCT) {
+      setRevealedCount(0);
+      return;
+    }
+    const t = (pct - REVEAL_START_PCT) / (1 - REVEAL_START_PCT);
+    setRevealedCount(Math.min(jump.stats.length, Math.round(t * jump.stats.length)));
+  };
 
   return (
     <Card ref={panelRef} className="p-6 shadow-[var(--shadow-card)] mt-8">
@@ -736,6 +758,7 @@ function WooSensorPanel() {
               playsInline
               preload="none"
               onEnded={handleVideoEnded}
+              onTimeUpdate={handleVideoTimeUpdate}
             />
           </div>
         )}
@@ -745,7 +768,7 @@ function WooSensorPanel() {
           style={{ animation: 'whatIfPop 0.4s ease' }}
         >
         {jump.stats.map((s, i) => {
-          const arrived = i < revealedCount;
+          const arrived = revealOrder.indexOf(i) < revealedCount;
           return (
             <div key={s.label}>
               <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider leading-tight mb-0.5">{s.label}</div>

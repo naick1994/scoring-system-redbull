@@ -1348,6 +1348,10 @@ function SensorCardsGrid() {
 
 const UNLOCK_CARDS = [
   {
+    label: 'Broadcast', title: 'Broadcast & spectators', color: 'pink',
+    desc: 'The live breakdown you just saw turns a ten-second trick into something a new viewer can actually follow, and enjoy.',
+  },
+  {
     label: 'Community', title: 'Community & amateurs', color: 'cyan',
     desc: 'A rider can score their own jump against the exact standard the pros are held to, using the same sensor data.',
   },
@@ -1358,10 +1362,6 @@ const UNLOCK_CARDS = [
   {
     label: 'Training', title: 'Real training data', color: 'orange',
     desc: 'Every session, not just contest day, produces the same area-by-area breakdown a rider can actually train against.',
-  },
-  {
-    label: 'Broadcast', title: 'Broadcast & spectators', color: 'pink',
-    desc: 'Live, on-screen area breakdowns turn a ten-second trick into something a new viewer can actually follow.',
   },
   {
     label: 'Data', title: 'A real data asset', color: 'blue',
@@ -1707,7 +1707,7 @@ export default function ChangeTheTide() {
             <p className="text-lg text-muted-foreground max-w-2xl">
               Holistic judging asks one person to weigh height, rotation, execution, and risk all at
               once. One dominant impression tends to eclipse everything else, leaving a scoreboard
-              that's hard to predict, or explain.
+              that's hard to predict, explain, or enjoy watching.
             </p>
           </RevealOnScroll>
 

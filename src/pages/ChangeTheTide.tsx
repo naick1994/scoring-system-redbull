@@ -713,12 +713,12 @@ function WooSensorPanel() {
         </div>
       </div>
       <p className="text-xs font-semibold text-amber-400 mb-4">{jump.category} · {jump.trick}</p>
-      <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="flex flex-col lg:flex-row gap-6 items-stretch">
         {inView && (
           <div key={jump.videoSrc} className="rounded-lg overflow-hidden border border-border bg-black w-full lg:w-3/5 shrink-0" style={{ animation: 'whatIfPop 0.4s ease' }}>
             <video
               src={jump.videoSrc}
-              className="w-full aspect-video object-cover"
+              className="w-full h-full object-cover"
               muted
               autoPlay
               playsInline
@@ -727,7 +727,11 @@ function WooSensorPanel() {
             />
           </div>
         )}
-        <div key={jump.label} className="grid grid-cols-2 gap-x-6 gap-y-4 lg:pt-1" style={{ animation: 'whatIfPop 0.4s ease' }}>
+        <div
+          key={jump.label}
+          className="flex-1 rounded-lg border border-border bg-muted/20 p-4 grid grid-cols-3 content-center gap-x-4 gap-y-5"
+          style={{ animation: 'whatIfPop 0.4s ease' }}
+        >
         {jump.stats.map(s => (
           <div key={s.label}>
             <div className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider leading-tight mb-0.5">{s.label}</div>

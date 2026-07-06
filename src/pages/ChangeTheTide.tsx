@@ -1476,7 +1476,7 @@ export default function ChangeTheTide() {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               From the season ranking, a rider can pick any other athlete and see an area-by-area
-              comparison: not just who's ahead, but where.
+              comparison: not just who's ahead, but where and why.
             </p>
           </RevealOnScroll>
 

@@ -1330,9 +1330,8 @@ export default function ChangeTheTide() {
               A trick is a <span className="text-primary">sum of parts,</span> not a single impression.
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
-              Break a jump down and it's four separate, measurable areas: Height &amp; Amplitude,
-              Extremity, Technicality, Execution, each scored on its own, then added together. No
-              overall impression, four simpler questions summed into one answer.
+              Every jump breaks down into four areas: Height &amp; Amplitude, Extremity, Technicality,
+              Execution. Each is scored on its own, then added together.
             </p>
           </RevealOnScroll>
 

@@ -850,6 +850,130 @@ function WooSensorPanel() {
   );
 }
 
+// Same colors used for these 4 areas everywhere else on the page (idea
+// split visual, parameters accordion dots), reused here for consistency.
+const LIVE_AREA_STYLES = [
+  { dot: 'bg-cyan-500', bar: 'bg-cyan-500', text: 'text-cyan-400' },
+  { dot: 'bg-pink-500', bar: 'bg-pink-500', text: 'text-pink-400' },
+  { dot: 'bg-amber-500', bar: 'bg-amber-500', text: 'text-amber-400' },
+  { dot: 'bg-lime-500', bar: 'bg-lime-500', text: 'text-lime-400' },
+];
+
+// Broadcast-style overlay demo: real trick ID graphic, then a live-built
+// score breakdown, layered directly on the jump footage — showing what a
+// spectator (not just a judge) could see while the trick is still live.
+function LiveSpectatorDemo() {
+  const jumpMeta = WOO_SENSOR_JUMPS[0];
+  const breakdown = JUMP_BREAKDOWNS[0];
+
+  const [phase, setPhase] = useState<'idle' | 'trick' | 'score'>('idle');
+  const [revealedAreas, setRevealedAreas] = useState(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.4 }
+    );
+    observer.observe(cardRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const video = e.currentTarget;
+    if (!video.duration) return;
+    const pct = video.currentTime / video.duration;
+    if (pct < 0.1) {
+      setPhase('idle');
+      setRevealedAreas(0);
+    } else if (pct < 0.65) {
+      setPhase('trick');
+    } else {
+      setPhase('score');
+      const t = (pct - 0.65) / (1 - 0.65);
+      setRevealedAreas(Math.min(4, Math.floor(t * 5)));
+    }
+  };
+
+  return (
+    <div ref={cardRef} className="relative rounded-xl overflow-hidden border border-border bg-black shadow-[var(--shadow-card)]">
+      {inView && (
+        <video
+          key={jumpMeta.videoSrc}
+          src={jumpMeta.videoSrc}
+          className="w-full aspect-video object-cover"
+          muted
+          autoPlay
+          loop
+          playsInline
+          preload="none"
+          onTimeUpdate={handleTimeUpdate}
+        />
+      )}
+
+      <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-black/70 backdrop-blur px-2.5 py-1 rounded-full border border-white/10">
+        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+        <span className="text-[10px] font-bold tracking-widest text-white">LIVE</span>
+      </div>
+
+      <div
+        className="absolute bottom-6 left-6 right-6 md:right-auto md:max-w-md transition-all duration-500 ease-out"
+        style={{
+          opacity: phase === 'trick' ? 1 : 0,
+          transform: phase === 'trick' ? 'translateY(0)' : 'translateY(12px)',
+        }}
+      >
+        <div className="bg-black/75 backdrop-blur-sm border-l-2 border-primary rounded-r-lg px-4 py-3">
+          <div className="text-[10px] font-mono tracking-widest text-primary uppercase mb-1">{jumpMeta.category}</div>
+          <div className="text-white font-bold text-lg leading-tight">{jumpMeta.trick}</div>
+        </div>
+      </div>
+
+      <div
+        className="absolute bottom-6 left-6 right-6 md:left-auto md:w-80 transition-all duration-500 ease-out"
+        style={{
+          opacity: phase === 'score' ? 1 : 0,
+          transform: phase === 'score' ? 'translateY(0)' : 'translateY(12px)',
+          pointerEvents: phase === 'score' ? 'auto' : 'none',
+        }}
+      >
+        <div className="bg-black/80 backdrop-blur-sm rounded-lg border border-white/10 p-4 space-y-2.5">
+          {breakdown.areas.map((area, i) => {
+            const areaVisible = revealedAreas > i;
+            const style = LIVE_AREA_STYLES[i];
+            return (
+              <div key={area.name} className="transition-opacity duration-300" style={{ opacity: areaVisible ? 1 : 0.2 }}>
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span className="flex items-center gap-1.5 text-white/80 font-medium">
+                    <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
+                    {area.name}
+                  </span>
+                  <span className={`font-bold tabular-nums ${style.text}`}>{areaVisible ? area.score.toFixed(2) : '—'}</span>
+                </div>
+                <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full ${style.bar} transition-all duration-700 ease-out`}
+                    style={{ width: areaVisible ? `${(area.score / area.max) * 100}%` : '0%' }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+          <div
+            className="pt-2 mt-1 border-t border-white/10 flex items-center justify-between transition-opacity duration-500"
+            style={{ opacity: revealedAreas >= 4 ? 1 : 0 }}
+          >
+            <span className="text-xs font-semibold text-white/80 uppercase tracking-wide">Total</span>
+            <span className="text-2xl font-bold text-primary tabular-nums">{breakdown.total.toFixed(2)}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const PROBLEM_ITEMS = [
   'One overall impression, formed in seconds',
   'Not tied to any fixed, published parameter',
@@ -1545,6 +1669,26 @@ export default function ChangeTheTide() {
           </RevealOnScroll>
 
           <SensorCardsGrid />
+        </div>
+      </section>
+
+      {/* ───────── Live for the viewer, not just the judge ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <RevealOnScroll direction="up">
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">For the broadcast</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+              Every trick, explained <span className="text-primary">as it happens.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+              The same data that scores the jump can caption it live: what trick, what category, and
+              exactly how the points added up, on screen while it's still fresh.
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={100}>
+            <LiveSpectatorDemo />
+          </RevealOnScroll>
         </div>
       </section>
 

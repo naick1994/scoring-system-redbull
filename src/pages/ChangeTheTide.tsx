@@ -771,10 +771,10 @@ function useInViewOnce<T extends HTMLElement>() {
 type RevealDirection = 'up' | 'down' | 'left' | 'right';
 
 const REVEAL_TRANSFORMS: Record<RevealDirection, string> = {
-  up: 'translateY(40px)',
-  down: 'translateY(-40px)',
-  left: 'translateX(48px)',
-  right: 'translateX(-48px)',
+  up: 'translateY(64px)',
+  down: 'translateY(-64px)',
+  left: 'translateX(72px)',
+  right: 'translateX(-72px)',
 };
 
 // Fade-and-slide reveal for a section's content, entering from a chosen
@@ -789,7 +789,7 @@ function RevealOnScroll({
       className={className}
       style={{
         opacity: seen ? 1 : 0,
-        transform: seen ? 'translate(0, 0) scale(1)' : `${REVEAL_TRANSFORMS[direction]} scale(0.97)`,
+        transform: seen ? 'translate(0, 0) scale(1)' : `${REVEAL_TRANSFORMS[direction]} scale(0.94)`,
         transition: `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
       }}
     >
@@ -1184,17 +1184,42 @@ function HistorySection() {
 }
 
 export default function ChangeTheTide() {
+  const [heroIn, setHeroIn] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setHeroIn(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+  const heroStep = (delay: number) => ({
+    opacity: heroIn ? 1 : 0,
+    transform: heroIn ? 'translateY(0)' : 'translateY(22px)',
+    transition: `opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+  });
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Shared entrance transition for auto-cycling values — never drops to
           opacity 0, so a fast tick never reads as content vanishing. */}
-      <style>{`@keyframes whatIfPop { from { opacity: 0.5; transform: translateY(1px); } to { opacity: 1; transform: translateY(0); } }`}</style>
+      <style>{`
+        @keyframes whatIfPop { from { opacity: 0.5; transform: translateY(1px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes heroGlowDrift {
+          0%, 100% { transform: translate(-8%, -6%) scale(1); opacity: 0.55; }
+          50% { transform: translate(6%, 4%) scale(1.15); opacity: 0.85; }
+        }
+        .hero-glow { animation: heroGlowDrift 14s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-glow { animation: none; }
+        }
+      `}</style>
       {/* ───────── Hero ───────── */}
       <section className="relative overflow-hidden border-b border-border min-h-screen flex flex-col">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent pointer-events-none" />
+        <div
+          className="hero-glow absolute -top-1/4 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full pointer-events-none"
+          style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.16) 0%, transparent 70%)', filter: 'blur(40px)' }}
+        />
 
         <div className="container mx-auto px-4 pt-10 max-w-5xl relative">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4" style={heroStep(0)}>
             <img src={wooLogo} alt="Woo" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
             <div className="w-px h-5 bg-border" />
             <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
@@ -1203,15 +1228,15 @@ export default function ChangeTheTide() {
 
         <div className="container mx-auto px-4 max-w-5xl relative flex-1 flex flex-col justify-center">
           <h1 className="text-6xl md:text-8xl font-bold leading-[1.05] tracking-tight max-w-5xl">
-            It's time for<br />
-            <span className="text-primary">objective judging.</span>
+            <span className="block" style={heroStep(150)}>It's time for</span>
+            <span className="block text-primary" style={heroStep(320)}>objective judging.</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mt-8 max-w-2xl">
+          <p className="text-xl md:text-2xl text-muted-foreground mt-8 max-w-2xl" style={heroStep(520)}>
             Big Air has objective data. It deserves objective judging.
           </p>
         </div>
 
-        <div className="relative pb-10 flex justify-center">
+        <div className="relative pb-10 flex justify-center" style={heroStep(750)}>
           <ChevronDown className="w-6 h-6 text-muted-foreground animate-bounce" />
         </div>
       </section>

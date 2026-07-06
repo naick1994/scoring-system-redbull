@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown, RotateCcw } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import nickAvatar from '@/assets/nick-avatar.jpg';
@@ -863,6 +863,15 @@ const LIVE_AREA_STYLES = [
 // how long, how extreme — out of the full 15-field sensor readout.
 const LIVE_TRICK_STAT_LABELS = ['Max Height', 'Airtime', 'Kite Angle', 'Distance', 'Yank Power', 'Free Fall'];
 
+// This reel's own natural cut points: trick ID graphic while the jump
+// footage plays, score builds in as it wraps up, comparison takes over
+// right where the footage itself cuts to a different shot (~23s in).
+const LIVE_DEMO_VIDEO_SRC = `${import.meta.env.BASE_URL}videos/mykonos-highlight.mp4`;
+const LIVE_DEMO_TRICK_START_SEC = 2;
+const LIVE_DEMO_SCORE_START_SEC = 12;
+const LIVE_DEMO_SCORE_FULL_SEC = 20.24;
+const LIVE_DEMO_COMPARE_SEC = 22.18;
+
 // Broadcast-style overlay demo: real trick ID graphic, then a live-built
 // score breakdown, layered directly on the jump footage — showing what a
 // spectator (not just a judge) could see while the trick is still live.
@@ -930,36 +939,39 @@ function LiveSpectatorDemo() {
 
   const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
     const video = e.currentTarget;
-    if (!video.duration || holdingRef.current) return;
-    const pct = video.currentTime / video.duration;
-    if (pct < 0.1) {
+    if (holdingRef.current) return;
+    const t = video.currentTime;
+    if (t < LIVE_DEMO_TRICK_START_SEC) {
       setPhase('idle');
       setRevealedAreas(0);
       return;
     }
-    if (pct < 0.65) {
+    if (t < LIVE_DEMO_SCORE_START_SEC) {
       setPhase('trick');
       return;
     }
     setPhase('score');
-    const t = (pct - 0.65) / (1 - 0.65);
-    const next = Math.min(4, Math.floor(t * 5));
-    setRevealedAreas(next);
-    if (next >= 4) {
-      // Fully revealed: pause here, hold on the score a beat longer, then
-      // switch to the comparison screen, then reset and resume from 0.
+    if (t < LIVE_DEMO_SCORE_FULL_SEC) {
+      const revealT = (t - LIVE_DEMO_SCORE_START_SEC) / (LIVE_DEMO_SCORE_FULL_SEC - LIVE_DEMO_SCORE_START_SEC);
+      setRevealedAreas(Math.min(4, Math.floor(revealT * 5)));
+    } else {
+      setRevealedAreas(4);
+    }
+    if (t >= LIVE_DEMO_COMPARE_SEC) {
+      // The footage itself cuts to a different shot right around here, so
+      // this is where the comparison screen takes over — pause, hold, then
+      // reset and resume from the start.
       holdingRef.current = true;
       video.pause();
+      setRevealedAreas(4);
+      setPhase('compare');
       setTimeout(() => {
-        setPhase('compare');
-        setTimeout(() => {
-          holdingRef.current = false;
-          setPhase('idle');
-          setRevealedAreas(0);
-          video.currentTime = 0;
-          video.play();
-        }, 9000);
-      }, 2000);
+        holdingRef.current = false;
+        setPhase('idle');
+        setRevealedAreas(0);
+        video.currentTime = 0;
+        video.play();
+      }, 9000);
     }
   };
 
@@ -967,8 +979,8 @@ function LiveSpectatorDemo() {
     <div ref={cardRef} className="relative rounded-xl overflow-hidden border border-border bg-black shadow-[var(--shadow-card)] aspect-video">
       {inView && (
         <video
-          key={jumpMeta.videoSrc}
-          src={jumpMeta.videoSrc}
+          key={LIVE_DEMO_VIDEO_SRC}
+          src={LIVE_DEMO_VIDEO_SRC}
           className="w-full h-full object-cover"
           muted
           autoPlay
@@ -980,8 +992,8 @@ function LiveSpectatorDemo() {
       )}
 
       <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-black/70 backdrop-blur px-2.5 py-1 rounded-full border border-white/10">
-        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
-        <span className="text-[10px] font-bold tracking-widest text-white">LIVE</span>
+        <RotateCcw className="w-2.5 h-2.5 text-white/70" />
+        <span className="text-[10px] font-bold tracking-widest text-white">REPLAY</span>
       </div>
 
       <div

@@ -1762,7 +1762,6 @@ export default function ChangeTheTide() {
       <section className="border-b border-border">
         <div className="container mx-auto px-4 py-24 max-w-5xl">
           <RevealOnScroll direction="up">
-            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Watch it live</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
               Watch the <span className="text-primary">math land.</span>
             </h2>

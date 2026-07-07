@@ -896,25 +896,16 @@ const LIVE_RIVAL_RANK = 3;
 // graphic ("3 LORENZO CASATI 9.40"), so the comparison card agrees with
 // what's visibly on screen instead of using an invented total.
 const LIVE_RIVAL_FIXED_TOTAL = 9.40;
-
-// Deterministic, illustrative-only Woo readings for the rival — same
-// spirit as getFakeAthleteScore (we only have real Woo data for Leonardo).
-// Scaled off his real numbers by the rival's relative area performance:
-// Height & Amplitude ratio drives Max Height/Distance/Airtime, Extremity
-// ratio drives Kite Angle/Yank Power/Free Fall (lower Extremity reads as a
-// less extreme, higher kite angle — matching the real scoring logic
-// explained elsewhere on the page).
-function getFakeRivalWooStats(jumpMeta: typeof WOO_SENSOR_JUMPS[number], heightRatio: number, extremityRatio: number) {
-  const get = (label: string) => parseFloat(jumpMeta.stats.find(s => s.label === label)!.value);
-  return {
-    'Max Height': `${(get('Max Height') * (0.82 + heightRatio * 0.18)).toFixed(1)} m`,
-    'Distance': `${Math.round(get('Distance') * (0.85 + heightRatio * 0.15))} m`,
-    'Airtime': `${(get('Airtime') * (0.88 + heightRatio * 0.12)).toFixed(1)} s`,
-    'Kite Angle': `${Math.round(Math.min(88, get('Kite Angle') + (1 - extremityRatio) * 22))}°`,
-    'Yank Power': `${(get('Yank Power') * (0.7 + extremityRatio * 0.3)).toFixed(1)}g`,
-    'Free Fall': `${(get('Free Fall') * (0.7 + extremityRatio * 0.3)).toFixed(1)}s`,
-  };
-}
+// Lorenzo's own real Woo readings for this jump, matching the broadcast
+// graphic rather than a value scaled off Leonardo's sensor data.
+const LIVE_RIVAL_FIXED_WOO: Record<string, string> = {
+  'Max Height': '19.0 m',
+  'Airtime': '8.4 s',
+  'Kite Angle': '98°',
+  'Yank Power': '4.5g',
+  'Distance': '111 m',
+  'Free Fall': '1.6s',
+};
 
 // Each judged sub-parameter within an area, with its real max value from
 // PARAMETER_CONFIG — used to split a known area score into a plausible
@@ -1000,11 +991,7 @@ function LiveSpectatorDemo() {
     averageScore: LIVE_RIVAL_FIXED_TOTAL,
     areas: getFixedTotalAreaScores(LIVE_RIVAL_NAME, LIVE_RIVAL_FIXED_TOTAL),
   }), []);
-  const rivalWoo = useMemo(() => {
-    const heightRatio = rival.areas[0].score / rival.areas[0].max;
-    const extremityRatio = rival.areas[1].score / rival.areas[1].max;
-    return getFakeRivalWooStats(jumpMeta, heightRatio, extremityRatio);
-  }, [rival, jumpMeta]);
+  const rivalWoo = LIVE_RIVAL_FIXED_WOO;
 
   const [phase, setPhase] = useState<'idle' | 'trick' | 'score' | 'compare'>('idle');
   const [revealedAreas, setRevealedAreas] = useState(0);

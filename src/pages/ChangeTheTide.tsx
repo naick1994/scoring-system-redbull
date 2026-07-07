@@ -1880,7 +1880,7 @@ export default function ChangeTheTide() {
         <div className="container mx-auto px-4 py-24 max-w-5xl">
           <RevealOnScroll direction="up">
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              The Anatomy of a <span className="text-primary">Big Air Jump.</span>
+              Every Jump Explained. <span className="text-primary">Live.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               The trick, how hard it was, and why it scored what it did, on screen the moment it

@@ -1764,11 +1764,11 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Watch it live</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              This is what it <span className="text-primary">looks like.</span>
+              This is <span className="text-primary">next level judging.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               The trick, how hard it was, and why it scored what it did, on screen the moment it
-              lands. This is the difference next-level judging makes for the people watching.
+              lands. This is what it feels like to watch, not just to judge.
             </p>
           </RevealOnScroll>
 

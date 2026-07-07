@@ -1564,7 +1564,7 @@ function SolutionSection() {
         <RevealOnScroll direction="up">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The solution</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Every problem, <span className="text-primary">answered.</span>
+            <ShinyText text="Every problem, answered." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             The same reductionist model, restated as answers to every problem holistic judging has.
@@ -1640,7 +1640,7 @@ function HistorySection() {
         <RevealOnScroll direction="right">
           <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Not the first sport to do this</div>
           <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Sooner or later, <span className="text-primary">every sport changes.</span>
+            <ShinyText text="Sooner or later, every sport changes." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mb-12">
             Most judged sports have already made this exact trade, usually after the same holistic
@@ -1791,9 +1791,8 @@ export default function ChangeTheTide() {
 
         <div className="container mx-auto px-4 max-w-5xl relative flex-1 flex flex-col justify-center">
           <h1 className="text-6xl md:text-8xl font-bold leading-[1.05] tracking-tight max-w-5xl">
-            <span className="block" style={heroStep(150)}>It's time for</span>
-            <span className="block" style={heroStep(320)}>
-              <ShinyText text="next level judging." baseColor="#FFFFFF" shineColor="#0abab5" speed={3} />
+            <span className="block" style={heroStep(150)}>
+              <ShinyText text={"It's time for\nnext level judging."} baseColor="#FFFFFF" shineColor="hsl(var(--primary))" speed={3} />
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mt-8 max-w-2xl" style={heroStep(520)}>
@@ -1814,7 +1813,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The problem</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-              One impression can outweigh <span className="text-primary">everything else.</span>
+              <ShinyText text="One impression can outweigh everything else." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Holistic judging asks one person to weigh height, rotation, execution, and risk all at
@@ -1833,7 +1832,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The idea</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-              A trick is a <span className="text-primary">sum of parts,</span> not a single impression.
+              <ShinyText text="A trick is a sum of parts, not a single impression." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Every jump breaks down into four areas: Height &amp; Amplitude, Extremity, Technicality,
@@ -1859,7 +1858,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The shift</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Break the jump into what can be <span className="text-primary">measured.</span>
+              <ShinyText text="Break the jump into what can be measured." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Every jump is decomposed into four areas, each scored against fixed, published parameters.
@@ -1879,7 +1878,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="right">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Tunable, not rigid</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Objective doesn't mean <span className="text-primary">fixed.</span>
+              <ShinyText text="Objective doesn't mean fixed." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Conditions change event to event, and so does what an organizer wants a heat to reward.
@@ -1900,7 +1899,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The sensors</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              One sensor sees the jump. Three see <span className="text-primary">the whole trick.</span>
+              <ShinyText text="One sensor sees the jump. Three see the whole trick." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               A sensor on the board alone can't see what the kite is doing, or how hard the rider loaded
@@ -1918,7 +1917,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Why now</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-              The data doesn't need to be <span className="text-primary">invented.</span>
+              <ShinyText text="The data doesn't need to be invented." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl">
               Sensor technology like Woo's can already capture height, speed, and rotations on every jump.
@@ -1940,7 +1939,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">For the broadcast</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Every trick, explained <span className="text-primary">as it happens.</span>
+              <ShinyText text="Every trick, explained as it happens." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               No more guessing what just happened. Fans see the trick name, how hard it was, and why
@@ -1960,7 +1959,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">For the fans</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Watching gets <span className="text-primary">better too.</span>
+              <ShinyText text="Watching gets better too." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Objective scoring isn't just fairer for riders and judges. It changes what it feels
@@ -1980,7 +1979,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="right">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">A login of their own</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Athletes don't just receive a score. They get <span className="text-primary">an account.</span>
+              <ShinyText text="Athletes don't just receive a score. They get an account." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               A separate rider login surfaces every area, every point, for every jump, not just a
@@ -2000,7 +1999,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The real unlock</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              "What do I need to improve?" gets <span className="text-primary">a real answer.</span>
+              <ShinyText text='"What do I need to improve?" gets a real answer.' baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               Today, an athlete who loses a heat gets an opinion. This model gives every rider a
@@ -2020,7 +2019,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="right">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Where they stand</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Compare against anyone in the field, not just <span className="text-primary">the leaderboard.</span>
+              <ShinyText text="Compare against anyone in the field, not just the leaderboard." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               From the season ranking, a rider can pick any other athlete and see an area-by-area
@@ -2042,7 +2041,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="left">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">What else it unlocks</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              More than a <span className="text-primary">scoring change.</span>
+              <ShinyText text="More than a scoring change." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               The same data that decides a heat also opens doors for riders, organizers, and the
@@ -2059,7 +2058,9 @@ export default function ChangeTheTide() {
         <div className="container mx-auto px-4 py-28 max-w-3xl text-center">
           <RevealOnScroll direction="up">
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">See it work</div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">A working demo <span className="text-primary">is live.</span></h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              <ShinyText text="A working demo is live." baseColor="hsl(var(--foreground))" shineColor="hsl(var(--primary))" speed={3} className="inline" />
+            </h2>
             <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
               Every screen referenced here, from the four-area breakdown to the coaching receipt,
               already exists as a working prototype.

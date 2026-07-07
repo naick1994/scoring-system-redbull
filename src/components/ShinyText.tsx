@@ -16,7 +16,7 @@ interface ShinyTextProps {
 export function ShinyText({ text, baseColor, shineColor, accentColor, speed = 3, className }: ShinyTextProps) {
   const gradient = accentColor
     ? `linear-gradient(100deg, ${baseColor} 30%, ${shineColor} 50%, ${accentColor} 60%, ${baseColor} 80%)`
-    : `linear-gradient(100deg, ${baseColor} 35%, ${shineColor} 50%, ${baseColor} 65%)`;
+    : `linear-gradient(100deg, ${baseColor} 12%, ${shineColor} 42%, ${shineColor} 58%, ${baseColor} 88%)`;
 
   return (
     <motion.span
@@ -32,7 +32,12 @@ export function ShinyText({ text, baseColor, shineColor, accentColor, speed = 3,
       animate={{ backgroundPosition: ['200% 0%', '-200% 0%'] }}
       transition={{ duration: speed, repeat: Infinity, ease: 'linear' }}
     >
-      {text}
+      {text.split('\n').map((line, i, arr) => (
+        <span key={i}>
+          {line}
+          {i < arr.length - 1 && <br />}
+        </span>
+      ))}
     </motion.span>
   );
 }

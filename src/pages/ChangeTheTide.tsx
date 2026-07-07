@@ -1121,6 +1121,7 @@ function LiveSpectatorDemo() {
 }
 
 const PROBLEM_ITEMS = [
+  'No insight for the viewer into why a score was given',
   'One overall impression, formed in seconds',
   'Not tied to any fixed, published parameter',
   'Hard to audit after the fact',
@@ -1128,10 +1129,10 @@ const PROBLEM_ITEMS = [
   'No specific feedback on what to improve',
   'Rewards how it looked, not what it measured',
   'No way to compare beyond the final rank',
-  'No insight for the viewer into why a score was given',
 ];
 
 const SOLUTION_ITEMS = [
+  'Live, on-screen breakdown of why a trick scored what it did',
   'Four weighted areas, scored independently',
   'Every point tied to a published parameter',
   'Fully auditable: every score is explainable',
@@ -1139,7 +1140,6 @@ const SOLUTION_ITEMS = [
   'Precise, per-parameter feedback for every rider',
   'Every score traced to a real measurement',
   'Area-by-area comparison against any rider',
-  'Live, on-screen breakdown of why a trick scored what it did',
 ];
 
 const PROBLEM_ITEM_COLORS = ['text-red-400'];

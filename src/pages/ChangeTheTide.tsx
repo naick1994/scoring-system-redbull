@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ParametersAccordion } from '@/components/ParametersAccordion';
-import { motion } from 'framer-motion';
 import { FadeIn } from '@/components/FadeIn';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
@@ -1248,79 +1247,6 @@ function useInViewOnce<T extends HTMLElement>() {
 // further explanation. Not a full-screen slide (that was tried and reverted
 // for regular sections earlier), just enough height to read as a breath
 // between parts rather than another content section.
-function PartDivider({ number, title, index }: { number: string; title: string; index: number }) {
-  const words = title.split(' ');
-  return (
-    <section className="relative overflow-hidden border-b border-border min-h-[55vh] flex items-center justify-center">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 pointer-events-none" />
-
-      {/* Faint oversized number watermark behind the content, for depth */}
-      <motion.div
-        className="absolute text-[16rem] md:text-[22rem] font-bold text-primary/[0.04] leading-none tabular-nums pointer-events-none select-none"
-        initial={{ scale: 1.4, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true, amount: 0.4 }}
-        transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-      >
-        {number}
-      </motion.div>
-
-      <div className="relative text-center px-4">
-        <motion.div
-          className="text-7xl md:text-8xl font-bold text-primary leading-none mb-4 tabular-nums"
-          initial={{ scale: 0.4, opacity: 0, rotate: -10 }}
-          whileInView={{ scale: 1, opacity: 1, rotate: 0 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ type: 'spring', stiffness: 140, damping: 11 }}
-        >
-          {number}
-        </motion.div>
-
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <motion.span
-            className="h-px bg-primary/40"
-            initial={{ width: 0 }}
-            whileInView={{ width: 32 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
-          />
-          <motion.span
-            className="text-[10px] font-mono tracking-[0.2em] text-muted-foreground uppercase"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ delay: 0.4, duration: 0.4 }}
-          >
-            Part {index} of 5
-          </motion.span>
-          <motion.span
-            className="h-px bg-primary/40"
-            initial={{ width: 0 }}
-            whileInView={{ width: 32 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ delay: 0.35, duration: 0.5, ease: 'easeOut' }}
-          />
-        </div>
-
-        <div className="text-2xl md:text-3xl font-bold tracking-tight overflow-hidden">
-          {words.map((word, i) => (
-            <motion.span
-              key={i}
-              className="inline-block mr-2.5"
-              initial={{ y: '110%', opacity: 0 }}
-              whileInView={{ y: '0%', opacity: 1 }}
-              viewport={{ once: true, amount: 0.6 }}
-              transition={{ delay: 0.5 + i * 0.07, duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {word}
-            </motion.span>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // Fade-and-rise reveal for a section's heading block, so every section
 // on the page animates in on scroll, not just the interactive widgets.
 type RevealDirection = 'up' | 'down' | 'left' | 'right';
@@ -1832,8 +1758,6 @@ export default function ChangeTheTide() {
         </div>
       </section>
 
-      <PartDivider index={1} number="01" title="THE NEED FOR CHANGE" />
-
       {/* ───────── The problem ───────── */}
       <section className="border-b border-border">
         <div className="container mx-auto px-4 py-24 max-w-5xl">
@@ -1874,8 +1798,6 @@ export default function ChangeTheTide() {
 
       {/* ───────── The solution ───────── */}
       <SolutionSection />
-
-      <PartDivider index={2} number="02" title="THE SYSTEM" />
 
       {/* ───────── The shift: 4 areas ───────── */}
       <section className="border-b border-border">
@@ -1960,8 +1882,6 @@ export default function ChangeTheTide() {
         </div>
       </section>
 
-      <PartDivider index={3} number="03" title="FOR THE FANS" />
-
       {/* ───────── Live for the viewer, not just the judge ───────── */}
       <section className="border-b border-border">
         <div className="container mx-auto px-4 py-24 max-w-5xl">
@@ -1999,8 +1919,6 @@ export default function ChangeTheTide() {
           <SpectatorBenefitsSection />
         </div>
       </section>
-
-      <PartDivider index={4} number="04" title="FOR THE RIDERS" />
 
       {/* ───────── Their results, broken down ───────── */}
       <section className="border-b border-border">
@@ -2061,8 +1979,6 @@ export default function ChangeTheTide() {
           </RevealOnScroll>
         </div>
       </section>
-
-      <PartDivider index={5} number="05" title="FOR EVERYONE" />
 
       {/* ───────── What it unlocks ───────── */}
       <section className="border-b border-border">

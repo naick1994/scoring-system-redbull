@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { motion } from 'framer-motion';
 import { FadeIn } from '@/components/FadeIn';
-import { StackingCard } from '@/components/StackingCard';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio } from 'lucide-react';
@@ -1602,34 +1601,38 @@ function SolutionSection() {
   const activeIndex = useRoundRobinIndex(SOLUTION_ITEMS.length, 2000);
 
   return (
-    <>
-      <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The solution</div>
-      <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-        Every problem, <span className="text-primary">answered.</span>
-      </h2>
-      <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-        The same reductionist model, restated as answers to every problem holistic judging has.
-      </p>
+    <section className="border-b border-border">
+      <div className="container mx-auto px-4 py-24 max-w-5xl">
+        <FadeIn y={50} duration={0.7}>
+          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The solution</div>
+          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+            Every problem, <span className="text-primary">answered.</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+            The same reductionist model, restated as answers to every problem holistic judging has.
+          </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {SOLUTION_ITEMS.map((text, i) => {
-          const color = SOLUTION_ITEM_COLORS[i % SOLUTION_ITEM_COLORS.length];
-          const isActive = i === activeIndex;
-          return (
-            <FadeIn key={text} y={30} delay={i * 0.08}>
-              <div
-                className={`flex items-center gap-3 text-sm rounded-lg border px-4 py-3 transition-all duration-300 ${
-                  isActive ? 'border-green-500 bg-green-500/25 shadow-[0_0_16px_-4px_rgba(34,197,94,0.5)]' : 'border-border bg-card/40'
-                }`}
-              >
-                <CheckCircle2 className={`w-4 h-4 shrink-0 transition-colors duration-300 ${isActive ? color : 'text-muted-foreground/50'}`} />
-                <span className={isActive ? 'text-foreground' : 'text-muted-foreground'}>{text}</span>
-              </div>
-            </FadeIn>
-          );
-        })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {SOLUTION_ITEMS.map((text, i) => {
+              const color = SOLUTION_ITEM_COLORS[i % SOLUTION_ITEM_COLORS.length];
+              const isActive = i === activeIndex;
+              return (
+                <FadeIn key={text} y={30} delay={i * 0.08}>
+                  <div
+                    className={`flex items-center gap-3 text-sm rounded-lg border px-4 py-3 transition-all duration-300 ${
+                      isActive ? 'border-green-500 bg-green-500/25 shadow-[0_0_16px_-4px_rgba(34,197,94,0.5)]' : 'border-border bg-card/40'
+                    }`}
+                  >
+                    <CheckCircle2 className={`w-4 h-4 shrink-0 transition-colors duration-300 ${isActive ? color : 'text-muted-foreground/50'}`} />
+                    <span className={isActive ? 'text-foreground' : 'text-muted-foreground'}>{text}</span>
+                  </div>
+                </FadeIn>
+              );
+            })}
+          </div>
+        </FadeIn>
       </div>
-    </>
+    </section>
   );
 }
 
@@ -1669,40 +1672,44 @@ function HistorySection() {
   const activeIndex = useRoundRobinIndex(HISTORY_ITEMS.length, 3000);
 
   return (
-    <>
-      <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Not the first sport to do this</div>
-      <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-        Sooner or later, <span className="text-primary">every sport changes.</span>
-      </h2>
-      <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-        Most judged sports have already made this exact trade, usually after the same holistic
-        problems became too visible to ignore.
-      </p>
+    <section className="border-b border-border">
+      <div className="container mx-auto px-4 py-24 max-w-5xl">
+        <FadeIn y={50} duration={0.7}>
+          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Not the first sport to do this</div>
+          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+            Sooner or later, <span className="text-primary">every sport changes.</span>
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+            Most judged sports have already made this exact trade, usually after the same holistic
+            problems became too visible to ignore.
+          </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {HISTORY_ITEMS.map((item, i) => {
-          const isActive = i === activeIndex;
-          const colors = CARD_ACCENT_COLORS[item.color];
-          return (
-            <FadeIn key={item.sport} y={40} delay={i * 0.12}>
-              <Card
-                className={`p-6 h-full shadow-[var(--shadow-card)] transition-all duration-500 ${
-                  isActive ? 'scale-[1.03]' : 'scale-100'
-                }`}
-                style={isActive ? { borderColor: colors.border } : undefined}
-              >
-                <div className={`text-3xl font-bold mb-1 tabular-nums transition-colors duration-500 ${isActive ? colors.text : 'text-foreground'}`}>
-                  {item.year}
-                </div>
-                <div className="font-bold text-sm mb-3">{item.sport}</div>
-                <p className="text-sm text-muted-foreground mb-3">{item.change}</p>
-                <p className="text-xs text-muted-foreground/80 border-t border-border pt-3">{item.why}</p>
-              </Card>
-            </FadeIn>
-          );
-        })}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {HISTORY_ITEMS.map((item, i) => {
+            const isActive = i === activeIndex;
+            const colors = CARD_ACCENT_COLORS[item.color];
+            return (
+              <FadeIn key={item.sport} y={40} delay={i * 0.12}>
+                <Card
+                  className={`p-6 h-full shadow-[var(--shadow-card)] transition-all duration-500 ${
+                    isActive ? 'scale-[1.03]' : 'scale-100'
+                  }`}
+                  style={isActive ? { borderColor: colors.border } : undefined}
+                >
+                  <div className={`text-3xl font-bold mb-1 tabular-nums transition-colors duration-500 ${isActive ? colors.text : 'text-foreground'}`}>
+                    {item.year}
+                  </div>
+                  <div className="font-bold text-sm mb-3">{item.sport}</div>
+                  <p className="text-sm text-muted-foreground mb-3">{item.change}</p>
+                  <p className="text-xs text-muted-foreground/80 border-t border-border pt-3">{item.why}</p>
+                </Card>
+              </FadeIn>
+            );
+          })}
+          </div>
+        </FadeIn>
       </div>
-    </>
+    </section>
   );
 }
 
@@ -1827,105 +1834,131 @@ export default function ChangeTheTide() {
 
       <PartDivider index={1} number="01" title="THE NEED FOR CHANGE" />
 
-      {/* ───────── The need for change: 4 sticky-stacking sub-chapters ───────── */}
-      <div className="relative h-[400vh] border-b border-border">
-        <StackingCard index={0} totalCards={4}>
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The problem</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-            One impression can outweigh <span className="text-primary">everything else.</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Holistic judging asks one person to weigh height, rotation, execution, and risk all at
-            once. One dominant impression tends to eclipse everything else, leaving a scoreboard
-            that's hard to predict, explain, or enjoy watching.
-          </p>
-          <ProblemList />
-        </StackingCard>
+      {/* ───────── The problem ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The problem</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
+              One impression can outweigh <span className="text-primary">everything else.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Holistic judging asks one person to weigh height, rotation, execution, and risk all at
+              once. One dominant impression tends to eclipse everything else, leaving a scoreboard
+              that's hard to predict, explain, or enjoy watching.
+            </p>
+            <ProblemList />
+          </FadeIn>
+        </div>
+      </section>
 
-        <StackingCard index={1} totalCards={4}>
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The idea</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-            A trick is a <span className="text-primary">sum of parts,</span> not a single impression.
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Every jump breaks down into four areas: Height &amp; Amplitude, Extremity, Technicality,
-            Execution. Each is scored on its own, then added together.
-          </p>
-          <IdeaSplitVisual />
-        </StackingCard>
+      {/* ───────── The idea: reductionist method intro ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The idea</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
+              A trick is a <span className="text-primary">sum of parts,</span> not a single impression.
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Every jump breaks down into four areas: Height &amp; Amplitude, Extremity, Technicality,
+              Execution. Each is scored on its own, then added together.
+            </p>
+            <IdeaSplitVisual />
+          </FadeIn>
+        </div>
+      </section>
 
-        <StackingCard index={2} totalCards={4}>
-          <HistorySection />
-        </StackingCard>
+      {/* ───────── Historical precedent ───────── */}
+      <HistorySection />
 
-        <StackingCard index={3} totalCards={4}>
-          <SolutionSection />
-        </StackingCard>
-      </div>
+      {/* ───────── The solution ───────── */}
+      <SolutionSection />
 
       <PartDivider index={2} number="02" title="THE SYSTEM" />
 
-      {/* ───────── The system: 4 sticky-stacking sub-chapters ───────── */}
-      <div className="relative h-[400vh] border-b border-border">
-        <StackingCard index={0} totalCards={4}>
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The shift</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Break the jump into what can be <span className="text-primary">measured.</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-            Every jump is decomposed into four areas, each scored against fixed, published parameters.
-            Three are grounded in sensor data. Only Execution stays a judged call.
-          </p>
-          <ParametersAccordion />
-        </StackingCard>
+      {/* ───────── The shift: 4 areas ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The shift</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+              Break the jump into what can be <span className="text-primary">measured.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+              Every jump is decomposed into four areas, each scored against fixed, published parameters.
+              Three are grounded in sensor data. Only Execution stays a judged call.
+            </p>
 
-        <StackingCard index={1} totalCards={4}>
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Tunable, not rigid</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            Objective doesn't mean <span className="text-primary">fixed.</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-            Conditions change event to event, and so does what an organizer wants a heat to reward.
-            Both are configuration, not code changes.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FadeIn y={40} delay={0}>
-              <ThresholdCard />
+            <FadeIn y={40} delay={0.1}>
+              <ParametersAccordion />
             </FadeIn>
-            <FadeIn y={40} delay={0.15}>
-              <PresetWeightsCard />
-            </FadeIn>
-          </div>
-        </StackingCard>
-
-        <StackingCard index={2} totalCards={4}>
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The sensors</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-            One sensor sees the jump. Three see <span className="text-primary">the whole trick.</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-            A sensor on the board alone can't see what the kite is doing, or how hard the rider loaded
-            into the move. Three sensors, one each on the kite, harness, and board, close that gap.
-          </p>
-          <SensorCardsGrid />
-        </StackingCard>
-
-        <StackingCard index={3} totalCards={4}>
-          <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Why now</div>
-          <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
-            The data doesn't need to be <span className="text-primary">invented.</span>
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Sensor technology like Woo's can already capture height, speed, and rotations on every jump.
-            A few new measurements, like kite angle, yank, and free fall, complete the picture.
-          </p>
-
-          <FadeIn y={40} delay={0.1}>
-            <WooSensorPanel />
           </FadeIn>
-        </StackingCard>
-      </div>
+        </div>
+      </section>
+
+      {/* ───────── Tunable, not rigid ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Tunable, not rigid</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+              Objective doesn't mean <span className="text-primary">fixed.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+              Conditions change event to event, and so does what an organizer wants a heat to reward.
+              Both are configuration, not code changes.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FadeIn y={40} delay={0}>
+                <ThresholdCard />
+              </FadeIn>
+              <FadeIn y={40} delay={0.15}>
+                <PresetWeightsCard />
+              </FadeIn>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ───────── The sensors ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The sensors</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+              One sensor sees the jump. Three see <span className="text-primary">the whole trick.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+              A sensor on the board alone can't see what the kite is doing, or how hard the rider loaded
+              into the move. Three sensors, one each on the kite, harness, and board, close that gap.
+            </p>
+
+            <SensorCardsGrid />
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ───────── Why now ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Why now</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
+              The data doesn't need to be <span className="text-primary">invented.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Sensor technology like Woo's can already capture height, speed, and rotations on every jump.
+              A few new measurements, like kite angle, yank, and free fall, complete the picture.
+            </p>
+
+            <FadeIn y={40} delay={0.1}>
+              <WooSensorPanel />
+            </FadeIn>
+          </FadeIn>
+        </div>
+      </section>
 
       <PartDivider index={3} number="03" title="FOR THE FANS" />
 

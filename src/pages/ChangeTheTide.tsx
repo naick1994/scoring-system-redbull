@@ -890,8 +890,12 @@ const LIVE_DEMO_REPLAY_LABEL_HIDE_SEC = 20.9;
 // deterministic breakdown clamped below Leonardo's real score, since we
 // only have real Woo data for him. Rank/name picked to match the heat
 // already shown in the broadcast graphic baked into this footage.
-const LIVE_RIVAL_NAME = 'Jamie Overbeek';
-const LIVE_RIVAL_RANK = 2;
+const LIVE_RIVAL_NAME = 'Lorenzo Casati';
+const LIVE_RIVAL_RANK = 3;
+// Matches the score already burned into this footage's own broadcast
+// graphic ("3 LORENZO CASATI 9.40"), so the comparison card agrees with
+// what's visibly on screen instead of using an invented total.
+const LIVE_RIVAL_FIXED_TOTAL = 9.40;
 
 // Deterministic, illustrative-only Woo readings for the rival — same
 // spirit as getFakeAthleteScore (we only have real Woo data for Leonardo).
@@ -948,6 +952,25 @@ function tinyHash(seed: string): number {
   return (h % 1000) / 1000;
 }
 
+// Distributes a known, fixed total (e.g. a score already shown in a
+// broadcast graphic) across the 4 areas using the standard GKA weights
+// (30/30/20/20), with a small deterministic per-area wobble so the split
+// looks natural while always summing exactly to the given total.
+function getFixedTotalAreaScores(athlete: string, total: number) {
+  const weights = [
+    { area: 'HEIGHT & AMPLITUDE', weight: 0.3 },
+    { area: 'EXTREMITY', weight: 0.3 },
+    { area: 'TECHNICALITY', weight: 0.2 },
+    { area: 'EXECUTION', weight: 0.2 },
+  ];
+  const raw = weights.map(({ area, weight }) => {
+    const jitter = 0.88 + tinyHash(`${athlete}-${area}-fixed`) * 0.18;
+    return weight * 10 * jitter;
+  });
+  const rawSum = raw.reduce((a, b) => a + b, 0);
+  return weights.map(({ weight }, i) => ({ score: Math.min(weight * 10, (raw[i] / rawSum) * total), max: weight * 10 }));
+}
+
 // Splits a known area score across its judged sub-parameters. Each
 // parameter's max is scaled so the group's maxes sum to the area's real
 // max, then a deterministic per-athlete performance ratio (in a plausible
@@ -973,10 +996,10 @@ function getAreaParamBreakdown(areaName: string, areaScore: number, areaMax: num
 function LiveSpectatorDemo() {
   const jumpMeta = WOO_SENSOR_JUMPS[0];
   const breakdown = JUMP_BREAKDOWNS[0];
-  const rival = useMemo(
-    () => getFakeAthleteScore(LIVE_RIVAL_NAME, LIVE_RIVAL_RANK, breakdown.total),
-    [breakdown]
-  );
+  const rival = useMemo(() => ({
+    averageScore: LIVE_RIVAL_FIXED_TOTAL,
+    areas: getFixedTotalAreaScores(LIVE_RIVAL_NAME, LIVE_RIVAL_FIXED_TOTAL),
+  }), []);
   const rivalWoo = useMemo(() => {
     const heightRatio = rival.areas[0].score / rival.areas[0].max;
     const extremityRatio = rival.areas[1].score / rival.areas[1].max;
@@ -1146,8 +1169,8 @@ function LiveSpectatorDemo() {
               woo: rivalWoo,
               photoUrl: GKA_BIG_AIR_MEN_RANKINGS_2026.find(r => r.athlete === LIVE_RIVAL_NAME)?.photoUrl,
             },
-          ].map((rider, riderIdx) => {
-            const isWinner = riderIdx === 0;
+          ].map((rider, riderIdx, riders) => {
+            const isWinner = rider.total >= riders[1 - riderIdx].total;
             return (
               <div key={rider.name} className={`rounded-lg border p-4 bg-black/90 backdrop-blur-sm ${isWinner ? 'border-primary/50' : 'border-white/10'}`}>
                 <div className="flex items-center gap-2 mb-2">

@@ -1249,7 +1249,10 @@ function useInViewOnce<T extends HTMLElement>() {
 function PartDivider({ number, title }: { number: string; title: string }) {
   const { ref, seen } = useInViewOnce<HTMLDivElement>();
   return (
-    <section className="relative overflow-hidden border-b border-border min-h-[50vh] flex items-center justify-center">
+    <section
+      className="relative overflow-hidden min-h-[50vh] flex items-center justify-center
+                 -mt-10 md:-mt-14 rounded-t-[40px] md:rounded-t-[60px] bg-card border-t border-x border-border z-10"
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-primary/5 pointer-events-none" />
       <div
         ref={ref}

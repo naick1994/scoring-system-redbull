@@ -1758,6 +1758,26 @@ export default function ChangeTheTide() {
         </div>
       </section>
 
+      {/* ───────── Live for the viewer, not just the judge ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <RevealOnScroll direction="up">
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">For the broadcast</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+              Every trick, explained <span className="text-primary">as it happens.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+              No more guessing what just happened. Fans see the trick name, how hard it was, and why
+              it scored what it did, live on screen, the moment it lands.
+            </p>
+          </RevealOnScroll>
+
+          <RevealOnScroll direction="up" delay={100}>
+            <LiveSpectatorDemo />
+          </RevealOnScroll>
+        </div>
+      </section>
+
       {/* ───────── The problem ───────── */}
       <section className="border-b border-border">
         <div className="container mx-auto px-4 py-24 max-w-5xl">
@@ -1879,26 +1899,6 @@ export default function ChangeTheTide() {
               <WooSensorPanel />
             </FadeIn>
           </FadeIn>
-        </div>
-      </section>
-
-      {/* ───────── Live for the viewer, not just the judge ───────── */}
-      <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-5xl">
-          <RevealOnScroll direction="up">
-            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">For the broadcast</div>
-            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Every trick, explained <span className="text-primary">as it happens.</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-              No more guessing what just happened. Fans see the trick name, how hard it was, and why
-              it scored what it did, live on screen, the moment it lands.
-            </p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={100}>
-            <LiveSpectatorDemo />
-          </RevealOnScroll>
         </div>
       </section>
 

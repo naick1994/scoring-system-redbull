@@ -6,7 +6,7 @@ import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { FadeIn } from '@/components/FadeIn';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause } from 'lucide-react';
 import wooLogo from '@/assets/woo-logo.svg';
 import capitalLogo from '@/assets/capital-com-logo.png';
 import nickAvatar from '@/assets/nick-avatar.jpg';
@@ -997,8 +997,22 @@ function LiveSpectatorDemo() {
   const [revealedAreas, setRevealedAreas] = useState(0);
   const [showReplayLabel, setShowReplayLabel] = useState(true);
   const [compareDetail, setCompareDetail] = useState(false);
+  const [manuallyPaused, setManuallyPaused] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+
+  const toggleVideoPlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+      setManuallyPaused(false);
+    } else {
+      video.pause();
+      setManuallyPaused(true);
+    }
+  };
 
   useEffect(() => {
     if (!cardRef.current) return;
@@ -1043,14 +1057,20 @@ function LiveSpectatorDemo() {
     setPhase('idle');
     setRevealedAreas(0);
     setCompareDetail(false);
+    setManuallyPaused(false);
     video.currentTime = 0;
     video.play();
   };
 
   return (
-    <div ref={cardRef} className="relative rounded-xl overflow-hidden border border-border bg-black shadow-[var(--shadow-card)] aspect-video">
+    <div
+      ref={cardRef}
+      onClick={toggleVideoPlayback}
+      className="relative rounded-xl overflow-hidden border border-border bg-black shadow-[var(--shadow-card)] aspect-video cursor-pointer group"
+    >
       {inView && (
         <video
+          ref={videoRef}
           key={LIVE_DEMO_VIDEO_SRC}
           src={LIVE_DEMO_VIDEO_SRC}
           className="w-full h-full object-cover"
@@ -1062,6 +1082,23 @@ function LiveSpectatorDemo() {
           onEnded={handleVideoEnded}
         />
       )}
+
+      <div
+        className="absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity duration-200 pointer-events-none"
+        style={{ opacity: manuallyPaused ? 1 : 0 }}
+      >
+        <div className="w-14 h-14 rounded-full bg-black/60 backdrop-blur flex items-center justify-center border border-white/20">
+          <Play className="w-6 h-6 text-white ml-0.5" fill="white" />
+        </div>
+      </div>
+      <div
+        className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none"
+        style={{ display: manuallyPaused ? 'none' : 'flex' }}
+      >
+        <div className="w-14 h-14 rounded-full bg-black/40 backdrop-blur flex items-center justify-center border border-white/20">
+          <Pause className="w-6 h-6 text-white" fill="white" />
+        </div>
+      </div>
 
       {showReplayLabel && (
         <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-black/70 backdrop-blur px-2.5 py-1 rounded-full border border-white/10">

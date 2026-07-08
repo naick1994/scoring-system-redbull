@@ -2094,10 +2094,20 @@ export default function ChangeTheTide() {
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-6">
               The data doesn't need to be <span className="text-primary">invented.</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-lg text-muted-foreground max-w-2xl mb-4">
               Sensor technology like Woo's can already capture height, speed, and rotations on every jump.
               A few new measurements, like kite angle, yank, and free fall, complete the picture.
             </p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {['9-axis IMU', 'Barometric altimeter', '100Hz sampling', 'Bluetooth 5.0'].map(spec => (
+                <span
+                  key={spec}
+                  className="text-[11px] font-mono tracking-wide text-muted-foreground border border-border rounded-full px-3 py-1"
+                >
+                  {spec}
+                </span>
+              ))}
+            </div>
 
             <FadeIn y={40} delay={0.1}>
               <WooSensorPanel />

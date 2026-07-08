@@ -2095,12 +2095,12 @@ export default function ChangeTheTide() {
               The data doesn't need to be <span className="text-primary">invented.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-4">
-              Woo's sensors already fuse a 9-axis IMU with a barometric altimeter to read height, speed,
-              and rotations on every jump at 100Hz. Kite angle, yank power, and free fall come from that
-              same accelerometer and gyroscope data, just not read yet.
+              Woo's sensors already fuse accelerometer, gyroscope, and barometric pressure data to read
+              height, speed, and rotations on every jump. Kite angle, yank power, and free fall come from
+              that same motion data, just not read yet.
             </p>
             <div className="flex flex-wrap gap-2 mb-2">
-              {['9-axis IMU', 'Barometric altimeter', '100Hz sampling', 'Bluetooth 5.0'].map(spec => (
+              {['Accelerometer', 'Gyroscope', 'Barometric pressure', 'Bluetooth sync'].map(spec => (
                 <span
                   key={spec}
                   className="text-[11px] font-mono tracking-wide text-muted-foreground border border-border rounded-full px-3 py-1"

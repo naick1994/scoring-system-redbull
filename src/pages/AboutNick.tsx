@@ -58,8 +58,7 @@ const TRACK_RECORD: TimelineItem[] = [
   {
     title: 'Chief Operating Officer', org: 'Snowit (Founding Team)', period: 'May 2019 - Feb 2025 · 5 yrs 10 mos', logo: logoSnowit,
     desc: [
-      'Scaled Snowit to 400k+ users.',
-      'Scaled the team from 3 to 50+ people.',
+      'Scaled Snowit to 400k+ users and the team from 3 to 50+ people.',
       'Led Product, Ops, and Customer Care teams.',
       'Managed P&L and implemented agile project management tools and routines.',
       'Led development of a GPS-based ski tracking app.',

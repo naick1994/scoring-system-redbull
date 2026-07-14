@@ -5,7 +5,7 @@ import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { FadeIn } from '@/components/FadeIn';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause } from 'lucide-react';
+import { CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause, DollarSign } from 'lucide-react';
 import gkaLogo from '@/assets/gka-logo.svg';
 import { useScoring } from '@/contexts/ScoringContext';
 import { AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
@@ -2197,6 +2197,31 @@ export default function ChangeTheTide() {
           </RevealOnScroll>
 
           <SpectatorBenefitsSection />
+
+          <RevealOnScroll direction="up" delay={100}>
+            <div className="mt-8 pt-8 border-t border-border">
+              <h3 className="font-bold mb-4 flex items-center gap-2">
+                <DollarSign className="w-4 h-4 text-primary" /> What that's worth to GKA
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="rounded-lg border border-border bg-card/60 p-4">
+                  <Users className="w-4 h-4 text-primary mb-2" />
+                  <div className="font-semibold text-sm mb-1">Viewers stay longer</div>
+                  <div className="text-xs text-muted-foreground">Today, most casual viewers can't follow the trick, its name, or the score. Explain it live, keep them watching.</div>
+                </div>
+                <div className="rounded-lg border border-border bg-card/60 p-4">
+                  <TrendingUp className="w-4 h-4 text-primary mb-2" />
+                  <div className="font-semibold text-sm mb-1">Sponsorship sells easier</div>
+                  <div className="text-xs text-muted-foreground">A bigger, more engaged audience is exactly what makes sponsors easier to find and worth more to charge.</div>
+                </div>
+                <div className="rounded-lg border border-border bg-card/60 p-4">
+                  <Share2 className="w-4 h-4 text-primary mb-2" />
+                  <div className="font-semibold text-sm mb-1">Content, already built</div>
+                  <div className="text-xs text-muted-foreground">The score build, the comparisons, the stat clips — content inventory GKA doesn't have to make from scratch.</div>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
         </div>
       </section>
 

@@ -289,16 +289,16 @@ function JumpBreakdownCard() {
   const activeAreaName = jump.areas[activeAreaIndex].name;
 
   return (
-    <Card ref={cardRef} className="p-6 shadow-[var(--shadow-card)]">
-      <div className="text-center mb-6">
+    <Card ref={cardRef} className="p-5 shadow-[var(--shadow-card)]">
+      <div className="text-center mb-4">
         <div className="text-xs text-muted-foreground mb-1 font-mono uppercase tracking-wide">Total Score</div>
-        <div className="text-4xl font-bold text-primary">23.82<span className="text-lg text-muted-foreground"> / 30</span></div>
-        <div className="flex items-center justify-center gap-2 mt-3">
+        <div className="text-3xl font-bold text-primary">23.82<span className="text-base text-muted-foreground"> / 30</span></div>
+        <div className="flex items-center justify-center gap-2 mt-2.5">
           {JUMP_BREAKDOWNS.map((j, i) => (
             <button
               key={j.label}
               onClick={() => { userInteractedRef.current = true; setSelected(i); }}
-              className={`rounded-lg px-4 py-2 text-sm transition-colors ${
+              className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
                 i === selected ? 'bg-primary/15 border border-primary/40' : 'bg-muted/40 hover:bg-muted/60 border border-transparent'
               }`}
             >
@@ -309,21 +309,21 @@ function JumpBreakdownCard() {
         </div>
       </div>
 
-      <div className="text-sm font-semibold mb-4 text-left">{jump.label}: Detailed Breakdown</div>
-      <div key={jump.label} className="space-y-3" style={{ animation: 'whatIfPop 0.35s ease' }}>
+      <div className="text-xs font-semibold mb-2.5 text-left">{jump.label}: Detailed Breakdown</div>
+      <div key={jump.label} className="space-y-2" style={{ animation: 'whatIfPop 0.35s ease' }}>
         {jump.areas.map((area, i) => {
           const isActive = i === activeAreaIndex;
           return (
             <div
               key={area.name}
-              className="rounded-lg p-3 -mx-3 transition-colors duration-500"
+              className="rounded-lg p-2 -mx-2 transition-colors duration-500"
               style={isActive ? { background: 'hsl(var(--primary) / 0.06)' } : undefined}
             >
-              <div className="flex justify-between items-center mb-1.5 text-sm">
+              <div className="flex justify-between items-center mb-1 text-xs">
                 <span className={`font-medium transition-colors duration-500 ${isActive ? 'text-primary' : ''}`}>{area.name}</span>
                 <span className="font-semibold text-primary">{area.score.toFixed(2)} / {area.max.toFixed(2)}</span>
               </div>
-              <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
+              <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r ${AREA_GRADIENT[area.name]}`}
                   style={{ width: `${(area.score / area.max) * 100}%`, transition: 'width 0.5s ease' }}
@@ -335,7 +335,7 @@ function JumpBreakdownCard() {
       </div>
 
       {/* Fixed-height panel so switching the active area never resizes the card. */}
-      <div className="mt-3 pt-4 border-t border-border overflow-y-auto" style={{ height: 190 }}>
+      <div className="mt-2 pt-3 border-t border-border overflow-y-auto" style={{ height: 140 }}>
         <div key={`${selected}-${activeAreaName}`} style={{ animation: 'whatIfPop 0.35s ease' }}>
           <div className="flex items-center justify-between mb-2">
             <span className="font-bold text-sm tracking-wide">{activeAreaName}</span>

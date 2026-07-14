@@ -2094,7 +2094,7 @@ export default function ChangeTheTide() {
           <FadeIn y={50} duration={0.7}>
             <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The sensors</div>
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              One sensor sees the jump. Three see <span className="text-primary">the whole trick.</span>
+              One sensor sees the jump. More see <span className="text-primary">the whole trick.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-12">
               A sensor on the board alone can't see what the kite is doing, or how hard the rider loaded
@@ -2145,10 +2145,14 @@ export default function ChangeTheTide() {
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
               A process, <span className="text-primary">not a switch flip.</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+            <p className="text-lg text-muted-foreground max-w-2xl mb-2">
               This doesn't replace judging overnight. Each step hands over one more piece, in an
               order GKA controls end to end — and every step already moves in the direction the
               sport is heading anyway.
+            </p>
+            <p className="text-sm text-muted-foreground/80 max-w-2xl mb-12">
+              One possible path, shown as an example — the order, the pace, and where it stops are
+              entirely GKA's call.
             </p>
 
             <div className="space-y-0">

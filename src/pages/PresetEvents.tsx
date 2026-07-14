@@ -32,7 +32,7 @@ const BRACKET_BADGE_COLORS = [
 ];
 
 const PRESET_NAME_TO_KEY: Record<string, EventPreset> = {
-  'GKA': 'GKA',
+  'Red Bull': 'GKA',
   'KOTA': 'KOTA',
   'Megaloop': 'Megaloop',
 };
@@ -107,7 +107,7 @@ export default function PresetEvents() {
   };
 
   const presetData = [
-    { name: 'GKA', ...PRESET_WEIGHTS.GKA, hasOI: PRESET_CONFIG.GKA.hasOverallImpression },
+    { name: 'Red Bull', ...PRESET_WEIGHTS.GKA, hasOI: PRESET_CONFIG.GKA.hasOverallImpression },
     { name: 'KOTA', ...PRESET_WEIGHTS.KOTA, hasOI: PRESET_CONFIG.KOTA.hasOverallImpression },
     { name: 'Megaloop', ...PRESET_WEIGHTS.Megaloop, hasOI: PRESET_CONFIG.Megaloop.hasOverallImpression },
   ];
@@ -131,7 +131,7 @@ export default function PresetEvents() {
               <SelectContent>
                 <SelectItem value="GKA">
                   <div className="flex items-center justify-between w-full gap-2">
-                    <span>GKA</span>
+                    <span>Red Bull</span>
                     {activePreset === 'GKA' && <Check className="w-4 h-4 text-primary" />}
                   </div>
                 </SelectItem>

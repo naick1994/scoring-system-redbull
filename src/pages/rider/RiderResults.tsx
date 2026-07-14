@@ -53,7 +53,7 @@ export default function RiderResults() {
           Download PDF
         </Button>
       </div>
-      <p className="text-muted-foreground mb-8">Capital.com GKA Big Air World Cup Mykonos 2026</p>
+      <p className="text-muted-foreground mb-8">Capital.com Red Bull Big Air World Cup Mykonos 2026</p>
 
       <Card className="p-8 mb-6 shadow-[var(--shadow-card)] text-center bg-gradient-to-br from-card to-primary/5 print-avoid-break">
         <h3 className="text-lg text-muted-foreground mb-2">Total Score</h3>

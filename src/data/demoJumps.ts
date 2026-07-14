@@ -42,7 +42,7 @@ export const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     category: 'KLBRFL',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_7.33.mp4`,
     woo: { maxHeight: 15.9, airtime: 7.6, distance: 76,  maxSpeed: 46, approachSpeed: 32, windAngle: 18, quality: 'OK',   peakTimeRatio: 0.30, takeoffOffset: 0, yankForce: 3.3, freeFallTime: 0.9, kiteAngleDeg: 76, loopType: 'Kiteloop', landingSpeedG: 2.1 },
-    realScore: 7.33, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
+    realScore: 7.33, realScoreEvent: 'Capital.com Red Bull Big Air World Cup Mykonos 2026',
   },
   {
     id: 2, label: 'Jump 2', athlete: 'Leonardo Casati',
@@ -50,7 +50,7 @@ export const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     category: 'KLFRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
     woo: { maxHeight: 19.8, airtime: 7.5, distance: 83,  maxSpeed: 52, approachSpeed: 30, windAngle: 11, quality: 'Good', peakTimeRatio: 0.33, takeoffOffset: 0, yankForce: 4.1, freeFallTime: 1.6, kiteAngleDeg: 73, loopType: 'Kiteloop', landingSpeedG: 1.9 },
-    realScore: 8.37, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
+    realScore: 8.37, realScoreEvent: 'Capital.com Red Bull Big Air World Cup Mykonos 2026',
   },
   {
     id: 3, label: 'Jump 3', athlete: 'Leonardo Casati',
@@ -58,7 +58,7 @@ export const DEMO_JUMPS_BASE: JumpDemoBase[] = [
     category: 'KLBRBO',
     videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
     woo: { maxHeight: 17.5, airtime: 7.0, distance: 121, maxSpeed: 65, approachSpeed: 28, windAngle: 6,  quality: 'Good', peakTimeRatio: 0.30, takeoffOffset: 0, yankForce: 3.5, freeFallTime: 1.0, kiteAngleDeg: 78, loopType: 'Kiteloop', landingSpeedG: 2.3 },
-    realScore: 8.07, realScoreEvent: 'Capital.com GKA Big Air World Cup Mykonos 2026',
+    realScore: 8.07, realScoreEvent: 'Capital.com Red Bull Big Air World Cup Mykonos 2026',
   },
 ];
 

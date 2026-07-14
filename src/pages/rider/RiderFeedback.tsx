@@ -244,7 +244,7 @@ export default function RiderFeedback() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Leonardo Casati — Performance Feedback</h1>
-            <p className="text-sm text-muted-foreground mt-1">Capital.com GKA Big Air World Cup Mykonos 2026</p>
+            <p className="text-sm text-muted-foreground mt-1">Capital.com Red Bull Big Air World Cup Mykonos 2026</p>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold">{totalScore.toFixed(2)} <span className="text-base font-normal text-muted-foreground">/ 30</span></div>

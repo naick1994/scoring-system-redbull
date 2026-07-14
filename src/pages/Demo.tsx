@@ -419,9 +419,9 @@ function RecapScreen({
             ))}
           </div>
 
-          {/* GKA weights legend */}
+          {/* Red Bull weights legend */}
           <div className="mt-auto pt-5 border-t border-white/10">
-            <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-3">GKA Weights</div>
+            <div className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase mb-3">Red Bull Weights</div>
             {[
               { label: 'Height',       pct: 30, color: 'bg-cyan-500' },
               { label: 'Extremity',    pct: 30, color: 'bg-pink-500' },

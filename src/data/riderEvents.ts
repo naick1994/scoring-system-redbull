@@ -33,7 +33,7 @@ export function getPhotoForAthlete(athlete: string): string {
 
 export const LORDS_OF_TRAM_FRANCE_2026: GkaEvent = {
   id: 'france',
-  name: 'Lords of Tram — GKA Big Air Kite World Cup',
+  name: 'Lords of Tram — Red Bull Big Air Kite World Cup',
   shortLabel: 'France',
   location: 'Le Barcarès, France',
   date: '2026-03-31',
@@ -67,7 +67,7 @@ export const LORDS_OF_TRAM_FRANCE_2026: GkaEvent = {
 
 export const MYKONOS_GREECE_2026: GkaEvent = {
   id: 'mykonos',
-  name: 'Capital.com GKA Big Air Kite World Cup',
+  name: 'Capital.com Red Bull Big Air Kite World Cup',
   shortLabel: 'Greece',
   location: 'Mykonos, Greece',
   date: '2026-05-01',

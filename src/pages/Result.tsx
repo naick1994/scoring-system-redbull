@@ -586,7 +586,7 @@ export default function Result() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="GKA">GKA</SelectItem>
+                <SelectItem value="GKA">Red Bull</SelectItem>
                 <SelectItem value="KOTA">KOTA</SelectItem>
                 <SelectItem value="Megaloop">Megaloop</SelectItem>
 

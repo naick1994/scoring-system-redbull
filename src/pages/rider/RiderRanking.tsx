@@ -207,8 +207,8 @@ export default function RiderRanking() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h2 className="text-3xl font-bold mb-1">GKA Big Air Rankings & Events</h2>
-      <p className="text-muted-foreground mb-8">Men's division — GKA Kite World Tour</p>
+      <h2 className="text-3xl font-bold mb-1">Red Bull Big Air Rankings & Events</h2>
+      <p className="text-muted-foreground mb-8">Men's division — Red Bull Kite World Tour</p>
 
       <Tabs defaultValue="season">
         <TabsList className="mb-6">

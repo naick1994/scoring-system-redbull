@@ -1,24 +1,13 @@
 import { useState, useMemo, useEffect, useRef, ReactNode } from 'react';
 import { Card } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { FadeIn } from '@/components/FadeIn';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause, DollarSign } from 'lucide-react';
 import redbullLogo from '@/assets/redbull-logo.svg';
-import { useScoring } from '@/contexts/ScoringContext';
-import { AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
-import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
-import { getFakeAthleteScore } from '@/data/fakeAthleteScores';
-import { getLeonardoAverageBreakdown } from '@/data/demoJumps';
-
-const RIDER_NAME = 'Leonardo Casati';
-
-const COUNTRY_FLAGS: Record<string, string> = {
-  Italy: '🇮🇹', Netherlands: '🇳🇱', Spain: '🇪🇸', Germany: '🇩🇪',
-  Israel: '🇮🇱', Brazil: '🇧🇷', USA: '🇺🇸',
-};
+import { AREA_GRADIENT } from '@/lib/scoring';
+import { GKA_BIG_AIR_MEN_RANKINGS_2026 } from '@/data/gkaRankings';
 
 // Smoothly tweens a displayed number toward `target` whenever it changes,
 // so the auto-cycling What If demo reads as a live recalculation rather
@@ -111,7 +100,7 @@ function ThresholdCard() {
   const t3 = 17.5 + shift;
 
   return (
-    <Card className="p-6 shadow-[var(--shadow-card)]">
+    <Card className="p-6 shadow-[var(--shadow-card)] h-full">
       <h3 className="font-bold mb-1">Thresholds, set per event</h3>
       <p className="text-sm text-muted-foreground mb-5">
         The chief judge sets what height and distance earn full marks, so a big-wind day and a
@@ -134,33 +123,33 @@ function ThresholdCard() {
 // Real preset weights (H&A / Extremity / Technicality / Execution), matching
 // the actual presets available in the app's Event Presets picker.
 const PRESET_ROWS = [
-  { name: 'Lords of Tram',  h: 30, e: 30, t: 25, x: 15 },
-  { name: 'Mykonos',        h: 45, e: 45, t: 10, x: 0 },
-  { name: 'Brazil',         h: 25, e: 25, t: 30, x: 20 },
+  { name: 'Red Bull King of The Air', h: 30, e: 30, t: 25, x: 15 },
+  { name: 'Red Bull Megaloop',        h: 45, e: 45, t: 10, x: 0 },
+  { name: 'Red Bull Cold Hawaii',     h: 25, e: 25, t: 30, x: 20 },
 ];
 
 function PresetWeightsCard() {
   const activeIndex = useCyclingIndex(PRESET_ROWS.length, 2500);
   return (
-    <Card className="p-6 shadow-[var(--shadow-card)]">
+    <Card className="p-6 shadow-[var(--shadow-card)] h-full">
       <h3 className="font-bold mb-1">Weights, set per format</h3>
       <p className="text-sm text-muted-foreground mb-5">
         Want extremity and load to matter more than technical variety at one event? Change the
         weights, not the philosophy.
       </p>
       <div className="text-xs font-mono overflow-x-auto">
-        <div className="grid grid-cols-5 gap-2 text-muted-foreground pb-2 border-b border-border min-w-[280px]">
+        <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-2 text-muted-foreground pb-2 border-b border-border min-w-[420px]">
           <span>Preset</span><span className="text-right">H&amp;A</span><span className="text-right">Extr.</span><span className="text-right">Tech.</span><span className="text-right">Exec.</span>
         </div>
         {PRESET_ROWS.map((row, i) => (
           <div
             key={row.name}
-            className="grid grid-cols-5 gap-2 py-1.5 px-1.5 -mx-1.5 rounded-md transition-colors duration-500 min-w-[280px]"
+            className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr] gap-2 py-1.5 px-1.5 -mx-1.5 rounded-md transition-colors duration-500 min-w-[420px]"
             style={i === activeIndex ? { background: 'rgba(74, 222, 128, 0.14)' } : undefined}
           >
-            <span className={`font-sans font-semibold flex items-center gap-1 ${i === activeIndex ? 'text-green-400' : 'text-foreground'}`}>
+            <span className={`font-sans font-semibold flex items-center gap-1 whitespace-nowrap ${i === activeIndex ? 'text-green-400' : 'text-foreground'}`}>
               {row.name}
-              {i === activeIndex && <CheckCircle2 className="w-3 h-3" />}
+              {i === activeIndex && <CheckCircle2 className="w-3 h-3 shrink-0" />}
             </span>
             <span className="text-right text-primary">{row.h}%</span>
             <span className="text-right text-primary">{row.e}%</span>
@@ -417,137 +406,6 @@ function AutoWhatIfDemo() {
   );
 }
 
-function LiveRankingComparison() {
-  const { heightAmplitudeThresholds } = useScoring();
-  const [selected, setSelected] = useState<RankingRow | null>(null);
-  const topEight = GKA_BIG_AIR_MEN_RANKINGS_2026.slice(0, 8);
-
-  const leonardo = useMemo(
-    () => getLeonardoAverageBreakdown(heightAmplitudeThresholds),
-    [heightAmplitudeThresholds]
-  );
-
-  const comparison = useMemo(() => {
-    if (!selected) return null;
-    const fake = getFakeAthleteScore(selected.athlete, selected.rank, leonardo.averageScore);
-    fake.areas = fake.areas.map(a => {
-      const leoArea = leonardo.areas.find(l => l.area === a.area);
-      if (leoArea && a.score >= leoArea.score) return { ...a, score: Math.max(0, leoArea.score - 0.05) };
-      return a;
-    });
-    return { fake, delta: leonardo.averageScore - fake.averageScore };
-  }, [selected, leonardo]);
-
-  return (
-    <>
-      <Card className="overflow-hidden shadow-[var(--shadow-card)]">
-        <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b-2 border-border bg-muted/40">
-              <th className="text-left py-3 px-4 font-semibold w-16 text-sm">Rank</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Athlete</th>
-              <th className="text-left py-3 px-4 font-semibold text-sm">Country</th>
-              <th className="text-right py-3 px-4 font-semibold text-sm">Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            {topEight.map((row, idx) => {
-              const isMe = row.athlete === RIDER_NAME;
-              return (
-                <tr
-                  key={idx}
-                  onClick={() => { if (!isMe) setSelected(row); }}
-                  className={`border-b border-border transition-colors ${isMe ? 'bg-primary/10' : 'hover:bg-muted/50 cursor-pointer'}`}
-                >
-                  <td className="py-3 px-4 font-semibold text-muted-foreground text-sm">#{row.rank}</td>
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-3">
-                      <img src={row.photoUrl} alt={row.athlete} className="w-8 h-8 rounded-full object-cover border border-border" />
-                      <span className={`font-medium text-sm ${isMe ? 'text-primary font-bold' : ''}`}>{row.athlete}</span>
-                      {isMe && (
-                        <Badge className="bg-primary/20 text-primary border border-primary/30 hover:bg-primary/20 text-[10px]">You</Badge>
-                      )}
-                    </div>
-                  </td>
-                  <td className="py-3 px-4 text-xl">{COUNTRY_FLAGS[row.country] ?? row.country}</td>
-                  <td className="py-3 px-4 text-right font-semibold text-sm">{row.points}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        </div>
-      </Card>
-      <p className="text-xs text-muted-foreground mt-3 font-mono">↑ Real ranking data. Click any rider to compare. Try it.</p>
-
-      <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <DialogContent className="max-w-lg">
-          {selected && comparison && (
-            <>
-              <DialogHeader>
-                <div className="flex items-center gap-3">
-                  <img src={selected.photoUrl} alt={selected.athlete} className="w-14 h-14 rounded-full object-cover border border-border" />
-                  <div>
-                    <DialogTitle className="text-xl">{selected.athlete}</DialogTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {COUNTRY_FLAGS[selected.country] ?? selected.country} #{selected.rank} · {selected.points} pts
-                    </p>
-                  </div>
-                </div>
-              </DialogHeader>
-
-              <div className="flex items-center justify-between py-2">
-                <div className="text-center flex-1">
-                  <div className="text-2xl font-bold">{comparison.fake.averageScore.toFixed(2)}</div>
-                  <div className="text-xs text-muted-foreground">{selected.athlete.split(' ')[0]}'s avg</div>
-                </div>
-                <div className="px-4 text-center">
-                  <div className={`text-lg font-bold ${comparison.delta >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {comparison.delta >= 0 ? '+' : ''}{comparison.delta.toFixed(2)}
-                  </div>
-                  <div className="text-[10px] text-muted-foreground uppercase">Leonardo's edge</div>
-                </div>
-                <div className="text-center flex-1">
-                  <div className="text-2xl font-bold text-primary">{leonardo.averageScore.toFixed(2)}</div>
-                  <div className="text-xs text-muted-foreground">Leonardo's avg</div>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {comparison.fake.areas.map((fakeArea) => {
-                  const leoArea = leonardo.areas.find(a => a.area === fakeArea.area);
-                  return (
-                    <div key={fakeArea.area}>
-                      <div className="flex justify-between items-center mb-1 text-sm">
-                        <span className="font-medium">{AREA_DISPLAY_NAMES[fakeArea.area] ?? fakeArea.area}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {fakeArea.score.toFixed(2)} vs <span className="text-primary font-semibold">{leoArea?.score.toFixed(2)}</span> / {fakeArea.max.toFixed(2)}
-                        </span>
-                      </div>
-                      <div className="relative w-full bg-muted rounded-full h-3 overflow-hidden">
-                        <div
-                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} opacity-40`}
-                          style={{ width: `${(fakeArea.score / fakeArea.max) * 100}%` }}
-                        />
-                        <div
-                          className={`absolute inset-y-0 left-0 bg-gradient-to-r ${AREA_GRADIENT[fakeArea.area]} border-r-2 border-white/80`}
-                          style={{ width: `${((leoArea?.score ?? 0) / fakeArea.max) * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </>
-  );
-}
-
-
 const AREAS = [
   { name: 'HEIGHT & AMPLITUDE', weight: 30, desc: 'Peak height and distance covered, measured directly against event thresholds.', subjective: false },
   { name: 'EXTREMITY', weight: 30, desc: 'Kite angle, load on entry, and hang time during the loop.', subjective: false },
@@ -638,48 +496,21 @@ const JUMP_SUB_PARAMS: Record<string, { label: string; pts: number; max: number 
   },
 ];
 
-// Real Woo sensor readouts for all 3 of Leonardo Casati's Mykonos jumps —
-// same numbers used everywhere else on the page, just the full sensor grid.
+// Real Woo sensor readout for Lorenzo Casati's Troobie Loop jump — same
+// numbers used everywhere else on the page, just the full sensor grid.
 const WOO_SENSOR_JUMPS = [
   {
-    label: 'Jump 1', category: 'KLBRFL', trick: 'Late Backroll Kiteloop Double Flip Added Rotation',
-    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_7.33.mp4`,
+    label: 'Jump 1', athlete: 'Lorenzo Casati',
+    category: 'TLBOBS', trick: 'Troobie Loop Board Off with Board Spin with added rotation',
+    videoSrc: `${import.meta.env.BASE_URL}videos/LORE_8.10.mp4`,
     stats: [
-      { label: 'Max Height', value: '15.9 m' }, { label: 'Distance', value: '76 m' },
-      { label: 'Airtime', value: '7.6 s' }, { label: 'Kite Angle', value: '76°' },
-      { label: 'Loop Type', value: 'Kiteloop' }, { label: 'Yank Power', value: '3.3g' },
-      { label: 'Free Fall', value: '0.9s' }, { label: 'Rotations', value: '×1' },
+      { label: 'Max Height', value: '17.2 m' }, { label: 'Distance', value: '88 m' },
+      { label: 'Airtime', value: '8.1 s' }, { label: 'Kite Angle', value: '68°' },
+      { label: 'Loop Type', value: 'Kiteloop' }, { label: 'Yank Power', value: '3.6g' },
+      { label: 'Free Fall', value: '1.1s' }, { label: 'Rotations', value: '×2' },
       { label: 'Rotation Axis', value: 'Horizontal' }, { label: 'Board Off', value: 'Yes' },
-      { label: 'Board Flip', value: '×2' }, { label: 'Board Spin', value: '0' },
-      { label: 'Max Speed', value: '46 km/h' }, { label: 'Approach', value: '32 km/h' },
-      { label: 'Landing Speed', value: '2.1g' },
-    ],
-  },
-  {
-    label: 'Jump 2', category: 'KLFRBO', trick: 'Doobie Loop Boardoff by the Fin',
-    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.37.mp4`,
-    stats: [
-      { label: 'Max Height', value: '19.8 m' }, { label: 'Distance', value: '83 m' },
-      { label: 'Airtime', value: '7.5 s' }, { label: 'Kite Angle', value: '73°' },
-      { label: 'Loop Type', value: 'Kiteloop' }, { label: 'Yank Power', value: '4.1g' },
-      { label: 'Free Fall', value: '1.6s' }, { label: 'Rotations', value: '×2' },
-      { label: 'Rotation Axis', value: 'Horizontal' }, { label: 'Board Off', value: 'Yes' },
-      { label: 'Board Flip', value: '0' }, { label: 'Board Spin', value: '0' },
-      { label: 'Max Speed', value: '52 km/h' }, { label: 'Approach', value: '30 km/h' },
-      { label: 'Landing Speed', value: '1.9g' },
-    ],
-  },
-  {
-    label: 'Jump 3', category: 'KLBRBO', trick: 'Backroll Kiteloop Tornado',
-    videoSrc: `${import.meta.env.BASE_URL}videos/LEO_8.07.mp4`,
-    stats: [
-      { label: 'Max Height', value: '17.5 m' }, { label: 'Distance', value: '121 m' },
-      { label: 'Airtime', value: '7.0 s' }, { label: 'Kite Angle', value: '78°' },
-      { label: 'Loop Type', value: 'Kiteloop' }, { label: 'Yank Power', value: '3.5g' },
-      { label: 'Free Fall', value: '1.0s' }, { label: 'Rotations', value: '×3' },
-      { label: 'Rotation Axis', value: 'Horizontal' }, { label: 'Board Off', value: 'Yes' },
-      { label: 'Board Flip', value: '0' }, { label: 'Board Spin', value: '0' },
-      { label: 'Max Speed', value: '65 km/h' }, { label: 'Approach', value: '28 km/h' },
+      { label: 'Board Flip', value: '×1' }, { label: 'Board Spin', value: '×1' },
+      { label: 'Max Speed', value: '48 km/h' }, { label: 'Approach', value: '34 km/h' },
       { label: 'Landing Speed', value: '2.3g' },
     ],
   },
@@ -825,26 +656,11 @@ function WooSensorPanel() {
 
   return (
     <Card ref={panelRef} className="p-6 shadow-[var(--shadow-card)] mt-8">
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <div className="flex items-center gap-2">
-          <img src={redbullLogo} alt="Red Bull" className="h-5" />
-          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data: Leonardo Casati</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          {WOO_SENSOR_JUMPS.map((j, i) => (
-            <button
-              key={j.label}
-              onClick={() => { userInteractedRef.current = true; setPaused(false); setIndex(i); }}
-              className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
-                i === index ? 'bg-primary/15 border-primary/40 text-primary' : 'border-border text-muted-foreground hover:bg-muted/50'
-              }`}
-            >
-              {j.label}
-            </button>
-          ))}
-        </div>
+      <div className="flex items-center gap-2 mb-4 flex-wrap">
+        <img src={redbullLogo} alt="Red Bull" className="h-5" />
+        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data: {jump.athlete}</span>
       </div>
-      <p className="text-xs font-semibold text-amber-400 mb-4">{jump.category} · {jump.trick}</p>
+      <p className="text-xs font-semibold text-amber-400 mb-4">{jump.trick}</p>
       <div className="flex flex-col lg:flex-row gap-6 items-stretch">
         {inView && (
           <div
@@ -930,21 +746,19 @@ const LIVE_TRICK_STAT_LABELS = ['Max Height', 'Airtime', 'Kite Angle', 'Distance
 
 // This reel's own natural cut points: trick ID graphic while the jump
 // footage plays, score builds in as it wraps up, comparison takes over
-// right where the footage itself cuts to a different shot (~23s in).
-const LIVE_DEMO_VIDEO_SRC = `${import.meta.env.BASE_URL}videos/mykonos-highlight.mp4`;
-const LIVE_DEMO_TRICK_START_SEC = 2;
-const LIVE_DEMO_SCORE_START_SEC = 12;
-// Timecodes given as HH:MM:SS:FF at 30fps: 00:00:20:24 -> 20 + 24/30 = 20.8s,
-// 00:00:22:18 -> 22 + 18/30 = 22.6s.
-const LIVE_DEMO_SCORE_DISAPPEAR_SEC = 20.8;
-const LIVE_DEMO_COMPARE_SEC = 22.6;
+// once the footage itself cuts to the venue b-roll shot (~16s in). Clip is
+// 23.83s total (30fps).
+const LIVE_DEMO_VIDEO_SRC = `${import.meta.env.BASE_URL}videos/redbull-highlight.mp4`;
+const LIVE_DEMO_TRICK_START_SEC = 1.5;
+const LIVE_DEMO_SCORE_START_SEC = 6;
+const LIVE_DEMO_SCORE_DISAPPEAR_SEC = 13;
+const LIVE_DEMO_COMPARE_SEC = 15;
 // Second beat within the comparison screen: swaps the raw Woo sensor grid
 // for the full per-parameter judged breakdown, a few seconds after the
 // comparison first appears so viewers see the simple totals before the
 // detail.
-const LIVE_DEMO_COMPARE_DETAIL_SEC = 26.2;
-// 00:00:20:27 at 30fps -> 20 + 27/30 = 20.9s.
-const LIVE_DEMO_REPLAY_LABEL_HIDE_SEC = 20.9;
+const LIVE_DEMO_COMPARE_DETAIL_SEC = 18.5;
+const LIVE_DEMO_REPLAY_LABEL_HIDE_SEC = 13.2;
 
 // Broadcast-style overlay demo: real trick ID graphic, then a live-built
 // score breakdown, layered directly on the jump footage — showing what a
@@ -956,10 +770,10 @@ const LIVE_DEMO_REPLAY_LABEL_HIDE_SEC = 20.9;
 // already shown in the broadcast graphic baked into this footage.
 const LIVE_RIVAL_NAME = 'Lorenzo Casati';
 const LIVE_RIVAL_RANK = 3;
-// Matches the score already burned into this footage's own broadcast
-// graphic ("3 LORENZO CASATI 9.40"), so the comparison card agrees with
-// what's visibly on screen instead of using an invented total.
-const LIVE_RIVAL_FIXED_TOTAL = 9.40;
+// Matches the score judged for this reel's own trick, so the comparison
+// card agrees with the overlay shown over the footage instead of an
+// invented total.
+const LIVE_RIVAL_FIXED_TOTAL = 8.10;
 // Lorenzo's own real Woo readings for this jump, matching the broadcast
 // graphic rather than a value scaled off Leonardo's sensor data.
 const LIVE_RIVAL_FIXED_WOO: Record<string, string> = {
@@ -970,9 +784,55 @@ const LIVE_RIVAL_FIXED_WOO: Record<string, string> = {
   'Distance': '111 m',
   'Free Fall': '1.6s',
 };
-// Trick ID for Lorenzo's jump.
-const LIVE_RIVAL_CATEGORY = 'KLBRFL';
-const LIVE_RIVAL_TRICK = 'Late Backroll Kiteloop Flip Added Rotation';
+// Trick ID for Lorenzo's jump — matches the reel's own trick, since this
+// clip is Lorenzo's jump rather than Leonardo's.
+const LIVE_RIVAL_CATEGORY = 'TLBOBS';
+const LIVE_RIVAL_TRICK = 'Troobie Loop Board Off with Board Spin with added rotation';
+
+// Trick ID graphic + live score build shown over the reel itself. Kept
+// separate from Leonardo's WOO_SENSOR_JUMPS/JUMP_BREAKDOWNS entries (used
+// elsewhere on the page) so swapping this footage for a different rider's
+// jump doesn't touch his data shown in those other sections.
+const LIVE_DEMO_JUMP = {
+  category: 'TLBOBS', trick: 'Troobie Loop Board Off with Board Spin with added rotation',
+  stats: [
+    { label: 'Max Height', value: '17.2 m' }, { label: 'Distance', value: '88 m' },
+    { label: 'Airtime', value: '8.1 s' }, { label: 'Kite Angle', value: '68°' },
+    { label: 'Loop Type', value: 'Kiteloop' }, { label: 'Yank Power', value: '3.6g' },
+    { label: 'Free Fall', value: '1.1s' }, { label: 'Rotations', value: '×2' },
+    { label: 'Rotation Axis', value: 'Horizontal' }, { label: 'Board Off', value: 'Yes' },
+    { label: 'Board Flip', value: '×1' }, { label: 'Board Spin', value: '×1' },
+    { label: 'Max Speed', value: '48 km/h' }, { label: 'Approach', value: '34 km/h' },
+    { label: 'Landing Speed', value: '2.3g' },
+  ],
+};
+const LIVE_DEMO_BREAKDOWN = {
+  total: 8.10,
+  areas: [
+    { name: 'HEIGHT & AMPLITUDE', score: 2.35, max: 3.0 },
+    { name: 'EXTREMITY', score: 2.55, max: 3.0 },
+    { name: 'TECHNICALITY', score: 1.60, max: 2.0 },
+    { name: 'EXECUTION', score: 1.60, max: 2.0 },
+  ],
+};
+
+// Leonardo's own Jump 1 (unchanged) — the comparison's home card keeps
+// showing his real score even though the footage above is now Lorenzo's
+// jump, so it stays consistent with his numbers shown elsewhere on the page.
+const LIVE_DEMO_HOME_ORIGINAL = {
+  category: 'KLBRFL', trick: 'Late Backroll Kiteloop Double Flip Added Rotation',
+  total: 7.14,
+  areas: [
+    { name: 'HEIGHT & AMPLITUDE', score: 1.88, max: 3.0 },
+    { name: 'EXTREMITY', score: 2.25, max: 3.0 },
+    { name: 'TECHNICALITY', score: 1.30, max: 2.0 },
+    { name: 'EXECUTION', score: 1.70, max: 2.0 },
+  ],
+  woo: {
+    'Max Height': '15.9 m', 'Airtime': '7.6 s', 'Kite Angle': '76°',
+    'Distance': '76 m', 'Yank Power': '3.3g', 'Free Fall': '0.9s',
+  },
+};
 
 // Each judged sub-parameter within an area, with its real max value from
 // PARAMETER_CONFIG — used to split a known area score into a plausible
@@ -1052,8 +912,8 @@ function getAreaParamBreakdown(areaName: string, areaScore: number, areaMax: num
 }
 
 function LiveSpectatorDemo() {
-  const jumpMeta = WOO_SENSOR_JUMPS[0];
-  const breakdown = JUMP_BREAKDOWNS[0];
+  const jumpMeta = LIVE_DEMO_JUMP;
+  const breakdown = LIVE_DEMO_BREAKDOWN;
   const rival = useMemo(() => ({
     averageScore: LIVE_RIVAL_FIXED_TOTAL,
     areas: getFixedTotalAreaScores(LIVE_RIVAL_NAME, LIVE_RIVAL_FIXED_TOTAL),
@@ -1249,10 +1109,10 @@ function LiveSpectatorDemo() {
         <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto w-full">
           {[
             {
-              name: 'Leonardo Casati', total: breakdown.total, areas: breakdown.areas.map(a => a.score),
-              woo: Object.fromEntries(LIVE_TRICK_STAT_LABELS.map(l => [l, jumpMeta.stats.find(s => s.label === l)!.value])),
+              name: 'Leonardo Casati', total: LIVE_DEMO_HOME_ORIGINAL.total, areas: LIVE_DEMO_HOME_ORIGINAL.areas.map(a => a.score),
+              woo: LIVE_DEMO_HOME_ORIGINAL.woo,
               photoUrl: GKA_BIG_AIR_MEN_RANKINGS_2026.find(r => r.athlete === 'Leonardo Casati')?.photoUrl,
-              category: jumpMeta.category, trick: jumpMeta.trick,
+              category: LIVE_DEMO_HOME_ORIGINAL.category, trick: LIVE_DEMO_HOME_ORIGINAL.trick,
             },
             {
               name: LIVE_RIVAL_NAME, total: rival.averageScore, areas: rival.areas.map(a => a.score),
@@ -2053,7 +1913,7 @@ export default function ChangeTheTide() {
             </p>
             <p className="text-sm text-muted-foreground/80 max-w-2xl mb-12">
               The areas, the parameters inside them, and the weights below are all examples —
-              GKA sets and owns every one of them, event by event.
+              Red Bull sets and owns every one of them, event by event.
             </p>
 
             <FadeIn y={40} delay={0.1}>
@@ -2147,12 +2007,12 @@ export default function ChangeTheTide() {
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-2">
               This doesn't replace judging overnight. Each step hands over one more piece, in an
-              order GKA controls end to end — and every step already moves in the direction the
+              order Red Bull controls end to end — and every step already moves in the direction the
               sport is heading anyway.
             </p>
             <p className="text-sm text-muted-foreground/80 max-w-2xl mb-12">
               One possible path, shown as an example — the order, the pace, and where it stops are
-              entirely GKA's call.
+              entirely Red Bull's call.
             </p>
 
             <div className="space-y-0">
@@ -2205,7 +2065,7 @@ export default function ChangeTheTide() {
           <RevealOnScroll direction="up" delay={100}>
             <div className="mt-8 pt-8 border-t border-border">
               <h3 className="font-bold mb-4 flex items-center gap-2">
-                <DollarSign className="w-4 h-4 text-primary" /> What that's worth to GKA
+                <DollarSign className="w-4 h-4 text-primary" /> What that's worth to Red Bull
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="rounded-lg border border-border bg-card/60 p-4">
@@ -2221,7 +2081,7 @@ export default function ChangeTheTide() {
                 <div className="rounded-lg border border-border bg-card/60 p-4">
                   <Share2 className="w-4 h-4 text-primary mb-2" />
                   <div className="font-semibold text-sm mb-1">Content, already built</div>
-                  <div className="text-xs text-muted-foreground">The score build, the comparisons, the stat clips — content inventory GKA doesn't have to make from scratch.</div>
+                  <div className="text-xs text-muted-foreground">The score build, the comparisons, the stat clips — content inventory Red Bull doesn't have to make from scratch.</div>
                 </div>
               </div>
             </div>
@@ -2265,26 +2125,6 @@ export default function ChangeTheTide() {
 
           <RevealOnScroll direction="up" delay={100}>
             <AutoWhatIfDemo />
-          </RevealOnScroll>
-        </div>
-      </section>
-
-      {/* ───────── Where they stand, against anyone ───────── */}
-      <section className="border-b border-border">
-        <div className="container mx-auto px-4 py-24 max-w-5xl">
-          <RevealOnScroll direction="right">
-            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">Where they stand</div>
-            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
-              Compare against anyone in the field, not just <span className="text-primary">the leaderboard.</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
-              From the season ranking, a rider can pick any other athlete and see an area-by-area
-              comparison: not just who's ahead, but where and why.
-            </p>
-          </RevealOnScroll>
-
-          <RevealOnScroll direction="up" delay={100}>
-            <LiveRankingComparison />
           </RevealOnScroll>
         </div>
       </section>

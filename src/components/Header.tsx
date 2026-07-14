@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import gkaLogo from '@/assets/gka-logo.svg';
+import redbullLogo from '@/assets/redbull-logo.svg';
 import { useScoring } from '@/contexts/ScoringContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -34,7 +34,7 @@ export function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-4">
           <Link to="/" className="flex items-center gap-5">
-            <img src={gkaLogo} alt="GKA Kite World Tour" className="h-14" />
+            <img src={redbullLogo} alt="Red Bull" className="h-14" />
           </Link>
           <h1 className="text-2xl font-bold text-foreground">Big Air Scoring System</h1>
         </div>

@@ -8,58 +8,58 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* GKA Kite World Tour-derived palette: navy background (#00162B), white
-       body text, cyan (#52C6D8) for bold/accent text */
-    --background: 209 100% 8%;
+    /* Red Bull-derived palette: near-black background, Red Bull red
+       (#D2003C) for bold/accent text, gold (#FFCC00) as secondary */
+    --background: 220 30% 5%;
     --foreground: 0 0% 100%;
 
-    --card: 209 70% 12%;
+    --card: 220 20% 10%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 209 70% 12%;
+    --popover: 220 20% 10%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 188 63% 58%;
-    --primary-foreground: 209 100% 8%;
+    --primary: 343 100% 41%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 191 61% 62%;
-    --secondary-foreground: 209 100% 8%;
+    --secondary: 48 100% 50%;
+    --secondary-foreground: 220 30% 5%;
 
-    --muted: 209 50% 16%;
-    --muted-foreground: 209 15% 72%;
+    --muted: 220 20% 14%;
+    --muted-foreground: 220 10% 70%;
 
-    --accent: 188 63% 58%;
-    --accent-foreground: 209 100% 8%;
+    --accent: 343 100% 41%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 209 40% 20%;
-    --input: 209 40% 20%;
-    --ring: 188 63% 58%;
+    --border: 220 15% 18%;
+    --input: 220 15% 18%;
+    --ring: 343 100% 41%;
 
     --radius: 0.9rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(188 63% 58%), hsl(200 70% 45%));
-    --gradient-secondary: linear-gradient(135deg, hsl(208 40% 30%), hsl(200 35% 22%));
+    --gradient-primary: linear-gradient(135deg, hsl(343 100% 41%), hsl(0 80% 35%));
+    --gradient-secondary: linear-gradient(135deg, hsl(48 100% 50%), hsl(40 90% 40%));
     --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.5);
     --shadow-hover: 0 8px 30px -6px hsl(0 0% 0% / 0.6);
 
-    --sidebar-background: 209 100% 10%;
+    --sidebar-background: 220 30% 6%;
 
     --sidebar-foreground: 0 0% 100%;
 
-    --sidebar-primary: 188 63% 58%;
+    --sidebar-primary: 343 100% 41%;
 
-    --sidebar-primary-foreground: 209 100% 8%;
+    --sidebar-primary-foreground: 0 0% 100%;
 
-    --sidebar-accent: 209 50% 16%;
+    --sidebar-accent: 220 20% 14%;
 
     --sidebar-accent-foreground: 0 0% 100%;
 
-    --sidebar-border: 209 40% 18%;
+    --sidebar-border: 220 15% 16%;
 
-    --sidebar-ring: 188 63% 58%;
+    --sidebar-ring: 343 100% 41%;
   }
 
   .dark {

@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/scoring-system-gka/',
+  base: '/scoring-system-redbull/',
   define: {
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
   },

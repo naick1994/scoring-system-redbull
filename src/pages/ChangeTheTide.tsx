@@ -6,7 +6,7 @@ import { FadeIn } from '@/components/FadeIn';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause, DollarSign } from 'lucide-react';
-import gkaLogo from '@/assets/gka-logo.svg';
+import redbullLogo from '@/assets/redbull-logo.svg';
 import { useScoring } from '@/contexts/ScoringContext';
 import { AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
 import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
@@ -827,7 +827,7 @@ function WooSensorPanel() {
     <Card ref={panelRef} className="p-6 shadow-[var(--shadow-card)] mt-8">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex items-center gap-2">
-          <img src={gkaLogo} alt="GKA" className="h-5" />
+          <img src={redbullLogo} alt="Red Bull" className="h-5" />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data: Leonardo Casati</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -854,7 +854,7 @@ function WooSensorPanel() {
           >
             {paused ? (
               <div className="w-full h-full flex items-center justify-center gap-4 aspect-video">
-                <img src={gkaLogo} alt="GKA Kite World Tour" className="h-11" />
+                <img src={redbullLogo} alt="Red Bull" className="h-11" />
               </div>
             ) : (
               <>
@@ -1244,7 +1244,7 @@ function LiveSpectatorDemo() {
         style={{ opacity: phase === 'compare' ? 1 : 0, pointerEvents: phase === 'compare' ? 'auto' : 'none' }}
       >
         <div className="flex items-center justify-center gap-3 mb-5 bg-black/70 backdrop-blur px-3 py-1.5 rounded-full border border-white/10 mx-auto">
-          <img src={gkaLogo} alt="GKA Kite World Tour" className="h-7" />
+          <img src={redbullLogo} alt="Red Bull" className="h-7" />
         </div>
         <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto w-full">
           {[
@@ -1960,7 +1960,7 @@ export default function ChangeTheTide() {
 
         <div className="container mx-auto px-4 pt-10 max-w-5xl relative">
           <div className="flex items-center gap-4" style={heroStep(0)}>
-            <img src={gkaLogo} alt="GKA Kite World Tour" className="h-12" />
+            <img src={redbullLogo} alt="Red Bull" className="h-12" />
           </div>
         </div>
 

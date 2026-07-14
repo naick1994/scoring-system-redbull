@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DeployTag } from '@/components/DeployTag';
-import gkaLogo from '@/assets/gka-logo.svg';
+import redbullLogo from '@/assets/redbull-logo.svg';
 
 const Login = () => {
   const [role, setRole] = useState<UserRole>('judge');
@@ -32,7 +32,7 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-card border border-border rounded-lg shadow-lg p-8">
           <Link to="/" className="flex items-center justify-center gap-4 mb-6">
-            <img src={gkaLogo} alt="GKA Kite World Tour" className="h-14" />
+            <img src={redbullLogo} alt="Red Bull" className="h-14" />
           </Link>
 
           <h1 className="text-2xl font-bold text-center text-foreground mb-6">

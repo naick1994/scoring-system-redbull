@@ -1,15 +1,12 @@
 import { useState, useMemo, useEffect, useRef, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { FadeIn } from '@/components/FadeIn';
 import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause } from 'lucide-react';
-import wooLogo from '@/assets/woo-logo.svg';
-import capitalLogo from '@/assets/capital-com-logo.png';
-import nickAvatar from '@/assets/nick-avatar.jpg';
+import { CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause } from 'lucide-react';
+import gkaLogo from '@/assets/gka-logo.svg';
 import { useScoring } from '@/contexts/ScoringContext';
 import { AREA_DISPLAY_NAMES, AREA_GRADIENT } from '@/lib/scoring';
 import { GKA_BIG_AIR_MEN_RANKINGS_2026, RankingRow } from '@/data/gkaRankings';
@@ -137,9 +134,9 @@ function ThresholdCard() {
 // Real preset weights (H&A / Extremity / Technicality / Execution), matching
 // the actual presets available in the app's Event Presets picker.
 const PRESET_ROWS = [
-  { name: 'GKA',      h: 30, e: 30, t: 20, x: 20 },
-  { name: 'KOTA',     h: 30, e: 30, t: 25, x: 15 },
-  { name: 'Megaloop', h: 45, e: 45, t: 10, x: 0 },
+  { name: 'Lords of Tram',  h: 30, e: 30, t: 25, x: 15 },
+  { name: 'Mykonos',        h: 45, e: 45, t: 10, x: 0 },
+  { name: 'Brazil',         h: 25, e: 25, t: 30, x: 20 },
 ];
 
 function PresetWeightsCard() {
@@ -175,6 +172,31 @@ function PresetWeightsCard() {
     </Card>
   );
 }
+
+// The staged rollout: each step hands over one more piece of the call to
+// sensors, in an order GKA controls, rather than a single overnight switch.
+const ROLLOUT_STEPS = [
+  {
+    title: 'Support the judge',
+    desc: 'Sensor data shown live alongside the current holistic call — no scoring change yet, just a second, objective opinion in view.',
+  },
+  {
+    title: 'Automate trick-calling',
+    desc: 'Sensors identify and name the trick live as it happens, freeing up the trick-caller role and feeding the broadcast overlay in real time.',
+  },
+  {
+    title: 'Automate Height & Amplitude',
+    desc: 'The most measurable area goes fully sensor-scored first — judges keep the rest, riders get their first fully objective number.',
+  },
+  {
+    title: 'Automate Extremity',
+    desc: 'Kite angle, yank power, and free fall move from a judge\'s read to a direct sensor reading.',
+  },
+  {
+    title: 'Automate Technicality',
+    desc: 'Rotations, axis, and board work are scored from motion data. Execution stays judged — it\'s the one area that\'s inherently a style call, not a measurement.',
+  },
+];
 
 function WhatIfParamRow({ label, tip, max, state }: { label: string; tip: string; max: number; state: { label: string; pts: number; isReal: boolean } }) {
   const animatedPts = useTweenedNumber(state.pts);
@@ -805,7 +827,7 @@ function WooSensorPanel() {
     <Card ref={panelRef} className="p-6 shadow-[var(--shadow-card)] mt-8">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex items-center gap-2">
-          <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
+          <img src={gkaLogo} alt="GKA" className="h-5" />
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data: Leonardo Casati</span>
         </div>
         <div className="flex items-center gap-1.5">
@@ -832,9 +854,7 @@ function WooSensorPanel() {
           >
             {paused ? (
               <div className="w-full h-full flex items-center justify-center gap-4 aspect-video">
-                <img src={wooLogo} alt="Woo" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-                <div className="w-px h-5 bg-border" />
-                <img src={capitalLogo} alt="Capital.com" className="h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+                <img src={gkaLogo} alt="GKA Kite World Tour" className="h-11" />
               </div>
             ) : (
               <>
@@ -1224,9 +1244,7 @@ function LiveSpectatorDemo() {
         style={{ opacity: phase === 'compare' ? 1 : 0, pointerEvents: phase === 'compare' ? 'auto' : 'none' }}
       >
         <div className="flex items-center justify-center gap-3 mb-5 bg-black/70 backdrop-blur px-3 py-1.5 rounded-full border border-white/10 mx-auto">
-          <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
-          <div className="w-px h-4 bg-white/20" />
-          <img src={capitalLogo} alt="Capital.com" className="h-3.5" style={{ filter: 'brightness(0) invert(1)' }} />
+          <img src={gkaLogo} alt="GKA Kite World Tour" className="h-7" />
         </div>
         <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto w-full">
           {[
@@ -1942,9 +1960,7 @@ export default function ChangeTheTide() {
 
         <div className="container mx-auto px-4 pt-10 max-w-5xl relative">
           <div className="flex items-center gap-4" style={heroStep(0)}>
-            <img src={wooLogo} alt="Woo" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-            <div className="w-px h-5 bg-border" />
-            <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+            <img src={gkaLogo} alt="GKA Kite World Tour" className="h-12" />
           </div>
         </div>
 
@@ -2031,9 +2047,13 @@ export default function ChangeTheTide() {
             <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
               Break the jump into what can be <span className="text-primary">measured.</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+            <p className="text-lg text-muted-foreground max-w-2xl mb-3">
               Every jump is decomposed into four areas, each scored against fixed, published parameters.
               Three are grounded in sensor data. Only Execution stays a judged call.
+            </p>
+            <p className="text-sm text-muted-foreground/80 max-w-2xl mb-12">
+              The areas, the parameters inside them, and the weights below are all examples —
+              GKA sets and owns every one of them, event by event.
             </p>
 
             <FadeIn y={40} delay={0.1}>
@@ -2095,7 +2115,7 @@ export default function ChangeTheTide() {
               The data doesn't need to be <span className="text-primary">invented.</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mb-4">
-              Woo's sensors already fuse accelerometer, gyroscope, and barometric pressure data to read
+              Motion sensors already fuse accelerometer, gyroscope, and barometric pressure data to read
               height, speed, and rotations on every jump. Kite angle, yank power, and free fall come from
               that same motion data, just not read yet.
             </p>
@@ -2113,6 +2133,51 @@ export default function ChangeTheTide() {
             <FadeIn y={40} delay={0.1}>
               <WooSensorPanel />
             </FadeIn>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ───────── The rollout: a staged process, not a switch flip ───────── */}
+      <section className="border-b border-border">
+        <div className="container mx-auto px-4 py-24 max-w-5xl">
+          <FadeIn y={50} duration={0.7}>
+            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">The rollout</div>
+            <h2 className="text-3xl md:text-4xl font-bold max-w-2xl mb-4">
+              A process, <span className="text-primary">not a switch flip.</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mb-12">
+              This doesn't replace judging overnight. Each step hands over one more piece, in an
+              order GKA controls end to end — and every step already moves in the direction the
+              sport is heading anyway.
+            </p>
+
+            <div className="space-y-0">
+              {ROLLOUT_STEPS.map((step, i) => (
+                <FadeIn key={step.title} y={30} delay={i * 0.1}>
+                  <div className="flex gap-5">
+                    <div className="flex flex-col items-center">
+                      <div className="w-9 h-9 rounded-full border-2 border-primary/50 bg-card flex items-center justify-center text-sm font-bold text-primary shrink-0">
+                        {i + 1}
+                      </div>
+                      {i < ROLLOUT_STEPS.length - 1 && <div className="w-px flex-1 bg-border my-1" />}
+                    </div>
+                    <div className="pb-8">
+                      <h3 className="font-bold mb-1.5">{step.title}</h3>
+                      <p className="text-sm text-muted-foreground max-w-xl">{step.desc}</p>
+                    </div>
+                  </div>
+                </FadeIn>
+              ))}
+            </div>
+
+            <div className="rounded-lg border border-border bg-card/60 p-6 mt-2">
+              <p className="text-sm text-muted-foreground max-w-2xl">
+                Every step trades subjective calls for measured ones — fewer disputed results, less
+                judging cost per event over time, more accurate scoring. And every benefit already
+                covered stays intact along the way: fairer outcomes for riders, a scoreboard fans can
+                follow live, and precise, per-parameter feedback for coaching.
+              </p>
+            </div>
           </FadeIn>
         </div>
       </section>
@@ -2213,38 +2278,7 @@ export default function ChangeTheTide() {
         </div>
       </section>
 
-      {/* ───────── CTA ───────── */}
-      <section>
-        <div className="container mx-auto px-4 py-28 max-w-3xl text-center">
-          <RevealOnScroll direction="up">
-            <div className="text-xs font-mono tracking-widest uppercase text-muted-foreground mb-4">See it work</div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">A working demo <span className="text-primary">is live.</span></h2>
-            <p className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto">
-              Every screen referenced here, from the four-area breakdown to the coaching receipt,
-              already exists as a working prototype.
-            </p>
-            <Link
-              to="/login"
-              className="inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground font-semibold px-8 py-4 text-lg hover:opacity-90 transition-opacity"
-            >
-              Open the scoring system
-              <ArrowUpRight className="w-5 h-5" />
-            </Link>
-          </RevealOnScroll>
-        </div>
-      </section>
-
       <footer className="border-t border-border py-8">
-        <div className="container mx-auto px-4 max-w-5xl text-center">
-          <Link
-            to="/about-nick"
-            className="inline-flex items-center gap-2.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <img src={nickAvatar} alt="Nicholas Baruffaldi" className="w-7 h-7 rounded-full object-cover border border-border" />
-            Built and prototyped by Nicholas Baruffaldi
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
         <DeployTag />
       </footer>
     </div>

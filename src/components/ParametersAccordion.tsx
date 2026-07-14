@@ -2,8 +2,7 @@ import { useScoring } from '@/contexts/ScoringContext';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { PARAMETER_CONFIG, PRESET_CONFIG, OVERALL_IMPRESSION_CONFIG, heightBracketLabel, amplitudeBracketLabel, YANK_POWER_RANGES, FREE_FALL_RANGES, KITE_ANGLE_RANGES } from '@/lib/scoring';
-import { Gavel } from 'lucide-react';
-import wooLogo from '@/assets/woo-logo.svg';
+import { Gavel, Radio } from 'lucide-react';
 
 // Small inline badge marking whether an area's score comes from sensor
 // data or a human judge's call — shown on every accordion trigger so
@@ -16,7 +15,7 @@ function SourceBadge({ subjective }: { subjective: boolean }) {
     </Badge>
   ) : (
     <Badge variant="outline" className="gap-1.5 text-muted-foreground border-border font-normal shrink-0">
-      <img src={wooLogo} alt="" className="h-3" style={{ filter: 'brightness(0) invert(1)' }} /> Sensor-based
+      <Radio className="w-3 h-3" /> Sensor-based
     </Badge>
   );
 }

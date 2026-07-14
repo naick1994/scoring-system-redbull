@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import wooLogo from '@/assets/woo-logo.svg';
-import capitalLogo from '@/assets/capital-com-logo.png';
+import gkaLogo from '@/assets/gka-logo.svg';
 import { useScoring } from '@/contexts/ScoringContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,6 @@ export function Header() {
         { path: '/new-score', label: 'New Score' },
         ...(showOverallImpression ? [{ path: '/overall-impression', label: 'Overall Impression' }] : []),
         { path: '/result', label: 'Result' },
-        { path: '/demo', label: 'Demo' },
         { path: '/rider/ranking', label: 'Ranking' },
       ];
 
@@ -36,9 +34,7 @@ export function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-4">
           <Link to="/" className="flex items-center gap-5">
-            <img src={wooLogo}     alt="Woo"        className="h-8" style={{ filter: 'brightness(0) invert(1)' }} />
-            <div className="w-px h-6 bg-border" />
-            <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+            <img src={gkaLogo} alt="GKA Kite World Tour" className="h-14" />
           </Link>
           <h1 className="text-2xl font-bold text-foreground">Big Air Scoring System</h1>
         </div>

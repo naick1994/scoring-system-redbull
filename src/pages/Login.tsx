@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { DeployTag } from '@/components/DeployTag';
-import wooLogo from '@/assets/woo-logo.svg';
-import capitalLogo from '@/assets/capital-com-logo.png';
+import gkaLogo from '@/assets/gka-logo.svg';
 
 const Login = () => {
   const [role, setRole] = useState<UserRole>('judge');
@@ -33,9 +32,7 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-card border border-border rounded-lg shadow-lg p-8">
           <Link to="/" className="flex items-center justify-center gap-4 mb-6">
-            <img src={wooLogo}     alt="Woo"         className="h-8" style={{ filter: 'brightness(0) invert(1)' }} />
-            <div className="w-px h-6 bg-border" />
-            <img src={capitalLogo} alt="Capital.com" className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
+            <img src={gkaLogo} alt="GKA Kite World Tour" className="h-14" />
           </Link>
 
           <h1 className="text-2xl font-bold text-center text-foreground mb-6">

@@ -6,8 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
-import wooLogo from '@/assets/woo-logo.svg';
-import capitalLogo from '@/assets/capital-com-logo.png';
+import gkaLogo from '@/assets/gka-logo.svg';
 
 // Prevents the page behind a fullscreen (fixed inset-0) modal from
 // showing its own scrollbar — without this, the underlying Demo page
@@ -204,9 +203,7 @@ function RecapScreen({
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between px-8 py-4 border-b border-white/10 shrink-0">
         <div className="flex items-center gap-5">
-          <img src={wooLogo}     alt="Woo"        className="h-6" style={{ filter: 'brightness(0) invert(1)' }} />
-          <div className="w-px h-5 bg-white/15" />
-          <img src={capitalLogo} alt="Capital.com" className="h-5" style={{ filter: 'brightness(0) invert(1)' }} />
+          <img src={gkaLogo} alt="GKA Kite World Tour" className="h-12" />
         </div>
         <button
           onClick={onClose}
@@ -410,7 +407,7 @@ function RecapScreen({
         {/* ── Woo sensor data (2/5 width) ── */}
         <div className="col-span-2 px-8 py-6 flex flex-col gap-5">
           <div className="flex items-center gap-2">
-            <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
+            <img src={gkaLogo} alt="GKA" className="h-8" />
             <span className="font-mono text-zinc-500 text-[10px] tracking-widest uppercase">Sensor Data</span>
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-6">
@@ -611,7 +608,7 @@ function WooPanel({ stats }: { stats: { label: string; value: string }[] }) {
   return (
     <div className="border-t border-border pt-4 mt-2">
       <div className="flex items-center gap-2 mb-3">
-        <img src={wooLogo} alt="Woo" className="h-4" style={{ filter: 'brightness(0) invert(1)' }} />
+        <img src={gkaLogo} alt="GKA" className="h-8" />
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data</span>
       </div>
       <div className="grid grid-cols-4 gap-3 sm:grid-cols-7">

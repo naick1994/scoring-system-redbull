@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef, ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { ParametersAccordion } from '@/components/ParametersAccordion';
 import { FadeIn } from '@/components/FadeIn';
@@ -6,8 +7,25 @@ import { DeployTag } from '@/components/DeployTag';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle2, X, Sparkles, ChevronDown, RotateCcw, TrendingUp, Mic, Users, Share2, Radio, Play, Pause, DollarSign } from 'lucide-react';
 import redbullLogo from '@/assets/redbull-logo.svg';
+import kotaLogo from '@/assets/kota-logo.png';
 import { AREA_GRADIENT } from '@/lib/scoring';
 import { GKA_BIG_AIR_MEN_RANKINGS_2026 } from '@/data/gkaRankings';
+
+/**
+ * Swaps the brand mark shown across the page based on route — /kota gets
+ * the King of the Air logo, everything else keeps the Red Bull wordmark.
+ * KOTA's badge is roughly square (not a wide wordmark like Red Bull's), so
+ * it reads small at the same height — `heightClass` lets each call site
+ * give it a taller class than the Red Bull one without affecting "/".
+ */
+function useBrandLogo() {
+  const { pathname } = useLocation();
+  const isKota = pathname.startsWith('/kota');
+  return {
+    src: isKota ? kotaLogo : redbullLogo,
+    heightClass: (redbullClass: string, kotaClass: string) => (isKota ? kotaClass : redbullClass),
+  };
+}
 
 // Smoothly tweens a displayed number toward `target` whenever it changes,
 // so the auto-cycling What If demo reads as a live recalculation rather
@@ -531,6 +549,7 @@ function shuffledIndices(n: number) {
 }
 
 function WooSensorPanel() {
+  const brandLogo = useBrandLogo();
   const [index, setIndex] = useState(0);
   const userInteractedRef = useRef(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -657,7 +676,7 @@ function WooSensorPanel() {
   return (
     <Card ref={panelRef} className="p-6 shadow-[var(--shadow-card)] mt-8">
       <div className="flex items-center gap-2 mb-4 flex-wrap">
-        <img src={redbullLogo} alt="Red Bull" className="h-5" />
+        <img src={brandLogo.src} alt="Red Bull" className={brandLogo.heightClass('h-5', 'h-12')} />
         <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Sensor Data: {jump.athlete}</span>
       </div>
       <p className="text-xs font-semibold text-amber-400 mb-4">{jump.trick}</p>
@@ -670,7 +689,7 @@ function WooSensorPanel() {
           >
             {paused ? (
               <div className="w-full h-full flex items-center justify-center gap-4 aspect-video">
-                <img src={redbullLogo} alt="Red Bull" className="h-11" />
+                <img src={brandLogo.src} alt="Red Bull" className={brandLogo.heightClass('h-11', 'h-24')} />
               </div>
             ) : (
               <>
@@ -912,6 +931,7 @@ function getAreaParamBreakdown(areaName: string, areaScore: number, areaMax: num
 }
 
 function LiveSpectatorDemo() {
+  const brandLogo = useBrandLogo();
   const jumpMeta = LIVE_DEMO_JUMP;
   const breakdown = LIVE_DEMO_BREAKDOWN;
   const rival = useMemo(() => ({
@@ -1104,7 +1124,7 @@ function LiveSpectatorDemo() {
         style={{ opacity: phase === 'compare' ? 1 : 0, pointerEvents: phase === 'compare' ? 'auto' : 'none' }}
       >
         <div className="flex items-center justify-center gap-3 mb-5 bg-black/70 backdrop-blur px-3 py-1.5 rounded-full border border-white/10 mx-auto">
-          <img src={redbullLogo} alt="Red Bull" className="h-7" />
+          <img src={brandLogo.src} alt="Red Bull" className={brandLogo.heightClass('h-7', 'h-14')} />
         </div>
         <div className="grid grid-cols-2 gap-4 md:gap-8 max-w-2xl mx-auto w-full">
           {[
@@ -1756,6 +1776,7 @@ const DATA_DOTS = [
 ];
 
 export default function ChangeTheTide() {
+  const brandLogo = useBrandLogo();
   const [heroIn, setHeroIn] = useState(false);
   useEffect(() => {
     const id = requestAnimationFrame(() => setHeroIn(true));
@@ -1820,7 +1841,7 @@ export default function ChangeTheTide() {
 
         <div className="container mx-auto px-4 pt-10 max-w-5xl relative">
           <div className="flex items-center gap-4" style={heroStep(0)}>
-            <img src={redbullLogo} alt="Red Bull" className="h-12" />
+            <img src={brandLogo.src} alt="Red Bull" className={brandLogo.heightClass('h-12', 'h-36')} />
           </div>
         </div>
 

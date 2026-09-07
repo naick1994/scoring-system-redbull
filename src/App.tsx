@@ -22,6 +22,8 @@ import RiderRanking from "./pages/rider/RiderRanking";
 import Admin from "./pages/Admin";
 import ChangeTheTide from "./pages/ChangeTheTide";
 import AboutNick from "./pages/AboutNick";
+import KotaScoring from "./pages/KotaScoring";
+import KotaCombo from "./pages/KotaCombo";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +38,8 @@ const App = () => (
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<ChangeTheTide />} />
+              <Route path="/kota" element={<KotaScoring />} />
+              <Route path="/kota/:combo" element={<KotaCombo />} />
               <Route path="/change-the-tide" element={<Navigate to="/" replace />} />
               <Route path="/about-nick" element={<AboutNick />} />
               <Route

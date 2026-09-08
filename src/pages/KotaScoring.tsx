@@ -53,7 +53,7 @@ export default function KotaScoring() {
         <div className="container mx-auto px-4 max-w-5xl relative py-16 md:py-24">
           <img src={kotaLogo} alt="Red Bull King of the Air" className="h-24 md:h-28 mb-8" />
           <p className="text-xs font-mono tracking-widest uppercase text-primary mb-4">
-            Change the System · internal document
+            Internal document
           </p>
           <h1 className="text-5xl md:text-7xl font-bold leading-[1.05] tracking-tight max-w-4xl">
             <span className="block">4 proposals to improve</span>
@@ -324,7 +324,7 @@ export default function KotaScoring() {
       </section>
 
       <div className="container mx-auto px-4 max-w-5xl py-10">
-        <p className="text-xs text-muted-foreground">Change the System · internal document</p>
+        <p className="text-xs text-muted-foreground">Internal document</p>
       </div>
       <DeployTag />
     </div>

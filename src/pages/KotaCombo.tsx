@@ -357,12 +357,9 @@ export default function KotaCombo() {
             {proposal.autoImpMechanic === 'stepped' && (
               <FadeIn y={30} delay={0.12}>
                 <Card className="p-6 md:p-8 shadow-[var(--shadow-card)] mb-8">
-                  <h2 className="text-xl md:text-2xl font-bold mb-1">
+                  <h2 className="text-xl md:text-2xl font-bold mb-6">
                     The reasoning behind the <span className="text-primary">Progressive Variety Model.</span>
                   </h2>
-                  <p className="text-sm text-muted-foreground mb-6">
-                    Marijn&apos;s own reasons, from his original proposal.
-                  </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {PROGRESSIVE_RATIONALE.map((r) => (
                       <div key={r.title}>

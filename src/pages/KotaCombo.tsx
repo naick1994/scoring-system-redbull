@@ -16,7 +16,7 @@ import {
   tierLabel,
   fmt,
   EXAMPLE_JUMPS,
-  EXAMPLE_VOTES,
+  EXAMPLE_SCORES,
   PROPOSALS,
   PROBLEMS,
   type JumpCount,
@@ -303,15 +303,15 @@ export default function KotaCombo() {
                 </p>
                 <p className="text-[15px] leading-relaxed text-foreground/85 mb-6">
                   {proposal.autoImpMechanic === 'binary'
-                    ? `All or nothing: above a vote of ${fmt(proposal.autoImpThreshold, 1)} a full point, below zero. Same as today.`
-                    : `Below a vote of ${fmt(proposal.autoImpThreshold, 1)}, zero points. Above it, the higher the vote, the more points it gives: in tiers, no longer all or nothing.`}
+                    ? `All or nothing: above a score of ${fmt(proposal.autoImpThreshold, 1)} a full point, below zero. Same as today.`
+                    : `Below a score of ${fmt(proposal.autoImpThreshold, 1)}, zero points. Above it, the higher the score, the more points it gives: in tiers, no longer all or nothing.`}
                 </p>
 
                 <div className="overflow-x-auto -mx-1">
                   <table className="w-full text-[13.5px] min-w-[360px]">
                     <thead>
                       <tr className="border-b border-border">
-                        <th className="text-left font-mono text-[10.5px] uppercase tracking-wide text-muted-foreground font-medium py-2 px-1">Vote</th>
+                        <th className="text-left font-mono text-[10.5px] uppercase tracking-wide text-muted-foreground font-medium py-2 px-1">Score</th>
                         {proposal.autoImpMechanic === 'stepped' && (
                           <th className="text-left font-mono text-[10.5px] uppercase tracking-wide text-muted-foreground font-medium py-2 px-1">Tier</th>
                         )}
@@ -320,7 +320,7 @@ export default function KotaCombo() {
                       </tr>
                     </thead>
                     <tbody>
-                      {EXAMPLE_VOTES.map((v) => (
+                      {EXAMPLE_SCORES.map((v) => (
                         <tr key={v} className="border-b border-border/60">
                           <td className="py-2 px-1 font-mono tabular-nums text-muted-foreground">{fmt(v, 1)}</td>
                           {proposal.autoImpMechanic === 'stepped' && (
@@ -379,8 +379,8 @@ export default function KotaCombo() {
                 </h2>
                 <p className="text-[15px] leading-relaxed text-foreground/85 mb-4">
                   {proposal.jumps === 3
-                    ? 'Same as today: the 3 highest-voted jumps count (best score). They don\'t need to be different tricks from each other.'
-                    : `Instead of the usual 3, the best ${proposal.jumps} jumps by vote count (best score): it takes more consistency, a single lucky jump matters less. They don't need to be different tricks from each other.`}
+                    ? 'Same as today: the 3 highest-scoring jumps count (best score). They don\'t need to be different tricks from each other.'
+                    : `Instead of the usual 3, the best ${proposal.jumps} jumps count (best score): it takes more consistency, a single lucky jump matters less. They don't need to be different tricks from each other.`}
                 </p>
                 <JumpsExample jumps={proposal.jumps} />
               </Card>
@@ -438,14 +438,14 @@ export default function KotaCombo() {
                   board technicality don&apos;t count: those are already rewarded in the individual jump score.
                 </p>
                 <p className="text-[15px] leading-relaxed text-foreground/85 mb-6">
-                  Today: the 3 highest-voted jumps (whatever tricks they are) + an Auto Impression up to 7 points
-                  for unique tricks. Here the two merge into one: for each category, only the highest-voted jump
+                  Today: the 3 highest-scoring jumps (whatever tricks they are) + an Auto Impression up to 7 points
+                  for unique tricks. Here the two merge into one: for each category, only the highest-scoring jump
                   counts, using the same categories that define &quot;unique&quot; above. Other jumps in the same
-                  category don&apos;t count, even with a higher vote than the first.
+                  category don&apos;t count, even with a higher score than the first.
                 </p>
                 <p className="text-[14.5px] leading-relaxed text-foreground/80">
-                  Example: Trick A (vote 8), Trick B different (vote 7), another trick in A&apos;s category (vote
-                  7.5, doesn&apos;t count because 8 is already the best in that category), Trick C different (vote
+                  Example: Trick A (score 8), Trick B different (score 7), another trick in A&apos;s category (score
+                  7.5, doesn&apos;t count because 8 is already the best in that category), Trick C different (score
                   6). Score ={' '}
                   <span className="font-mono">8 + 7 + 6 = <strong className="text-primary font-semibold">21</strong></span>.
                 </p>

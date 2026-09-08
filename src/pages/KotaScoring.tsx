@@ -88,7 +88,7 @@ export default function KotaScoring() {
                 </div>
                 <h3 className="font-bold text-sm mb-3">Best 3 jumps</h3>
                 <p className="text-sm text-muted-foreground">
-                  Best score: only the 3 highest-voted jumps of each rider count, they don&apos;t need to be
+                  Best score: only the 3 highest-scoring jumps of each rider count, they don&apos;t need to be
                   different tricks from each other.
                 </p>
               </Card>
@@ -137,7 +137,7 @@ export default function KotaScoring() {
 
               <p className="text-[15.5px] leading-relaxed text-foreground/85 mb-8">
                 Auto Impression and Judges Impression together form the Overall Impression Score: the part of the
-                score not tied to the vote on individual jumps.
+                total not decided by the individual jump scores.
               </p>
 
               <div className="flex items-baseline justify-between border-t border-border pt-5">
@@ -176,7 +176,7 @@ export default function KotaScoring() {
                 </p>
                 <dl className="space-y-2 text-sm mb-4">
                   <div className="flex justify-between gap-4">
-                    <dt className="text-muted-foreground">3 jumps, same trick, vote 10.0</dt>
+                    <dt className="text-muted-foreground">3 jumps, same trick, score 10.0</dt>
                     <dd className="font-mono shrink-0">30</dd>
                   </div>
                   <div className="flex justify-between gap-4">
@@ -199,12 +199,12 @@ export default function KotaScoring() {
                 <div className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-2">Rider B</div>
                 <h3 className="font-bold text-xl mb-4">The complete rider</h3>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Lands 7 tricks, all different, vote 7.0 each. A much wider repertoire, but less clean on any
+                  Lands 7 tricks, all different, score 7.0 each. A much wider repertoire, but less clean on any
                   single jump.
                 </p>
                 <dl className="space-y-2 text-sm mb-4">
                   <div className="flex justify-between gap-4">
-                    <dt className="text-muted-foreground">7 different jumps, vote 7.0, only the best 3 count</dt>
+                    <dt className="text-muted-foreground">7 different jumps, score 7.0, only the best 3 count</dt>
                     <dd className="font-mono shrink-0">21</dd>
                   </div>
                   <div className="flex justify-between gap-4">

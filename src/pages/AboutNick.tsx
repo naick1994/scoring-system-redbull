@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Mail, Phone, MapPin } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, MapPin, Briefcase, ChevronDown, Wind } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { DeployTag } from '@/components/DeployTag';
 import nickAvatar from '@/assets/nick-avatar.jpg';
 import logoFlightMode from '@/assets/logo-flight-mode.jpg';
 import logoCasatiBrothers from '@/assets/logo-casati-brothers.svg';
-import logoRidesk from '@/assets/logo-ridesk.jpg';
 import logoHarlem from '@/assets/logo-harlem.jpg';
 import logoSnowit from '@/assets/logo-snowit.jpg';
 import logoTribala from '@/assets/logo-tribala.jpg';
@@ -21,42 +20,41 @@ const STATS = [
   { value: '110/110', label: 'Bocconi MSc in Management' },
 ];
 
-type TimelineItem = { title: string; org: string; orgUrl?: string; period: string; desc: string[]; logo?: string; logoScale?: number };
+// Real numbers from Nicholas's own kitesurf sessions, same as published on his live about page.
+const SESSION_LOG = {
+  count: 377,
+  maxDistance: '119m',
+  maxSpeed: '79kmh',
+  maxHeight: '18.6m',
+  maxAirtime: '9.1s',
+};
 
-const CURRENT_ROLES: TimelineItem[] = [
+type TimelineItem = { title: string; org: string; city: string; orgUrl?: string; period: string; desc: string[]; logo?: string; logoScale?: number };
+
+const EXPERIENCE: TimelineItem[] = [
   {
-    title: 'Co-Founder & CEO', org: 'Flight Mode', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoFlightMode,
+    title: 'Co-Founder & CEO', org: 'Flight Mode', city: 'Tarifa', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoFlightMode,
     desc: [
       'Objective: innovate and revolutionise the kitesurf industry.',
       'Developing market growth initiatives for the global wind-powered sports ecosystem.',
     ],
   },
   {
-    title: 'Manager', org: 'Casati Brothers', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoCasatiBrothers, logoScale: 2.1,
+    title: 'Manager', org: 'Casati Brothers', city: 'Tarifa', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoCasatiBrothers, logoScale: 2.1,
     desc: [
       'Athlete representation, sponsorships, partnerships, and strategic growth.',
       'Currently managing two of the most talented riders in the world.',
     ],
   },
   {
-    title: 'Co-Founder & CEO', org: 'Ridesk', period: 'Oct 2025 - Present · 10 mos', logo: logoRidesk,
-    desc: [
-      'Objective: simplify the watersport school industry through digital innovation.',
-      'Building Ridesk, a scalable SaaS platform that helps schools manage bookings, instructors, payments, and daily operations from one all-in-one system.',
-    ],
-  },
-  {
-    title: 'Italy and Spain Distributor', org: 'Harlem Kitesurfing', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoHarlem,
+    title: 'Italy and Spain Distributor', org: 'Harlem Kitesurfing', city: 'Tarifa', period: 'Mar 2025 - Present · 1 yr 5 mos', logo: logoHarlem,
     desc: [
       'Exclusive distribution partner for Harlem in Italy, Spain, and the Canary Islands.',
       'Retail and ambassador strategy, brand positioning.',
     ],
   },
-];
-
-const TRACK_RECORD: TimelineItem[] = [
   {
-    title: 'Chief Operating Officer', org: 'Snowit (Founding Team)', orgUrl: 'https://snowit.ski/en', period: 'May 2019 - Feb 2025 · 5 yrs 10 mos', logo: logoSnowit,
+    title: 'Chief Operating Officer', org: 'Snowit (Founding Team)', city: 'Milan', orgUrl: 'https://snowit.ski/en', period: 'May 2019 - Feb 2025 · 5 yrs 10 mos', logo: logoSnowit,
     desc: [
       'Scaled Snowit to 400k+ users and the team from 3 to 50+ people.',
       'Led Product, Ops, and Customer Care teams.',
@@ -65,7 +63,7 @@ const TRACK_RECORD: TimelineItem[] = [
     ],
   },
   {
-    title: 'Co-Founder & Chief Operating Officer', org: 'Tribala', orgUrl: 'https://tribala.travel/en', period: 'May 2023 - Feb 2025 · 1 yr 10 mos', logo: logoTribala,
+    title: 'Co-Founder & Chief Operating Officer', org: 'Tribala', city: 'Milan', orgUrl: 'https://tribala.travel/en', period: 'May 2023 - Feb 2025 · 1 yr 10 mos', logo: logoTribala,
     desc: [
       'Co-founded Tribala, taking it from the initial idea to launch and market validation.',
       'Built the brand identity and product strategy for a sports group travel marketplace.',
@@ -73,18 +71,18 @@ const TRACK_RECORD: TimelineItem[] = [
     ],
   },
   {
-    title: 'Digital & Innovation Ambassador', org: 'FNM S.p.A.', orgUrl: 'https://www.fnmgroup.it/', period: 'Sep 2022 - Oct 2024 · 2 yrs 2 mos', logo: logoFnm,
+    title: 'Digital & Innovation Ambassador', org: 'FNM S.p.A.', city: 'Milan', orgUrl: 'https://www.fnmgroup.it/', period: 'Sep 2022 - Oct 2024 · 2 yrs 2 mos', logo: logoFnm,
     desc: ['Member of Digital & Innovation Ambassadors to promote innovation within the FNM group.'],
   },
   {
-    title: 'Consultant', org: 'DGM Consulting Srl', orgUrl: 'https://dgmco.it/it/', period: 'Apr 2018 - Aug 2018 · 5 mos', logo: logoDgm,
+    title: 'Consultant', org: 'DGM Consulting Srl', city: 'Milan', orgUrl: 'https://dgmco.it/it/', period: 'Apr 2018 - Aug 2018 · 5 mos', logo: logoDgm,
     desc: ['Data analytics and strategic consulting in hospitality and industrial sectors.'],
   },
 ];
 
 const EDUCATION: TimelineItem[] = [
   {
-    title: 'MSc in Management', org: 'Bocconi University', period: 'Sep 2016 - Dec 2018', logo: logoBocconi,
+    title: 'MSc in Management', org: 'Bocconi University', city: 'Milan', period: 'Sep 2016 - Dec 2018', logo: logoBocconi,
     desc: [
       'Top grades (110/110).',
       'Final thesis on budgeting effectiveness and behavior.',
@@ -92,11 +90,11 @@ const EDUCATION: TimelineItem[] = [
     ],
   },
   {
-    title: 'Exchange Program', org: 'National Taiwan University of Taipei', period: 'Aug 2016 - Dec 2018', logo: logoNtuTaiwan,
+    title: 'Exchange Program', org: 'National Taiwan University of Taipei', city: 'Taiwan', period: 'Aug 2016 - Dec 2018', logo: logoNtuTaiwan,
     desc: ['Business & culture exchange.', 'GPA 4/4.'],
   },
   {
-    title: 'BSc', org: 'Bocconi University', period: 'Sep 2013 - Jul 2016', logo: logoBocconi,
+    title: 'BSc', org: 'Bocconi University', city: 'Milan', period: 'Sep 2013 - Jul 2016', logo: logoBocconi,
     desc: [],
   },
 ];
@@ -125,75 +123,87 @@ function useInViewOnce<T extends HTMLElement>() {
   return { ref, seen };
 }
 
-// Each entry: logo in a fixed neutral box (object-contain, so non-square
-// logos never crop or stretch), then title / org / period stacked in
-// that order, left-aligned, identically across every entry.
+// Each entry: logo, title + city badge, org name, period, chevron. Click
+// a row to expand it and reveal the description bullets, collapsed by
+// default so the list reads as a scannable résumé, not a wall of text.
 function Timeline({ items }: { items: TimelineItem[] }) {
   const { ref, seen } = useInViewOnce<HTMLDivElement>();
+  const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (
     <div ref={ref} className="divide-y divide-border border-t border-border">
-      {items.map((item, i) => (
-        <div
-          key={item.title + item.org}
-          className="flex gap-4 py-5"
-          style={{
-            opacity: seen ? 1 : 0,
-            transform: seen ? 'translateX(0)' : 'translateX(-12px)',
-            transition: `opacity 0.5s ease ${i * 90}ms, transform 0.5s ease ${i * 90}ms`,
-          }}
-        >
-          {item.logo && (
-            item.orgUrl ? (
-              <a
-                href={item.orgUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-12 h-12 rounded-lg overflow-hidden shrink-0 flex items-center justify-center"
-              >
-                <img
-                  src={item.logo}
-                  alt={`${item.org} logo`}
-                  className="w-full h-full object-contain"
-                  style={item.logoScale ? { transform: `scale(${item.logoScale})` } : undefined}
-                />
-              </a>
-            ) : (
-              <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 flex items-center justify-center">
-                <img
-                  src={item.logo}
-                  alt={`${item.org} logo`}
-                  className="w-full h-full object-contain"
-                  style={item.logoScale ? { transform: `scale(${item.logoScale})` } : undefined}
-                />
-              </div>
-            )
-          )}
-          <div className="min-w-0 flex-1">
-            <div className="font-bold text-sm">{item.title}</div>
-            <div className="text-sm text-muted-foreground">
-              {item.orgUrl ? (
-                <a
-                  href={item.orgUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground underline decoration-dotted underline-offset-2 transition-colors"
-                >
-                  {item.org}
-                </a>
-              ) : (
-                item.org
+      {items.map((item, i) => {
+        const key = item.title + item.org;
+        const isOpen = openKey === key;
+        return (
+          <div
+            key={key}
+            style={{
+              opacity: seen ? 1 : 0,
+              transform: seen ? 'translateX(0)' : 'translateX(-12px)',
+              transition: `opacity 0.5s ease ${i * 90}ms, transform 0.5s ease ${i * 90}ms`,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setOpenKey(isOpen ? null : key)}
+              disabled={item.desc.length === 0}
+              className="w-full flex items-center gap-4 py-5 text-left disabled:cursor-default"
+            >
+              {item.logo && (
+                <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 flex items-center justify-center bg-card">
+                  <img
+                    src={item.logo}
+                    alt={`${item.org} logo`}
+                    className="w-full h-full object-contain"
+                    style={item.logoScale ? { transform: `scale(${item.logoScale})` } : undefined}
+                  />
+                </div>
               )}
-            </div>
-            <div className="text-xs text-muted-foreground mt-0.5">{item.period}</div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-sm">{item.title}</span>
+                  <Badge variant="outline" className="border-primary/40 text-primary text-[9px] uppercase tracking-wide px-1.5 py-0">
+                    {item.city}
+                  </Badge>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  {item.orgUrl ? (
+                    <a
+                      href={item.orgUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="hover:text-foreground underline decoration-dotted underline-offset-2 transition-colors"
+                    >
+                      {item.org}
+                    </a>
+                  ) : (
+                    item.org
+                  )}
+                </div>
+              </div>
+              <div className="shrink-0 flex items-center gap-3">
+                <span className="text-xs text-muted-foreground hidden sm:inline">{item.period}</span>
+                {item.desc.length > 0 && (
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                )}
+              </div>
+            </button>
+            <div className="text-xs text-muted-foreground -mt-3 mb-3 sm:hidden">{item.period}</div>
             {item.desc.length > 0 && (
-              <ul className="text-sm text-muted-foreground mt-2 space-y-1 list-disc list-inside">
-                {item.desc.map((line) => <li key={line}>{line}</li>)}
-              </ul>
+              <div
+                className="overflow-hidden transition-all duration-300"
+                style={{ maxHeight: isOpen ? 200 : 0, opacity: isOpen ? 1 : 0 }}
+              >
+                <ul className="text-sm text-muted-foreground pb-5 space-y-1 list-disc list-inside">
+                  {item.desc.map((line) => <li key={line}>{line}</li>)}
+                </ul>
+              </div>
             )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -247,7 +257,7 @@ export default function AboutNick() {
             <img
               src={nickAvatar}
               alt="Nicholas Baruffaldi"
-              className="w-24 h-24 rounded-full object-cover border-2 border-primary/30 shadow-[0_0_30px_-8px_hsl(var(--primary)/0.5)]"
+              className="w-24 h-24 rounded-full object-cover border-2 border-primary/40 shadow-[0_0_36px_-6px_hsl(var(--primary)/0.6)]"
             />
             <div>
               <h1 className="text-3xl md:text-4xl font-bold">Nicholas Baruffaldi</h1>
@@ -259,7 +269,7 @@ export default function AboutNick() {
               </div>
             </div>
           </div>
-          <p className="text-lg text-muted-foreground mb-10">
+          <p className="text-lg text-muted-foreground mb-8">
             I'm a digital enthusiast and sport lover born and raised in the Italian Alps, with the dream of
             transforming the competitive sport arena into something bigger than performance. Today I'm CEO
             &amp; Co-founder of Flight Mode, official Harlem Kitesurfing distributor for Italy and Spain,
@@ -269,6 +279,33 @@ export default function AboutNick() {
             development. Selected in Forbes Under 30, I believe in clarity, bold execution and authentic
             stories. As an avid believer in optimisation, I follow the motto: "done is better than perfect."
           </p>
+
+          <div className="rounded-lg border border-border bg-card p-4 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-primary">
+                <Wind className="w-3.5 h-3.5" /> Session Log
+              </div>
+              <span className="text-xs text-muted-foreground">{SESSION_LOG.count} logged</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <div className="text-lg font-bold text-primary tabular-nums">{SESSION_LOG.maxDistance}</div>
+                <div className="text-[11px] text-muted-foreground">Max distance</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-primary tabular-nums">{SESSION_LOG.maxSpeed}</div>
+                <div className="text-[11px] text-muted-foreground">Max speed</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-primary tabular-nums">{SESSION_LOG.maxHeight}</div>
+                <div className="text-[11px] text-muted-foreground">Max height</div>
+              </div>
+              <div>
+                <div className="text-lg font-bold text-primary tabular-nums">{SESSION_LOG.maxAirtime}</div>
+                <div className="text-[11px] text-muted-foreground">Max airtime</div>
+              </div>
+            </div>
+          </div>
 
           <div className="grid grid-cols-3 gap-4 mb-14">
             {STATS.map((stat) => (
@@ -282,13 +319,10 @@ export default function AboutNick() {
 
         <div className="space-y-14">
           <div>
-            <h2 className="font-bold mb-6">Right now</h2>
-            <Timeline items={CURRENT_ROLES} />
-          </div>
-
-          <div>
-            <h2 className="font-bold mb-6">Track record</h2>
-            <Timeline items={TRACK_RECORD} />
+            <h2 className="font-bold mb-6 flex items-center gap-2">
+              <Briefcase className="w-4 h-4 text-primary" /> Experience
+            </h2>
+            <Timeline items={EXPERIENCE} />
           </div>
 
           <div>

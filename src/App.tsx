@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Header } from "./components/Header";
 import { DeployTag } from "./components/DeployTag";
+import { ScrollToTop } from "./components/ScrollToTop";
 import NewJump from "./pages/NewJump";
 import PresetEvents from "./pages/PresetEvents";
 import Result from "./pages/Result";
@@ -35,6 +36,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter basename={import.meta.env.BASE_URL}>
+            <ScrollToTop />
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<ChangeTheTide />} />
